@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.sandbox.lock/
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
