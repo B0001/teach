@@ -59,12 +59,72 @@ Edge derivation -- the one substantive judgment call this module makes:
   which is a genuine, content-level escalation, not just five grade labels
   in numeric order.
 
-  High school (grades 9-12) is explicitly OUT of scope here: VA's high
-  school math standards are organized by *course* (Algebra I, Geometry,
-  Algebra II, ...), not by a single linear grade number, and this session
-  could not reach a VDOE-published course-sequence document to source that
-  ordering -- asserting one from memory would violate the same rule this
-  module leans on elsewhere. Filed as a follow-up, not done here.
+  High school (grades 9-12) is organized by *course* (Algebra 1, Geometry,
+  Algebra II, ...), not a single linear grade number, so the K-8 grade-chain
+  rule above does not apply to it -- see the next section.
+
+High school course sequence (teach-8xw.16) -- what's sourced and what isn't:
+
+  teach-8xw.2 and teach-8xw.5 (this bead's dependencies) each tried and
+  failed to reach a VDOE course-sequence document: doe.virginia.gov 403s all
+  direct bot traffic (Akamai block, reconfirmed live this session), and both
+  sessions' Wayback Machine checks against a *guessed* crosswalk URL
+  (testing/sol/resources/crosswalks.html) found zero snapshots -- correctly,
+  since that URL was never real. This session found the real document by a
+  different route: the Learning Commons node data for VA's HS math standards
+  (see below) carries an `attributionStatement` citing VDOE's actual
+  publication URL, `doe.virginia.gov/home/showpublisheddocument/48908/<id>`.
+  Wayback DOES hold live snapshots of that exact URL family across several
+  capture dates from 2023 through 2026-04-16 (verified via the CDX API this
+  session, not the unreliable `availability` API endpoint) -- it was never
+  actually unreachable, only unguessed. The 2026-04-16 capture
+  (https://web.archive.org/web/20260416041407/https://www.doe.virginia.gov/home/showpublisheddocument/48908/638741650017470000)
+  is "Mathematics Standards of Learning for Virginia Public Schools,"
+  adopted August 2023 by the Virginia Board of Education -- the actual
+  current SOL document, not a secondary summary of it.
+
+  That PDF gives each high-school course a short introductory paragraph, and
+  most of them explicitly name a prerequisite course by stating what
+  students are assumed to have already completed. Those sentences are the
+  *only* source for the `course_prerequisites` list in
+  `data/va_math_sol_hs.json` -- each entry there carries the exact quoted
+  sentence it was read from, verbatim (pypdf-extracted, whitespace-
+  normalized), so this is checkable against the PDF rather than asserted.
+  Courses with no such sentence (Trigonometry, Probability and Statistics,
+  Discrete Mathematics) get no incoming prerequisite edge here -- the
+  document simply doesn't say, and inventing "well-known" ordering for them
+  (e.g. that Trigonometry is usually taken after Geometry) would be exactly
+  the kind of unsourced claim sandbox-prompt.md rules out. The 7 sourced
+  relations: Algebra 1 -> Geometry, Algebra 1 -> AFDA, Algebra 1 -> Algebra
+  2, Algebra 1 -> Computer Mathematics, Geometry -> Computer Mathematics
+  (the source's exact phrase is "beginning Geometry," weaker than "completed
+  Geometry" for the other edges -- flagged, not softened away), Geometry ->
+  Mathematical Analysis, Algebra 2 -> Mathematical Analysis.
+
+  Node/edge granularity mismatch and how it's resolved: like the K-8 data,
+  each HS node is a (course, strand) grouping (e.g. `G.RLT`, `A.EO`) -- the
+  same `Standard Grouping` level Learning Commons uses, for the same reason
+  (the individual numbered standards within one grouping carry no documented
+  order). But the *sourced* prerequisite relation is at course granularity
+  ("completed Algebra 1"), not grouping granularity, and a course's strand
+  groupings don't line up 1:1 across courses the way K-8 grade-groupings do
+  (Geometry's strands are DF/PC/RLT/TR; Algebra 1's are EI/EO/F/ST -- no
+  shared strand code to chain within). Asserting a `PrerequisiteEdge` from
+  just one Algebra 1 grouping to just one Geometry grouping would not
+  actually force every Algebra 1 grouping before every Geometry grouping in
+  `topological_order()` -- a valid topological sort could still place an
+  unconnected Algebra 1 grouping after a Geometry one. So `_hs_course_edges`
+  below builds the full bipartite product: every grouping of the
+  prerequisite course gets an edge to every grouping of the dependent
+  course. This is mechanical (generated from `course_prerequisites`, not
+  hand-typed) and is the minimum edge set that actually guarantees "all of
+  course X before any of course Y" under Kahn's-algorithm topological sort.
+
+  What is deliberately NOT here: an edge from any K-8 grouping into Algebra
+  1. The 2023 document's Algebra 1 section says algebraic thinking "begins
+  in kindergarten," but never cites a specific K-8 standard grouping as
+  Algebra 1's prerequisite the way the HS-to-HS sentences do -- so, per the
+  same rule, no edge is asserted there either.
 """
 from __future__ import annotations
 
@@ -74,6 +134,7 @@ from pathlib import Path
 from teach.concept_graph import ConceptGraph, ConceptNode, PrerequisiteEdge
 
 _DATA_PATH = Path(__file__).parent / "data" / "va_math_sol_k8.json"
+_HS_DATA_PATH = Path(__file__).parent / "data" / "va_math_sol_hs.json"
 
 
 def load_va_math_sol_data() -> dict:
@@ -126,6 +187,70 @@ def load_va_math_sol_graph() -> ConceptGraph:
     return ConceptGraph(nodes=nodes, edges=tuple(edges))
 
 
+def load_va_math_sol_hs_data() -> dict:
+    """Raw parsed JSON for the high-school course-grouping data -- exposed so
+    a caller (or a test) can inspect `data["course_prerequisites"]` (each
+    entry's sourced quote) without also building a ConceptGraph."""
+    with _HS_DATA_PATH.open(encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_va_math_sol_hs_graph() -> ConceptGraph:
+    """Build the high-school ConceptGraph: one node per (course, strand)
+    grouping, edges built from `course_prerequisites`' sourced course-level
+    relations as the full bipartite product of (every grouping of the
+    prerequisite course) x (every grouping of the dependent course). See the
+    module docstring's "High school course sequence" section for why this
+    shape, and why it's the minimum edge set that actually orders correctly.
+    """
+    data = load_va_math_sol_hs_data()
+
+    nodes = tuple(
+        ConceptNode(
+            id=g["id"],
+            domain="math",
+            label=f"{g['strand_description']} ({g['course_name']})",
+            standard_ref=g["statement_code"],
+            facts={
+                "course_code": g["course_code"],
+                "course_name": g["course_name"],
+                "strand_description": g["strand_description"],
+                "case_identifier_uuid": g["case_identifier_uuid"],
+                "leaf_standards": tuple(
+                    (leaf["statement_code"], leaf["description"])
+                    for leaf in g["leaf_standards"]
+                ),
+            },
+        )
+        for g in data["groupings"]
+    )
+
+    groupings_by_course: dict[str, list[str]] = {}
+    for g in data["groupings"]:
+        groupings_by_course.setdefault(g["course_code"], []).append(g["id"])
+
+    edges: list[PrerequisiteEdge] = []
+    for rel in data["course_prerequisites"]:
+        src_ids = groupings_by_course[rel["src_course"]]
+        dst_ids = groupings_by_course[rel["dst_course"]]
+        for src_id in src_ids:
+            for dst_id in dst_ids:
+                edges.append(PrerequisiteEdge(src=src_id, dst=dst_id))
+
+    return ConceptGraph(nodes=nodes, edges=tuple(edges))
+
+
+def load_va_math_sol_full_graph() -> ConceptGraph:
+    """K-8 and high-school combined into one ConceptGraph. Safe to union
+    directly (no shared node ids -- K-8 ids key on a digit/'K' grade, HS ids
+    key on a course letter code) and no edges cross the two, since no K-8
+    grouping is asserted as an HS course's prerequisite (see module
+    docstring)."""
+    k8 = load_va_math_sol_graph()
+    hs = load_va_math_sol_hs_graph()
+    return ConceptGraph(nodes=k8.nodes + hs.nodes, edges=k8.edges + hs.edges)
+
+
 if __name__ == "__main__":
     graph = load_va_math_sol_graph()
 
@@ -159,4 +284,64 @@ if __name__ == "__main__":
         f"valid DAG ({len(graph.edges)} grade-chain edges across {len(strands)} "
         "strands); K.NS..8.NS orders correctly and its endpoints' sourced "
         "standard text actually escalates in content, not just grade number"
+    )
+
+    hs_graph = load_va_math_sol_hs_graph()
+
+    assert len(hs_graph.nodes) == 33, f"expected 33 HS course-strand groupings, got {len(hs_graph.nodes)}"
+    assert len(hs_graph.edges) == 96, f"expected 96 bipartite prerequisite edges, got {len(hs_graph.edges)}"
+
+    hs_order = hs_graph.topological_order()
+
+    # Content-level check, same spirit as the K-8 one above: every Algebra 1
+    # grouping actually precedes every Geometry grouping (and the other 6
+    # sourced course relations) in the computed order -- not just "some edge
+    # exists somewhere", which is what the bipartite-product edge
+    # construction exists to guarantee. A bug that only wired one grouping
+    # per course (instead of the full product) would leave some pairs
+    # unordered and this loop would catch it.
+    hs_data = load_va_math_sol_hs_data()
+    groupings_by_course: dict[str, list[str]] = {}
+    for g in hs_data["groupings"]:
+        groupings_by_course.setdefault(g["course_code"], []).append(g["id"])
+    for rel in hs_data["course_prerequisites"]:
+        for src_id in groupings_by_course[rel["src_course"]]:
+            for dst_id in groupings_by_course[rel["dst_course"]]:
+                assert hs_order.index(src_id) < hs_order.index(dst_id), (
+                    f"{src_id} ({rel['src_course']}) must precede {dst_id} ({rel['dst_course']}) "
+                    f"per source quote: {rel['source_quote']!r}"
+                )
+
+    # Every course_prerequisites entry must carry a real, non-empty quote --
+    # this is what stops the edge list from silently degrading into an
+    # unsourced assertion if someone edits the data file later.
+    for rel in hs_data["course_prerequisites"]:
+        assert rel.get("source_quote"), f"missing source_quote for {rel['src_course']} -> {rel['dst_course']}"
+        assert rel["src_course"] in hs_data["courses"]
+        assert rel["dst_course"] in hs_data["courses"]
+
+    # Courses the source document gives no prerequisite sentence for must
+    # have zero incoming course_prerequisites edges -- abstention, not a
+    # guessed ordering (see module docstring).
+    courses_with_incoming = {rel["dst_course"] for rel in hs_data["course_prerequisites"]}
+    no_sourced_prereq = set(hs_data["courses"]) - courses_with_incoming - {"A"}
+    assert no_sourced_prereq == {"T", "PS", "DM"}, (
+        f"expected exactly Trigonometry/Probability-and-Statistics/Discrete-Mathematics "
+        f"to have no sourced prerequisite, got {no_sourced_prereq}"
+    )
+
+    full_graph = load_va_math_sol_full_graph()
+    assert len(full_graph.nodes) == len(graph.nodes) + len(hs_graph.nodes)
+    assert len(full_graph.edges) == len(graph.edges) + len(hs_graph.edges)
+    full_graph.validate()  # union must still be a single valid DAG, no cross-contamination
+
+    print(
+        f"OK: {len(hs_graph.nodes)} VA Math SOL high-school course-strand groupings "
+        f"(9 courses: {', '.join(sorted(hs_data['courses']))}) load as a valid DAG "
+        f"({len(hs_graph.edges)} edges from {len(hs_data['course_prerequisites'])} sourced "
+        "course-level prerequisite sentences in VDOE's August 2023 Mathematics SOL "
+        "document, expanded to the full bipartite product); every sourced relation "
+        "orders correctly; courses with no sourced prerequisite sentence "
+        "(Trigonometry, Probability and Statistics, Discrete Mathematics) correctly "
+        "have none asserted"
     )

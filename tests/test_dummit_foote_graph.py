@@ -30,10 +30,11 @@ order of a subgroup divides the order of a finite group.
 """
 
 SIGNPOSTED_LESSON = """
-Recall that a subgroup H is a nonempty subset closed under the operation and
-under inverses. Bond takes any agent g and forms the left coset gH. The
-cosets partition the roster into equal blocks, so the order of H divides the
-order of G. That is Lagrange theorem, with the index counting the blocks.
+Recall that the left coset gH is the set of products gh, and these cosets
+partition the group into equal blocks. Bond takes Q Branch as the subgroup H
+and any agent g, and forms the left coset gH the same way. The order of H
+divides the order of G, so this is Lagrange theorem, with the index counting
+the blocks.
 """
 
 
@@ -58,6 +59,32 @@ def test_lagrange_closure_is_exactly_the_definitional_chain():
         "dummit-foote:1.1-groups",
         "dummit-foote:0.1-sets-and-functions",
     }
+
+
+def test_isomorphism_theorems_closure_excludes_lagrange():
+    """teach-25o: the First Isomorphism Theorem needs homomorphisms/kernels
+    (1.6) and quotient groups (reached through cosets, 3.1) -- not Lagrange's
+    theorem, even though 3.2 prints immediately before 3.3 in the book."""
+    graph = load_dummit_foote_graph()
+    assert prerequisite_closure(graph, "dummit-foote:3.3-isomorphism-theorems") == {
+        "dummit-foote:1.6-homomorphisms",
+        "dummit-foote:3.1-cosets",
+        "dummit-foote:2.1-subgroups",
+        "dummit-foote:1.1-groups",
+        "dummit-foote:0.1-sets-and-functions",
+    }
+
+
+def test_kernel_normal_subgroup_fact_is_reachable():
+    """teach-25o's whole point: teach.math_facts' kernel-normal-subgroup
+    SourceFact (D&F 3.2 Prop 7) must attach to some node in this graph, not
+    sit unreferenced. Before this bead there was no homomorphism node for it
+    to attach to at all."""
+    graph = load_dummit_foote_graph()
+    carriers = [
+        n.id for n in graph.nodes if "kernel-normal-subgroup" in n.facts.get("fact_topics", ())
+    ]
+    assert carriers == ["dummit-foote:3.3-isomorphism-theorems"]
 
 
 @pytest.mark.parametrize("src,dst", NON_EDGES)
@@ -95,16 +122,43 @@ def test_checker_recovers_lagrange_from_bond_framing():
     assert result.taught_node_id == TARGET_NODE_ID
 
 
-def test_unsignposted_prerequisites_abstain_rather_than_guess():
-    """BOND_LESSON leans on subgroup/coset with no 'recall'-style phrase.
-    The checker reports nothing rather than inferring -- and that is the
-    known limitation tracked by teach-20c: a lesson that silently assumes
-    a prerequisite is indistinguishable here from one that assumes none."""
+def test_unsignposted_prerequisites_flagged_as_own_category():
+    """BOND_LESSON leans on subgroup/coset vocabulary throughout with no
+    'recall'-style phrase anywhere. teach-20c: this must not land in
+    assumed_prerequisite_ids (no signpost -- that field requires one), but
+    it must also not collapse into the same empty result a lesson that
+    assumes nothing would produce. It is a third, distinct outcome:
+    unsignposted use of a direct prerequisite's distinctive vocabulary."""
     result = recover_from_lesson_text(BOND_LESSON, load_dummit_foote_graph())
     assert result.assumed_prerequisite_ids == ()
+    assert result.unsignposted_prerequisite_ids == ("dummit-foote:3.1-cosets",)
+
+
+def test_no_signal_at_all_is_still_distinct_from_unsignposted_use():
+    """The other half of teach-20c's split: a lesson that teaches Lagrange
+    using the theorem's own vocabulary (order, index, divides, finite,
+    blocks) without leaning on coset-specific words at all gets empty
+    results on *both* fields -- genuinely no recoverable signal, not
+    silent-but-detectable use of the prerequisite. Contrast with
+    test_unsignposted_prerequisites_flagged_as_own_category, whose BOND_LESSON
+    fixture actually uses coset vocabulary and must NOT abstain the same
+    way."""
+    text = (
+        "This is Lagrange theorem. For any finite group, the order of a "
+        "certain part always divides the total order of the group. That "
+        "part cuts the group into blocks of equal size, and the number of "
+        "blocks is called the index. This is what the proof establishes."
+    )
+    result = recover_from_lesson_text(text, load_dummit_foote_graph())
+    assert result.taught_node_id == TARGET_NODE_ID
+    assert result.assumed_prerequisite_ids == ()
+    assert result.unsignposted_prerequisite_ids == ()
 
 
 def test_signposted_prerequisites_are_recovered():
     result = recover_from_lesson_text(SIGNPOSTED_LESSON, load_dummit_foote_graph())
     assert result.taught_node_id == TARGET_NODE_ID
     assert "dummit-foote:3.1-cosets" in result.assumed_prerequisite_ids
+    # Signposted, so it must not also be reported as unsignposted -- the two
+    # categories are mutually exclusive per node (teach-20c).
+    assert result.unsignposted_prerequisite_ids == ()

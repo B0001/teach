@@ -18,6 +18,7 @@ from teach.concept_recovery import (
     build_vocabulary_index,
     recover_assumed_prerequisites,
     recover_from_lesson_text,
+    recover_unsignposted_prerequisites,
 )
 from teach.va_math_sol_graph import load_va_math_sol_graph
 
@@ -180,6 +181,117 @@ def test_only_direct_prerequisite_edges_are_considered():
     assert result.taught_node_id == "c"
     # "a" is only a prerequisite of "b", not of "c" -- must not appear here.
     assert result.assumed_prerequisite_ids == ()
+
+
+def test_unsignposted_prerequisite_use_is_flagged_without_a_signal_phrase():
+    """teach-20c: a lesson that leans on enough of a direct prerequisite's
+    distinctive vocabulary to be leaning on it, with no 'you already
+    know'-style phrase anywhere, must be reported as unsignposted use --
+    not silently collapsed into the same empty result as a lesson that
+    assumes nothing."""
+    graph = ConceptGraph(
+        nodes=(
+            ConceptNode(id="a", domain="math", label="Node A",
+                        facts={"detail": "zebras xylophones quicksand mongoose"}),
+            ConceptNode(id="b", domain="math", label="Node B",
+                        facts={"detail": "walruses yardsticks umbrellas trombones bicycles"}),
+        ),
+        edges=(PrerequisiteEdge(src="a", dst="b"),),
+    )
+    # "b" (taught) matches all 5 of its own words; "a" (direct prerequisite)
+    # matches only 3 of its 4 -- enough to clear both the unsignposted bar
+    # (>= 3) and the taught-concept margin bar (5 - 3 >= 2) without a tie.
+    text = (
+        "Today we cover walruses, yardsticks, umbrellas, trombones, and "
+        "bicycles, plus some zebras, xylophones, and quicksand along the "
+        "way for flavor."
+    )
+    index = build_vocabulary_index(graph)
+    result = recover_from_lesson_text(text, graph)
+    assert result.taught_node_id == "b"
+    assert result.assumed_prerequisite_ids == ()
+    assert result.unsignposted_prerequisite_ids == ("a",)
+    # And the underlying function agrees when called directly.
+    assert recover_unsignposted_prerequisites(text, index, "b", ()) == ("a",)
+
+
+def test_unsignposted_and_assumed_are_mutually_exclusive():
+    """A prerequisite the text explicitly signposts must not ALSO show up
+    as unsignposted -- the two fields partition the direct prerequisites,
+    they don't overlap."""
+    graph = ConceptGraph(
+        nodes=(
+            ConceptNode(id="a", domain="math", label="Node A",
+                        facts={"detail": "zebras xylophones quicksand mongoose"}),
+            ConceptNode(id="b", domain="math", label="Node B",
+                        facts={"detail": "walruses yardsticks umbrellas trombones bicycles"}),
+        ),
+        edges=(PrerequisiteEdge(src="a", dst="b"),),
+    )
+    text = (
+        "You already know about zebras, xylophones, and quicksand. Today we "
+        "cover walruses, yardsticks, umbrellas, trombones, and bicycles."
+    )
+    result = recover_from_lesson_text(text, graph)
+    assert result.taught_node_id == "b"
+    assert result.assumed_prerequisite_ids == ("a",)
+    assert result.unsignposted_prerequisite_ids == ()
+
+
+def test_unsignposted_detection_only_considers_direct_prerequisites():
+    """Same discipline as `recover_assumed_prerequisites`: a grandparent
+    node (two edges away) must never be flagged as unsignposted, even if
+    the text happens to share plenty of its distinctive vocabulary."""
+    graph = ConceptGraph(
+        nodes=(
+            ConceptNode(id="a", domain="math", label="Node A",
+                        facts={"detail": "zebras xylophones quicksand mongoose"}),
+            ConceptNode(id="b", domain="math", label="Node B",
+                        facts={"detail": "walruses yardsticks"}),
+            ConceptNode(id="c", domain="math", label="Node C",
+                        facts={"detail": "umbrellas trombones bicycles accordions saxophones"}),
+        ),
+        edges=(
+            PrerequisiteEdge(src="a", dst="b"),
+            PrerequisiteEdge(src="b", dst="c"),
+        ),
+    )
+    # "c" (taught) matches all 5 of its own words; "a" (grandparent, not a
+    # direct prerequisite of "c") matches only 3 of its 4 -- enough to clear
+    # the unsignposted overlap bar on its own, and enough margin (5 - 3 >= 2)
+    # that concept identification isn't itself ambiguous.
+    text = (
+        "Today we cover umbrellas, trombones, bicycles, accordions, and "
+        "saxophones -- plus zebras, xylophones, and quicksand for good "
+        "measure."
+    )
+    result = recover_from_lesson_text(text, graph)
+    assert result.taught_node_id == "c"
+    # "a" is a grandparent of "c", not a direct prerequisite -- must not
+    # appear even though the text shares 3 of its 4 distinctive words.
+    assert result.unsignposted_prerequisite_ids == ()
+
+
+def test_unsignposted_detection_requires_the_same_overlap_bar_as_recovery():
+    """A stray word or two from a prerequisite's vocabulary is not enough
+    to call it unsignposted use -- same abstention discipline as everywhere
+    else in this module. Below the match-word threshold, silence."""
+    graph = ConceptGraph(
+        nodes=(
+            ConceptNode(id="a", domain="math", label="Node A",
+                        facts={"detail": "zebras xylophones quicksand mongoose"}),
+            ConceptNode(id="b", domain="math", label="Node B",
+                        facts={"detail": "walruses yardsticks umbrellas trombones bicycles"}),
+        ),
+        edges=(PrerequisiteEdge(src="a", dst="b"),),
+    )
+    text = (
+        "Today we cover walruses, yardsticks, umbrellas, trombones, and "
+        "bicycles. A zebra wandered by once, too."
+    )
+    result = recover_from_lesson_text(text, graph)
+    assert result.taught_node_id == "b"
+    assert result.unsignposted_prerequisite_ids == ()
 
 
 def test_build_vocabulary_index_filters_boilerplate_words():

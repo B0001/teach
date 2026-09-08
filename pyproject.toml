@@ -17,6 +17,11 @@ testpaths = ["tests"]
 # the repo is driven by, not a library the repo uses. Only what genuinely
 # differs per repo belongs here; see that package's README for every key.
 [tool.sandbox]
+# teach-8xw.17 needs a real HuggingFace credential and a live dataset repo.
+# No worker session has one, and the worker correctly refused to fabricate a
+# push result -- so stop dispatching it rather than burning an attempt.
+park = ["teach-8xw.17"]
+
 # narrator is a sibling repo on the host, not a package on any index. Two
 # worker sessions burned searching GitHub/PyPI for it before it was mounted.
 # Read-only: workers read its story-generation machinery, never edit it.

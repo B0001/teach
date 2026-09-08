@@ -43,13 +43,27 @@ would quietly start lying:
               (|H| divides |G|) needs subgroups and cosets, not generators.
               Omitted -- this is the edge most likely to be wrongly asserted
               from memory of the chapter order.
+  1.6 -> 2.1  teach-25o: chapter 1 (homomorphisms, 1.6) prints before chapter
+              2 (subgroups, 2.1). The subgroup criterion never mentions a map
+              between groups; a reader who has never seen a homomorphism can
+              still state it. Omitted.
+  3.2 -> 3.3  teach-25o: 3.2 (Lagrange) immediately precedes 3.3 (isomorphism
+              theorems) and some courses use Lagrange to prove corollaries of
+              the isomorphism theorems. But the First Isomorphism Theorem's
+              own statement needs a homomorphism, its kernel, and a quotient
+              group -- not "|H| divides |G|". Omitted for the same reason as
+              2.3 -> 3.2: proof order is not definitional need.
 
-The self-check below asserts these four stay absent, so a later well-meaning
+The self-check below asserts these six stay absent, so a later well-meaning
 edit that "completes" the chain fails loudly instead of silently widening
 what this graph claims.
 
 Target node is 3.2 (Lagrange), chosen to line up with `teach.math_facts`,
 whose two verified SourceFacts are D&F 3.2 Proposition 7 and 3.2 Theorem 8.
+teach-25o added 1.6 (homomorphisms) and 3.3 (isomorphism theorems) past that
+target so Proposition 7 (kernel of a homomorphism is normal in the domain) is
+reachable from a traversal; 3.2 remains the target used by teach-8xw.15's
+acceptance test.
 """
 from __future__ import annotations
 
@@ -153,6 +167,26 @@ _NODES = (
         },
     ),
     ConceptNode(
+        id="dummit-foote:1.6-homomorphisms",
+        domain=DOMAIN,
+        label="Group Homomorphisms and Isomorphisms",
+        standard_ref="Dummit & Foote, 3rd ed., section 1.6",
+        facts={
+            "section": "1.6",
+            "key_terms": ("homomorphism", "isomorphism", "isomorphic",
+                          "kernel", "image", "structure preserving",
+                          "well defined map"),
+            "definition": (
+                "A homomorphism phi from a group G to a group G prime is a "
+                "map satisfying phi(xy) = phi(x)phi(y) for all x, y in G. "
+                "It is an isomorphism when phi is also a bijection, in which "
+                "case G and G prime are called isomorphic. The kernel of "
+                "phi is the set of elements of G mapped to the identity of "
+                "G prime."
+            ),
+        },
+    ),
+    ConceptNode(
         id="dummit-foote:2.1-subgroups",
         domain=DOMAIN,
         label="Subgroups and the Subgroup Criterion",
@@ -203,7 +237,6 @@ _NODES = (
                 "inverse equals H, which is exactly the condition making the "
                 "cosets into a quotient group."
             ),
-            "fact_topics": ("kernel-normal-subgroup",),
         },
     ),
     ConceptNode(
@@ -225,6 +258,24 @@ _NODES = (
             "fact_topics": ("lagrange-order-divides",),
         },
     ),
+    ConceptNode(
+        id="dummit-foote:3.3-isomorphism-theorems",
+        domain=DOMAIN,
+        label="The Isomorphism Theorems",
+        standard_ref="Dummit & Foote, 3rd ed., section 3.3",
+        facts={
+            "section": "3.3",
+            "key_terms": ("isomorphism theorem", "first isomorphism theorem",
+                          "natural map", "correspondence", "kernel", "image"),
+            "definition": (
+                "The First Isomorphism Theorem: if phi is a homomorphism "
+                "from G to G prime, then the kernel of phi is normal in G, "
+                "and the quotient group G modulo the kernel is isomorphic "
+                "to the image of phi."
+            ),
+            "fact_topics": ("kernel-normal-subgroup",),
+        },
+    ),
 )
 
 # Content dependencies only -- see EDGE PROVENANCE. Kept as a transitive
@@ -241,6 +292,10 @@ _EDGES = (
                      "dummit-foote:1.3-symmetric-groups"),
     PrerequisiteEdge("dummit-foote:1.1-groups",
                      "dummit-foote:1.3-symmetric-groups"),
+    PrerequisiteEdge("dummit-foote:0.1-sets-and-functions",
+                     "dummit-foote:1.6-homomorphisms"),
+    PrerequisiteEdge("dummit-foote:1.1-groups",
+                     "dummit-foote:1.6-homomorphisms"),
     PrerequisiteEdge("dummit-foote:1.1-groups",
                      "dummit-foote:2.1-subgroups"),
     PrerequisiteEdge("dummit-foote:2.1-subgroups",
@@ -249,6 +304,10 @@ _EDGES = (
                      "dummit-foote:3.1-cosets"),
     PrerequisiteEdge("dummit-foote:3.1-cosets",
                      TARGET_NODE_ID),
+    PrerequisiteEdge("dummit-foote:1.6-homomorphisms",
+                     "dummit-foote:3.3-isomorphism-theorems"),
+    PrerequisiteEdge("dummit-foote:3.1-cosets",
+                     "dummit-foote:3.3-isomorphism-theorems"),
 )
 
 # Asserted absent by the self-check and by tests. See EDGES DELIBERATELY NOT
@@ -259,6 +318,18 @@ NON_EDGES = (
     ("dummit-foote:0.1-sets-and-functions", "dummit-foote:0.2-integers"),
     ("dummit-foote:2.3-cyclic-groups", TARGET_NODE_ID),
     ("dummit-foote:1.3-symmetric-groups", TARGET_NODE_ID),
+    # teach-25o: 1.6 (chapter 1) prints before 2.1 (chapter 2), which reads
+    # as an ordering claim. But the subgroup criterion ("a nonempty subset
+    # closed under the operation and inverses") never mentions a map between
+    # groups; a reader who has never seen a homomorphism can still state it.
+    ("dummit-foote:1.6-homomorphisms", "dummit-foote:2.1-subgroups"),
+    # teach-25o: 3.2 immediately precedes 3.3 in the book and Lagrange is
+    # used to prove corollaries of the isomorphism theorems in some courses,
+    # but the First Isomorphism Theorem's own statement (G/ker(phi) is
+    # isomorphic to the image) needs a homomorphism, its kernel, and a
+    # quotient group -- not "|H| divides |G|". Omitted for the same reason
+    # 2.3 -> 3.2 is omitted above: proof order is not definitional need.
+    (TARGET_NODE_ID, "dummit-foote:3.3-isomorphism-theorems"),
 )
 
 
@@ -293,13 +364,13 @@ def prerequisite_closure(graph: ConceptGraph, node_id: str) -> frozenset[str]:
 
 def _self_check() -> None:
     graph = load_dummit_foote_graph()
-    assert len(graph.nodes) == 9, len(graph.nodes)
-    assert len(graph.edges) == 9, len(graph.edges)
+    assert len(graph.nodes) == 11, len(graph.nodes)
+    assert len(graph.edges) == 13, len(graph.edges)
 
     # Structure: validate() already ran inside the loader, so a cycle or a
     # dangling endpoint would have raised before reaching here.
     order = graph.topological_order()
-    assert len(order) == 9
+    assert len(order) == 11
 
     # The chain actually orders the way the mathematics does.
     position = {node_id: i for i, node_id in enumerate(order)}
@@ -308,6 +379,10 @@ def _self_check() -> None:
         ("dummit-foote:1.1-groups", "dummit-foote:2.1-subgroups"),
         ("dummit-foote:2.1-subgroups", "dummit-foote:3.1-cosets"),
         ("dummit-foote:3.1-cosets", TARGET_NODE_ID),
+        ("dummit-foote:0.1-sets-and-functions", "dummit-foote:1.6-homomorphisms"),
+        ("dummit-foote:1.1-groups", "dummit-foote:1.6-homomorphisms"),
+        ("dummit-foote:1.6-homomorphisms", "dummit-foote:3.3-isomorphism-theorems"),
+        ("dummit-foote:3.1-cosets", "dummit-foote:3.3-isomorphism-theorems"),
     ):
         assert position[earlier] < position[later], (earlier, later)
 
@@ -320,6 +395,19 @@ def _self_check() -> None:
         "dummit-foote:0.1-sets-and-functions",
     }, sorted(closure)
 
+    # The isomorphism theorems depend on homomorphisms/kernels and on
+    # quotient groups (via cosets/normal subgroups) -- not on Lagrange, and
+    # not on the cyclic/symmetric-group side branches.
+    iso_closure = prerequisite_closure(graph, "dummit-foote:3.3-isomorphism-theorems")
+    assert iso_closure == {
+        "dummit-foote:1.6-homomorphisms",
+        "dummit-foote:3.1-cosets",
+        "dummit-foote:2.1-subgroups",
+        "dummit-foote:1.1-groups",
+        "dummit-foote:0.1-sets-and-functions",
+    }, sorted(iso_closure)
+    assert TARGET_NODE_ID not in iso_closure
+
     # The deliberate omissions stay omitted. This is the assertion that fails
     # if someone later "completes" the graph from chapter order.
     present = {(e.src, e.dst) for e in graph.edges}
@@ -328,6 +416,12 @@ def _self_check() -> None:
     # Cyclic groups and symmetric groups are genuinely off the Lagrange path.
     assert "dummit-foote:2.3-cyclic-groups" not in closure
     assert "dummit-foote:1.3-symmetric-groups" not in closure
+
+    # teach-25o: Proposition 7 (kernel of a homomorphism is normal in the
+    # domain) is now reachable -- it requires both 1.6 (kernel) and 3.1
+    # (normal subgroup), and 3.3 is where the graph states it.
+    assert "dummit-foote:1.6-homomorphisms" in iso_closure
+    assert "dummit-foote:3.1-cosets" in iso_closure
 
     # The two nodes carrying fact_topics match teach.math_facts' real topics.
     topics = {t for n in graph.nodes for t in n.facts.get("fact_topics", ())}

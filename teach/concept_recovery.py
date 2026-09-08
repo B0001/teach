@@ -98,6 +98,13 @@ _MIN_MARGIN = 2
 # curriculum boilerplate, not a discriminating signal -- excluded from
 # scoring entirely. See module docstring.
 _MAX_DOCUMENT_FREQ = 4
+# A direct prerequisite is reported as UNSIGNPOSTED USE (teach-20c) when the
+# lesson text as a whole shares at least this many distinctive words with
+# that prerequisite's vocabulary and no "assumed known" phrase covers it.
+# Same bar as _MIN_MATCH_WORDS: the claim "this text is meaningfully about
+# that node's content" should take the same amount of evidence whether the
+# node is the one being taught or one being silently leaned on.
+_MIN_UNSIGNPOSTED_MATCH_WORDS = _MIN_MATCH_WORDS
 
 _ASSUMED_KNOWN_PATTERNS = (
     re.compile(r"\byou (already|previously) (know|learned|learnt)\b", re.IGNORECASE),
@@ -202,12 +209,27 @@ class RecoveryResult:
     vocabulary matched well enough, or two or more candidates were too
     close to call. It is NOT the same thing as "the graph has no node for
     this" (this checker cannot tell those apart, and does not claim to).
+
+    Prerequisite recovery has three distinct outcomes, not two (teach-20c).
+    For a given direct prerequisite of `taught_node_id`, it is either:
+
+      - in `assumed_prerequisite_ids`: the text both signals *something* as
+        already known and that signal co-occurs with this node's vocabulary.
+      - in `unsignposted_prerequisite_ids`: the text leans on enough of this
+        node's distinctive vocabulary to say the lesson assumes it, but no
+        "you already know"-style phrase covers it anywhere. This is the
+        unannounced-assumed-knowledge case -- the one that actually costs a
+        learner, because they get lost without being told why.
+      - in neither: this checker found no recoverable signal that the text
+        assumes this prerequisite at all. That is still not proof the lesson
+        assumed nothing -- only that neither detector above fired.
     """
 
     taught_node_id: str | None
     candidates: tuple[ConceptMatch, ...]
     abstain_reason: str | None
     assumed_prerequisite_ids: tuple[str, ...]
+    unsignposted_prerequisite_ids: tuple[str, ...]
 
 
 def recover_taught_concept(text: str, index: VocabularyIndex) -> tuple[str | None, tuple[ConceptMatch, ...], str | None]:
@@ -261,6 +283,41 @@ def recover_assumed_prerequisites(text: str, index: VocabularyIndex, taught_node
     return tuple(assumed)
 
 
+def recover_unsignposted_prerequisites(
+    text: str,
+    index: VocabularyIndex,
+    taught_node_id: str,
+    assumed_prerequisite_ids: tuple[str, ...],
+) -> tuple[str, ...]:
+    """Direct-prerequisite nodes of `taught_node_id` whose distinctive
+    vocabulary this text leans on WITHOUT any "you already know"-style
+    signal marking it as established -- teach-20c's third outcome, distinct
+    from both `assumed_prerequisite_ids` (signposted) and "no signal at all"
+    (empty on both). See `RecoveryResult`'s docstring for the three-way
+    split.
+
+    A node already in `assumed_prerequisite_ids` is excluded here -- it is
+    signposted, so it is not also unsignposted. Otherwise the bar is the
+    same overlap discipline as concept identification itself: at least
+    `_MIN_UNSIGNPOSTED_MATCH_WORDS` of that node's distinctive words have to
+    appear anywhere in the text, not just near a signal phrase, because
+    there is no signal phrase to anchor to -- that is exactly what makes
+    this case silent.
+    """
+    prereq_ids = tuple(
+        edge.src for edge in index.graph.edges if edge.dst == taught_node_id
+    )
+    text_words = _words(text)
+    unsignposted = []
+    for prereq_id in prereq_ids:
+        if prereq_id in assumed_prerequisite_ids:
+            continue
+        overlap = index.node_words(prereq_id) & text_words
+        if len(overlap) >= _MIN_UNSIGNPOSTED_MATCH_WORDS:
+            unsignposted.append(prereq_id)
+    return tuple(unsignposted)
+
+
 def recover_from_lesson_text(text: str, graph: ConceptGraph) -> RecoveryResult:
     """The checker entry point: lesson text and the domain's ConceptGraph
     (the fixed vocabulary; NOT the planner's traversal for this specific
@@ -273,11 +330,17 @@ def recover_from_lesson_text(text: str, graph: ConceptGraph) -> RecoveryResult:
         if taught_node_id is not None
         else ()
     )
+    unsignposted = (
+        recover_unsignposted_prerequisites(text, index, taught_node_id, assumed)
+        if taught_node_id is not None
+        else ()
+    )
     return RecoveryResult(
         taught_node_id=taught_node_id,
         candidates=candidates,
         abstain_reason=abstain_reason,
         assumed_prerequisite_ids=assumed,
+        unsignposted_prerequisite_ids=unsignposted,
     )
 
 

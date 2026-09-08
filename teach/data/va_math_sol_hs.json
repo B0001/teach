@@ -1,0 +1,850 @@
+{
+  "schema": "va-math-sol-hs-course-groupings-v1",
+  "source": {
+    "standard_text_provider": "Learning Commons (learningcommons.org), Knowledge Graph v1.13.0",
+    "standard_text_author": "Virginia Department of Education",
+    "standard_text_license": "https://creativecommons.org/licenses/by/4.0/",
+    "standard_text_attribution": "Knowledge Graph is provided by Learning Commons under the CC BY-4.0 license. Virginia Mathematics standards provided by the Virginia Department of Education available at https://www.doe.virginia.gov/home/showpublisheddocument/48908/638603404953130000.",
+    "standard_text_retrieved_via": "https://cdn.learningcommons.org/knowledge-graph/v1.13.0/exports/{nodes,relationships}.jsonl",
+    "course_sequence_document": "Mathematics Standards of Learning for Virginia Public Schools, adopted August 2023, Virginia Board of Education (VDOE).",
+    "course_sequence_document_note": "doe.virginia.gov returns 403 to direct bot traffic (Akamai block, confirmed live in this session -- same finding as teach-8xw.2/.5). The document was retrieved via the Wayback Machine, which DOES hold live snapshots of this exact document at this exact showpublisheddocument/48908/<id> URL family across multiple capture dates 2023-2026 -- contradicting teach-8xw.2's and teach-8xw.5's finding of 'zero archived snapshots' for VDOE crosswalk/sequence pages. That prior finding was accurate for the specific speculative crosswalk URL those sessions tried (which does not exist), not for this document, which they did not indepedently CDX-search for by its own attributionStatement URL.",
+    "course_sequence_document_retrieved_via": "https://web.archive.org/web/20260416041407/https://www.doe.virginia.gov/home/showpublisheddocument/48908/638741650017470000",
+    "course_sequence_document_pdf_sha256_note": "1254006 bytes retrieved 2026-09-08; page count 115; each course_prerequisites[].source_quote below is copied verbatim (pypdf text extraction, whitespace-normalized) from that course's introductory paragraph in this PDF."
+  },
+  "courses": {
+    "A": "Algebra 1",
+    "G": "Geometry",
+    "AFDA": "Algebra, Functions, and Data Analysis",
+    "A2": "Algebra 2",
+    "T": "Trigonometry",
+    "CM": "Computer Mathematics",
+    "PS": "Probability and Statistics",
+    "DM": "Discrete Mathematics",
+    "MA": "Mathematical Analysis"
+  },
+  "course_prerequisites": [
+    {
+      "src_course": "A",
+      "dst_course": "G",
+      "source_quote": "Geometry is a course designed for students who have successfully completed the Standards for Algebra 1."
+    },
+    {
+      "src_course": "A",
+      "dst_course": "AFDA",
+      "source_quote": "Algebra, Functions, and Data Analysis is a course designed for students who have successfully completed the Standards for Algebra 1 and may benefit from additional support in their transition to Algebra 2."
+    },
+    {
+      "src_course": "A",
+      "dst_course": "A2",
+      "source_quote": "Students enrolled in Algebra 2 are assumed to have mastered the concepts outlined in the Algebra 1 Standards."
+    },
+    {
+      "src_course": "A",
+      "dst_course": "CM",
+      "source_quote": "Students enrolled in Computer Mathematics are assumed to have studied the concepts and skills in Algebra 1 and beginning Geometry."
+    },
+    {
+      "src_course": "G",
+      "dst_course": "CM",
+      "source_quote": "Students enrolled in Computer Mathematics are assumed to have studied the concepts and skills in Algebra 1 and beginning Geometry."
+    },
+    {
+      "src_course": "G",
+      "dst_course": "MA",
+      "source_quote": "Students enrolled in Mathematical Analysis are assumed to have mastered Geometry and Algebra 2 concepts."
+    },
+    {
+      "src_course": "A2",
+      "dst_course": "MA",
+      "source_quote": "Students enrolled in Mathematical Analysis are assumed to have mastered Geometry and Algebra 2 concepts."
+    }
+  ],
+  "groupings": [
+    {
+      "id": "va-math-sol:A.EI",
+      "statement_code": "A.EI",
+      "course_code": "A",
+      "course_name": "Algebra 1",
+      "strand_description": "Equations and Inequalities",
+      "case_identifier_uuid": "3aeb2cdf-f341-4f63-bb4e-9ba2368ca7da",
+      "leaf_standards": [
+        {
+          "statement_code": "A.EI.1",
+          "description": "The student will represent, solve, explain, and interpret the solution to multistep linear equations and inequalities in one variable and literal equations for a specified variable. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A.EI.2",
+          "description": "The student will represent, solve, explain, and interpret the solution to a system of two linear equations, a linear inequality in two variables, or a system of two linear inequalities in two variables. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A.EI.3",
+          "description": "The student will represent, solve, and interpret the solution to a quadratic equation in one variable. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:A.EO",
+      "statement_code": "A.EO",
+      "course_code": "A",
+      "course_name": "Algebra 1",
+      "strand_description": "Expressions and Operations",
+      "case_identifier_uuid": "cefb3617-2fbe-4769-b345-d3e430d75c15",
+      "leaf_standards": [
+        {
+          "statement_code": "A.EO.1",
+          "description": "The student will represent verbal quantitative situations algebraically and evaluate these expressions for given replacement values of the variables. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A.EO.2",
+          "description": "The student will perform operations on and factor polynomial expressions in one variable. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A.EO.3",
+          "description": "The student will derive and apply the laws of exponents. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A.EO.4",
+          "description": "The student will simplify and determine equivalent radical expressions involving square roots of whole numbers and cube roots of integers. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:A.F",
+      "statement_code": "A.F",
+      "course_code": "A",
+      "course_name": "Algebra 1",
+      "strand_description": "Functions",
+      "case_identifier_uuid": "4231ee43-7b9b-4e86-80b5-ad45eba11836",
+      "leaf_standards": [
+        {
+          "statement_code": "A.F.1",
+          "description": "The student will investigate, analyze, and compare linear functions algebraically and graphically, and model linear relationships. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A.F.2",
+          "description": "The student will investigate, analyze, and compare characteristics of functions, including quadratic, and exponential functions, and model quadratic and exponential relationships. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:A.ST",
+      "statement_code": "A.ST",
+      "course_code": "A",
+      "course_name": "Algebra 1",
+      "strand_description": "Statistics",
+      "case_identifier_uuid": "dc73512a-25c1-4d69-b7e3-2dff32aa0a8f",
+      "leaf_standards": [
+        {
+          "statement_code": "A.ST.1",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on representing bivariate data in scatterplots and determining the curve of best fit using linear and quadratic functions. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:A2.EI",
+      "statement_code": "A2.EI",
+      "course_code": "A2",
+      "course_name": "Algebra 2",
+      "strand_description": "Equations and Inequalities",
+      "case_identifier_uuid": "476c12db-a1d5-4f79-98f9-dc6eb253a4ce",
+      "leaf_standards": [
+        {
+          "statement_code": "A2.EI.1",
+          "description": "The student will represent, solve, and interpret the solution to absolute value equations and inequalities in one variable. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.EI.2",
+          "description": "The student will represent, solve, and interpret the solution to quadratic equations in one variable over the set of complex numbers and solve quadratic inequalities in one variable. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.EI.3",
+          "description": "The student will solve a system of equations in two variables containing a quadratic expression."
+        },
+        {
+          "statement_code": "A2.EI.4",
+          "description": "The student will represent, solve, and interpret the solution to an equation containing rational algebraic expressions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.EI.5",
+          "description": "The student will represent, solve, and interpret the solution to an equation containing a radical expression. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.EI.6",
+          "description": "The student will represent, solve, and interpret the solution to a polynomial equation. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:A2.EO",
+      "statement_code": "A2.EO",
+      "course_code": "A2",
+      "course_name": "Algebra 2",
+      "strand_description": "Expressions and Operations",
+      "case_identifier_uuid": "f5a2e98b-4105-421e-af63-2a021544ae16",
+      "leaf_standards": [
+        {
+          "statement_code": "A2.EO.1",
+          "description": "The student will perform operations on and simplify rational expressions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.EO.2",
+          "description": "The student will perform operations on and simplify radical expressions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.EO.3",
+          "description": "The student will perform operations on polynomial expressions and factor polynomial expressions in one and two variables. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.EO.4",
+          "description": "The student will perform operations on complex numbers. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:A2.F",
+      "statement_code": "A2.F",
+      "course_code": "A2",
+      "course_name": "Algebra 2",
+      "strand_description": "Functions",
+      "case_identifier_uuid": "d0239d5d-f2a5-4c6c-8cb5-9fd74b8c369d",
+      "leaf_standards": [
+        {
+          "statement_code": "A2.F.1",
+          "description": "The student will investigate, analyze, and compare square root, cube root, rational, exponential, and logarithmic function families, algebraically and graphically, using transformations. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.F.2",
+          "description": "The student will investigate and analyze characteristics of square root, cube root, rational, polynomial, exponential, logarithmic, and piecewise-defined functions algebraically and graphically. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:A2.ST",
+      "statement_code": "A2.ST",
+      "course_code": "A2",
+      "course_name": "Algebra 2",
+      "strand_description": "Statistics",
+      "case_identifier_uuid": "b1f5f6c9-93a9-45e3-a803-cb9ee9046e09",
+      "leaf_standards": [
+        {
+          "statement_code": "A2.ST.1",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on univariate quantitative data represented by a smooth curve, including a normal curve. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.ST.2",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on representing bivariate data in scatterplots and determining the curve of best fit using linear, quadratic, exponential, or a combination of these functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "A2.ST.3",
+          "description": "The student will compute and distinguish between permutations and combinations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:AFDA.AF",
+      "statement_code": "AFDA.AF",
+      "course_code": "AFDA",
+      "course_name": "Algebra, Functions, and Data Analysis",
+      "strand_description": "Algebra and Functions",
+      "case_identifier_uuid": "ea1251c9-3d5b-4733-be5e-0fa5c0106bf6",
+      "leaf_standards": [
+        {
+          "statement_code": "AFDA.AF.1",
+          "description": "The student will investigate, analyze, and compare linear, quadratic, and exponential function families, algebraically and graphically, using transformations. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "AFDA.AF.2",
+          "description": "The student will investigate and analyze characteristics of the graphs of linear, quadratic, exponential, and piecewise-defined functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "AFDA.AF.3",
+          "description": "The student will represent and interpret contextual situations with constraints that require optimization using linear programming techniques, including systems of linear equations or inequalities, solving graphically and when appropriate, algebraically. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:AFDA.DA",
+      "statement_code": "AFDA.DA",
+      "course_code": "AFDA",
+      "course_name": "Algebra, Functions, and Data Analysis",
+      "strand_description": "Data Analysis",
+      "case_identifier_uuid": "c612ad71-041d-44cf-994e-75f37e2aa503",
+      "leaf_standards": [
+        {
+          "statement_code": "AFDA.DA.1",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on representing bivariate data in scatterplots and determining the curve of best fit using linear, quadratic, and exponential functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "AFDA.DA.2",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on the design and implementation of an experiment and/or observational study. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "AFDA.DA.3",
+          "description": "The student will calculate and interpret probabilities, including those in contextual situations. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "AFDA.DA.4",
+          "description": "The student will describe and apply the properties of normal distribution, including those in contextual situations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:CM.AP",
+      "statement_code": "CM.AP",
+      "course_code": "CM",
+      "course_name": "Computer Mathematics",
+      "strand_description": "Applications of Programming",
+      "case_identifier_uuid": "a2e2f779-4999-481c-930d-5bcf97432418",
+      "leaf_standards": [
+        {
+          "statement_code": "CM.AP.1",
+          "description": "The student will write and implement programs using sequencing, selection, and iteration to perform a specific task or solve a problem, including those arising from mathematical and interdisciplinary contexts. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.AP.2",
+          "description": "The student will create documentation using written comments to annotate the intended purpose of the components of a user-created program. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.AP.3",
+          "description": "The student will verify how programs access and process variables. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.AP.4",
+          "description": "The student will translate a mathematical expression or statement into computer code. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.AP.5",
+          "description": "The student will trace existing code to interpret the intended purpose. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:CM.CP",
+      "statement_code": "CM.CP",
+      "course_code": "CM",
+      "course_name": "Computer Mathematics",
+      "strand_description": "Components of Programming",
+      "case_identifier_uuid": "70337016-7a9d-4a48-9af3-a5d3cf813c73",
+      "leaf_standards": [
+        {
+          "statement_code": "CM.CP.1",
+          "description": "The student will design a step-by-step plan to perform a task or solve a problem, including those arising from mathematical or interdisciplinary contexts. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.CP.2",
+          "description": "The student will construct Boolean expressions and implement conditional statements. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.CP.3",
+          "description": "The student will perform iteration with loops. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.CP.4",
+          "description": "The student will write and implement the output phase of a computer program. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.CP.5",
+          "description": "The student will write and implement the input phase of a computer program. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.CP.6",
+          "description": "The student will implement library functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.CP.7",
+          "description": "The student will write and implement user-defined functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.CP.8",
+          "description": "The student will implement pre-defined algorithms, including search routines and sort routines. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:CM.DRS",
+      "statement_code": "CM.DRS",
+      "course_code": "CM",
+      "course_name": "Computer Mathematics",
+      "strand_description": "Data Representation and Storage",
+      "case_identifier_uuid": "d21e774c-12d7-4dc1-af30-269aa91e2f0f",
+      "leaf_standards": [
+        {
+          "statement_code": "CM.DRS.1",
+          "description": "The student will represent data and convert data between different number systems. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.DRS.2",
+          "description": "The student will differentiate between variable data types based upon their characteristics. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.DRS.3",
+          "description": "The student will represent data using appropriate data structures. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:CM.EP",
+      "statement_code": "CM.EP",
+      "course_code": "CM",
+      "course_name": "Computer Mathematics",
+      "strand_description": "Evaluation of Programming",
+      "case_identifier_uuid": "922902ff-775a-4a3b-b4f5-be3e2b81db90",
+      "leaf_standards": [
+        {
+          "statement_code": "CM.EP.1",
+          "description": "The student will test a program to match a sample output, using a set of data. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.EP.2",
+          "description": "The student will identify errors and debug a program using various techniques. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "CM.EP.3",
+          "description": "The student will compare and contrast the efficiency of computer programs. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:DM.CM",
+      "statement_code": "DM.CM",
+      "course_code": "DM",
+      "course_name": "Discrete Mathematics",
+      "strand_description": "Computational Methods",
+      "case_identifier_uuid": "5230e9ad-554c-43e8-acc2-697360fcf2ab",
+      "leaf_standards": [
+        {
+          "statement_code": "DM.CM.1†",
+          "description": "The student will describe and apply sorting and searching algorithms used in processing and communicating information. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.CM.2†",
+          "description": "The student will use recursive processes. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.CM.3",
+          "description": "The student will identify and apply cryptographic methods. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.CM.4",
+          "description": "The student will analyze the limitations of algorithms and their contextual relationships in computing. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:DM.GT",
+      "statement_code": "DM.GT",
+      "course_code": "DM",
+      "course_name": "Discrete Mathematics",
+      "strand_description": "Graph Theory",
+      "case_identifier_uuid": "ace6071e-ff6b-4fe3-b8ab-1821ed4c32b5",
+      "leaf_standards": [
+        {
+          "statement_code": "DM.GT.1†",
+          "description": "The student will represent problems using vertex-edge graphs. The concepts of degree, connectedness, paths, planarity, and directed graphs will be analyzed. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.GT.2†",
+          "description": "The student will solve problems through analysis and application of circuits, cycles, Euler paths, Euler circuits, Hamilton paths, and Hamilton circuits. Optimal solutions will be determined using existing algorithms and student-created algorithms. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.GT.3†",
+          "description": "The student will apply graphs to conflict-resolution problems, such as graph coloring, scheduling, matching, and optimization. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.GT.4",
+          "description": "The student will recognize and apply algorithms to solve configuration, conflictresolution, and sorting problems. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.GT.5",
+          "description": "The student will use algorithms to schedule tasks to determine a minimum project time. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:DM.LR",
+      "statement_code": "DM.LR",
+      "course_code": "DM",
+      "course_name": "Discrete Mathematics",
+      "strand_description": "Logical Reasoning",
+      "case_identifier_uuid": "bdbe1c27-4be2-491f-a940-2e2c2fd46f24",
+      "leaf_standards": [
+        {
+          "statement_code": "DM.LR.1†",
+          "description": "The student will use reasoning to develop and apply logical arguments. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.LR.2†",
+          "description": "The student will apply logic and proof techniques in the construction of a sound argument. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.LR.3†",
+          "description": "The student will apply Boolean algebra to represent and analyze the function of logical gates and circuits. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.LR.4",
+          "description": "The student will use mathematical induction to prove formulas and mathematical statements. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:DM.SNT",
+      "statement_code": "DM.SNT",
+      "course_code": "DM",
+      "course_name": "Discrete Mathematics",
+      "strand_description": "Set and Number Theory",
+      "case_identifier_uuid": "feb1faf6-bd46-4ce0-b6b5-25add7b28726",
+      "leaf_standards": [
+        {
+          "statement_code": "DM.SNT.1†",
+          "description": "The student will identify and use the properties of sets and set operations. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.SNT.2†",
+          "description": "The student will apply the formulas of combinatorics. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "DM.SNT.3",
+          "description": "The student will use Pascal’s Triangle to analyze numerical patterns and relationships. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:G.DF",
+      "statement_code": "G.DF",
+      "course_code": "G",
+      "course_name": "Geometry",
+      "strand_description": "Two- and Three-Dimensional Figures",
+      "case_identifier_uuid": "d7269965-b61c-4c1a-9000-5e779a46aa20",
+      "leaf_standards": [
+        {
+          "statement_code": "G.DF.1",
+          "description": "The student will create models and solve problems, including those in context, involving surface area and volume of rectangular and triangular prisms, cylinders, cones, pyramids, and spheres. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.DF.2",
+          "description": "The student will determine the effect of changing one or more dimensions of a threedimensional geometric figure and describe the relationship between the original and changed figure. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:G.PC",
+      "statement_code": "G.PC",
+      "course_code": "G",
+      "course_name": "Geometry",
+      "strand_description": "Polygons and Circles",
+      "case_identifier_uuid": "13c8bd67-8b90-405b-9601-9df7fbca7ad2",
+      "leaf_standards": [
+        {
+          "statement_code": "G.PC.1",
+          "description": "The student will prove and justify theorems and properties of quadrilaterals, and verify and use properties of quadrilaterals to solve problems, including the relationships between the sides, angles, and diagonals. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.PC.2",
+          "description": "The student will verify relationships and solve problems involving the number of sides and measures of angles of convex polygons. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.PC.3",
+          "description": "The student will solve problems, including those in context, by applying properties of circles. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.PC.4",
+          "description": "The student will solve problems in the coordinate plane involving equations of circles. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:G.RLT",
+      "statement_code": "G.RLT",
+      "course_code": "G",
+      "course_name": "Geometry",
+      "strand_description": "Reasoning, Lines and Transformations",
+      "case_identifier_uuid": "a83746ab-4c05-4556-b4df-e467ad55b4e6",
+      "leaf_standards": [
+        {
+          "statement_code": "G.RLT.1",
+          "description": "The student will translate logic statements, identify conditional statements, and use and interpret Venn diagrams. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.RLT.2",
+          "description": "The student will analyze, prove, and justify the relationships of parallel lines cut by a transversal. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.RLT.3",
+          "description": "The student will solve problems, including contextual problems, involving symmetry and transformation. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:G.TR",
+      "statement_code": "G.TR",
+      "course_code": "G",
+      "course_name": "Geometry",
+      "strand_description": "Triangles",
+      "case_identifier_uuid": "bcc1a4de-1e5b-480a-94c9-015e212bf5c5",
+      "leaf_standards": [
+        {
+          "statement_code": "G.TR.1",
+          "description": "The student will determine the relationships between the measures of angles and lengths of sides in triangles, including problems in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.TR.2",
+          "description": "The student will, given information in the form of a figure or statement, prove and justify two triangles are congruent using direct and indirect proofs, and solve problems involving measured attributes of congruent triangles. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.TR.3",
+          "description": "The student will, given information in the form of a figure or statement, prove and justify two triangles are similar using direct and indirect proofs, and solve problems, including those in context, involving measured attributes of similar triangles. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "G.TR.4",
+          "description": "The student will model and solve problems, including those in context, involving trigonometry in right triangles and applications of the Pythagorean Theorem. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:MA.AG",
+      "statement_code": "MA.AG",
+      "course_code": "MA",
+      "course_name": "Mathematical Analysis",
+      "strand_description": "Analytic Geometry",
+      "case_identifier_uuid": "380d23e1-7473-4e47-96ef-932db3e4d833",
+      "leaf_standards": [
+        {
+          "statement_code": "MA.AG.1",
+          "description": "The student will identify and analyze the properties of conic sections and sketch a graph given an equation. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "MA.AG.2",
+          "description": "The student will use parametric equations to model and solve problems in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "MA.AG.3",
+          "description": "The student will perform operations with vectors in the coordinate plane. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "MA.AG.4",
+          "description": "The student will investigate and identify the characteristics of the graphs of polar equations. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "MA.AG.5",
+          "description": "The student will use matrices to organize data and will add and subtract matrices, multiply matrices, multiply matrices by a scalar, and use matrices to solve systems of equations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:MA.CF",
+      "statement_code": "MA.CF",
+      "course_code": "MA",
+      "course_name": "Mathematical Analysis",
+      "strand_description": "Characteristics of Functions",
+      "case_identifier_uuid": "23c9fbc7-7504-423f-908c-d4d0316d6776",
+      "leaf_standards": [
+        {
+          "statement_code": "MA.CF.1",
+          "description": "The student will identify and analyze the properties of polynomial, rational, piecewise-defined, absolute value, radical, and step functions and sketch the graphs of the functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "MA.CF.2",
+          "description": "The student will determine the limit of a function if it exists. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "MA.CF.3",
+          "description": "The student will analyze and describe the continuity of functions. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:MA.FR",
+      "statement_code": "MA.FR",
+      "course_code": "MA",
+      "course_name": "Mathematical Analysis",
+      "strand_description": "Functional Relationships",
+      "case_identifier_uuid": "881ba77d-72a5-46c1-a29b-382d03ffe76e",
+      "leaf_standards": [
+        {
+          "statement_code": "MA.FR.1",
+          "description": "The student will analyze compositions of functions to determine and verify inverses of functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "MA.FR.2",
+          "description": "The student will analyze the characteristics of exponential and logarithmic functions, and sketch the graphs of the functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "MA.FR.3",
+          "description": "The student will analyze sequences and finite series, and model and solve problems in context using sequences and series. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:PS.DC",
+      "statement_code": "PS.DC",
+      "course_code": "PS",
+      "course_name": "Probability and Statistics",
+      "strand_description": "Data in Context",
+      "case_identifier_uuid": "95fcd0c6-fbf7-435d-a588-57e82ec56022",
+      "leaf_standards": [
+        {
+          "statement_code": "PS.DC.1†",
+          "description": "The student will use a statistical cycle to formulate questions, describe types of data, data sources, and constraints within the context of a problem. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.DC.2†",
+          "description": "The student will compare and contrast data collection methods to plan and conduct an observational study. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.DC.3†",
+          "description": "The student will utilize the principles of experimental design to plan and conduct a well-designed experiment. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:PS.DS",
+      "statement_code": "PS.DS",
+      "course_code": "PS",
+      "course_name": "Probability and Statistics",
+      "strand_description": "Descriptive Statistics",
+      "case_identifier_uuid": "5c57fe0e-3274-4370-92cd-4ff7307a829f",
+      "leaf_standards": [
+        {
+          "statement_code": "PS.DS.1†",
+          "description": "The student will represent and analyze data visualizations of univariate quantitative data, including dot plots, stemplots, boxplots, cumulative frequency graphs, and histograms, to identify and describe patterns and departures from patterns, using central tendency, spread, clusters, gaps, and outliers, within the context of a problem. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.DS.2†",
+          "description": "The student will represent and analyze numerical characteristics of univariate quantitative data sets to describe patterns and departures from patterns within the context of a problem. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.DS.3†",
+          "description": "The student will represent, compare, and analyze distributions of two or more univariate quantitative data sets, numerically and graphically. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.DS.4",
+          "description": "The student will represent and analyze categorical data, using two-way tables and other graphical displays, to describe patterns and relationships. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.DS.5",
+          "description": "The student will represent and analyze quantitative bivariate data with scatterplots to identify and describe the relationship between two variables. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.DS.6",
+          "description": "The student will create and interpret a linear model using the least squares regression method to assess the relationship between two quantitative variables. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:PS.IS",
+      "statement_code": "PS.IS",
+      "course_code": "PS",
+      "course_name": "Probability and Statistics",
+      "strand_description": "Inferential Statistics",
+      "case_identifier_uuid": "e3aef5df-5c8d-4794-b6e9-83f063569555",
+      "leaf_standards": [
+        {
+          "statement_code": "PS.IS.1",
+          "description": "The student will apply properties of sampling distributions and inference procedures to make decisions about population proportions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.IS.2",
+          "description": "The student will apply properties of sampling distributions and inference procedures to make decisions about populations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:PS.P",
+      "statement_code": "PS.P",
+      "course_code": "PS",
+      "course_name": "Probability and Statistics",
+      "strand_description": "Probability",
+      "case_identifier_uuid": "20b486a1-2316-4167-9549-270d36600071",
+      "leaf_standards": [
+        {
+          "statement_code": "PS.P.1†",
+          "description": "The student will organize information and apply probability rules to compute probabilities of events within the context of a problem. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.P.2",
+          "description": "The student will represent and interpret situations using discrete random distributions, including binomial distributions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "PS.P.3†",
+          "description": "The student will represent and interpret situations using normal distributions. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:T.CT",
+      "statement_code": "T.CT",
+      "course_code": "T",
+      "course_name": "Trigonometry",
+      "strand_description": "Circular Trigonometry",
+      "case_identifier_uuid": "290cd79c-f907-4ffa-bd4e-157969d9fa36",
+      "leaf_standards": [
+        {
+          "statement_code": "T.CT.1",
+          "description": "The student will determine the degree and radian measure of angles; sketch angles in standard position on a coordinate plane; and determine the sine, cosine, tangent, cosecant, secant, and cotangent of an angle, given a point on the terminal side of an angle in standard position or the value of a trigonometric function of the angle."
+        },
+        {
+          "statement_code": "T.CT.2",
+          "description": "The student will develop and apply the properties of the unit circle in degrees and radians. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:T.GT",
+      "statement_code": "T.GT",
+      "course_code": "T",
+      "course_name": "Trigonometry",
+      "strand_description": "Graphs of Trigonometric Functions",
+      "case_identifier_uuid": "c99a8a6e-8900-4ee1-b093-eb1793a92c3f",
+      "leaf_standards": [
+        {
+          "statement_code": "T.GT.1",
+          "description": "The student will graph and analyze trigonometric functions and apply trigonometric functions to represent periodic phenomena. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "T.GT.2",
+          "description": "The student will graph the six inverse trigonometric functions. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:T.IE",
+      "statement_code": "T.IE",
+      "course_code": "T",
+      "course_name": "Trigonometry",
+      "strand_description": "Identities and Equations",
+      "case_identifier_uuid": "5ade0c36-5b31-41dd-af0e-2ab34e3180c9",
+      "leaf_standards": [
+        {
+          "statement_code": "T.IE.1",
+          "description": "The student will evaluate expressions involving the six trigonometric functions and the inverse sine, cosine, and tangent functions. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "T.IE.2",
+          "description": "The student will use basic trigonometric identity substitutions to simplify and verify trigonometric identities. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "T.IE.3",
+          "description": "The student will solve trigonometric equations and inequalities. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:T.TT",
+      "statement_code": "T.TT",
+      "course_code": "T",
+      "course_name": "Trigonometry",
+      "strand_description": "Triangle Trigonometry",
+      "case_identifier_uuid": "d9c42039-5928-4848-b36d-3ec8858827c2",
+      "leaf_standards": [
+        {
+          "statement_code": "T.TT.1",
+          "description": "The student will determine the sine, cosine, tangent, cotangent, secant, and cosecant of the acute angles in a right triangle and use these ratios to solve for missing sides and angle measures, including application in contextual problems. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "T.TT.2",
+          "description": "The student will find the area of any triangle and solve for the lengths of the sides and measures of the angles in a non-right triangle using the Law of Sines and the Law of Cosines. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    }
+  ]
+}
