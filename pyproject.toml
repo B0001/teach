@@ -15,6 +15,11 @@ testpaths = ["tests"]
 # the repo is driven by, not a library the repo uses. Only what genuinely
 # differs per repo belongs here; see that package's README for every key.
 [tool.sandbox]
+# narrator is a sibling repo on the host, not a package on any index. Two
+# worker sessions burned searching GitHub/PyPI for it before it was mounted.
+# Read-only: workers read its story-generation machinery, never edit it.
+volumes = ["/Users/benjaminhess/Downloads/narrator:/workspace-narrator:ro",
+           "/Users/benjaminhess/Downloads/mathgraph:/workspace-mathgraph:ro"]
 
 [tool.sandbox.forward-env]
-HF_TOKEN = "why this matters when unset"
+HF_TOKEN = "publishing built knowledge graphs to HuggingFace will fail"
