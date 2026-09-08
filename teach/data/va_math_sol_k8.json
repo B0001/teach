@@ -1,0 +1,997 @@
+{
+  "schema": "va-math-sol-k8-strand-groupings-v1",
+  "source": {
+    "provider": "Learning Commons (learningcommons.org), Knowledge Graph v1.13.0",
+    "author": "Virginia Department of Education",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "attribution": "Knowledge Graph is provided by Learning Commons under the CC BY-4.0 license. Virginia Mathematics standards provided by the Virginia Department of Education available at https://www.doe.virginia.gov/home/showpublisheddocument/48908/638603404953130000.",
+    "retrieved_via": "https://cdn.learningcommons.org/knowledge-graph/v1.13.0/exports/{nodes,relationships}.jsonl"
+  },
+  "grade_order": [
+    "K",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8"
+  ],
+  "strands": {
+    "NS": "Number and Number Sense",
+    "CE": "Computation and Estimation",
+    "MG": "Measurement and Geometry",
+    "PFA": "Patterns, Functions, and Algebra",
+    "PS": "Probability and Statistics"
+  },
+  "groupings": [
+    {
+      "id": "va-math-sol:K.NS",
+      "statement_code": "K.NS",
+      "grade": "K",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "6a389be0-cbc2-49b9-8da5-e2fee2689d36",
+      "leaf_standards": [
+        {
+          "statement_code": "K.NS.1",
+          "description": "The student will utilize flexible counting strategies to determine and describe quantities up to 100. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "K.NS.2",
+          "description": "The student will identify, represent, and compare quantities up to 30. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:1.NS",
+      "statement_code": "1.NS",
+      "grade": "1",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "d8358cea-f767-40e9-8f8a-8d44f93abcd1",
+      "leaf_standards": [
+        {
+          "statement_code": "1.NS.1",
+          "description": "The student will utilize flexible counting strategies to determine and describe quantities up to 120. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "1.NS.2",
+          "description": "The student will represent, compare, and order quantities up to 120. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "1.NS.3",
+          "description": "The student will use mathematical reasoning and justification to solve contextual problems that involve partitioning models into two and four equal-sized parts. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:2.NS",
+      "statement_code": "2.NS",
+      "grade": "2",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "8a992682-db48-4951-8d64-f8f48825b161",
+      "leaf_standards": [
+        {
+          "statement_code": "2.NS.1",
+          "description": "The student will utilize flexible counting strategies to determine and describe quantities up to 200. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "2.NS.2",
+          "description": "The student will demonstrate an understanding of the ten-to-one relationships of the base 10 number system to represent, compare, and order whole numbers up to 999. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "2.NS.3",
+          "description": "The student will use mathematical reasoning and justification to solve contextual problems that involve partitioning models into equal-sized parts (halves, fourths, eighths, thirds, and sixths). Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "2.NS.4",
+          "description": "The student will solve problems that involve counting and representing money amounts up to $2.00. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:3.NS",
+      "statement_code": "3.NS",
+      "grade": "3",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "02394ccf-fb87-4bae-a2b9-ded03ecaa961",
+      "leaf_standards": [
+        {
+          "statement_code": "3.NS.1",
+          "description": "The student will use place value understanding to read, write, and determine the place and value of each digit in a whole number, up to six digits, with and without models. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "3.NS.2",
+          "description": "The student will demonstrate an understanding of the base 10 system to compare and order whole numbers up to 9,999. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "3.NS.3",
+          "description": "The student will use mathematical reasoning and justification to represent and compare fractions (proper and improper) and mixed numbers with denominators of 2, 3, 4, 5, 6,\n8, and 10), including those in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "3.NS.4",
+          "description": "The student will solve problems, including those in context, that involve counting, comparing, representing, and making change for money amounts up to $5.00. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:4.NS",
+      "statement_code": "4.NS",
+      "grade": "4",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "e672912e-e1dc-4838-96dc-141df3b9a4df",
+      "leaf_standards": [
+        {
+          "statement_code": "4.NS.1",
+          "description": "The student will use place value understanding to read, write, and identify the place and value of each digit in a nine-digit whole number. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.NS.2",
+          "description": "The student will demonstrate an understanding of the base 10 system to compare and order whole numbers up to seven digits."
+        },
+        {
+          "statement_code": "4.NS.3",
+          "description": "The student will use mathematical reasoning and justification to represent, compare, and order fractions (proper, improper, and mixed numbers with denominators 12 or less), with and without models. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.NS.4",
+          "description": "The student will use mathematical reasoning and justification to represent, compare, and order decimals through thousandths, with and without models. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.NS.5",
+          "description": "The student will reason about the relationship between fractions and decimals (limited to halves, fourths, fifths, tenths, and hundredths) to identify and represent equivalencies. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:5.NS",
+      "statement_code": "5.NS",
+      "grade": "5",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "1108ac8e-f49f-4c25-99a6-38c60b6f8065",
+      "leaf_standards": [
+        {
+          "statement_code": "5.NS.1",
+          "description": "The student will use reasoning and justification to identify and represent equivalency between fractions (with denominators that are thirds, eighths, and factors of 100) and decimals; and compare and order sets of fractions (proper, improper, and/or mixed numbers having denominators of 12 or less) and decimals (through thousandths). Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.NS.2",
+          "description": "The student will demonstrate an understanding of prime and composite numbers, and determine the prime factorization of a whole number up to 100. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:6.NS",
+      "statement_code": "6.NS",
+      "grade": "6",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "83ce690f-6f1b-4c38-912e-077fd582442d",
+      "leaf_standards": [
+        {
+          "statement_code": "6.NS.1",
+          "description": "The student will reason and use multiple strategies to express equivalency, compare, and order numbers written as fractions, mixed numbers, decimals, and percents. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.NS.2",
+          "description": "The student will reason and use multiple strategies to represent, compare, and order integers. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.NS.3",
+          "description": "The student will recognize and represent patterns with whole number exponents and perfect squares. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:7.NS",
+      "statement_code": "7.NS",
+      "grade": "7",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "be787f2a-6582-4661-a2de-696aec523d7d",
+      "leaf_standards": [
+        {
+          "statement_code": "7.NS.1",
+          "description": "The student will investigate and describe the concept of exponents for powers of ten and compare and order numbers greater than zero written in scientific notation. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.NS.2",
+          "description": "The student will reason and use multiple strategies to compare and order rational numbers. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.NS.3",
+          "description": "The student will recognize and describe the relationship between square roots and perfect squares. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:8.NS",
+      "statement_code": "8.NS",
+      "grade": "8",
+      "strand_code": "NS",
+      "strand_name": "Number and Number Sense",
+      "description": "Number and Number Sense",
+      "case_identifier_uuid": "6e8e3b2d-7581-421a-8d85-30f06ee98e5d",
+      "leaf_standards": [
+        {
+          "statement_code": "8.NS.1",
+          "description": "The student will compare and order real numbers and determine the relationships between real numbers. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.NS.2",
+          "description": "The student will investigate and describe the relationship between the subsets of the real number system. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:K.CE",
+      "statement_code": "K.CE",
+      "grade": "K",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "6db7cf93-4634-4cbf-8a32-5d09eab7a443",
+      "leaf_standards": [
+        {
+          "statement_code": "K.CE.1",
+          "description": "The student will model and solve single-step contextual problems using addition and subtraction with whole numbers within 10. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:1.CE",
+      "statement_code": "1.CE",
+      "grade": "1",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "d6e3991a-61fd-4403-8ce5-5ebfb8ee22e0",
+      "leaf_standards": [
+        {
+          "statement_code": "1.CE.1",
+          "description": "The student will recall with automaticity addition and subtraction facts within 10 and represent, solve, and justify solutions to single-step problems, including those in context, using addition and subtraction with whole numbers within 20. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:2.CE",
+      "statement_code": "2.CE",
+      "grade": "2",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "b33e052c-1c3e-4143-b3e6-8236222112e4",
+      "leaf_standards": [
+        {
+          "statement_code": "2.CE.1",
+          "description": "The student will recall with automaticity addition and subtraction facts within 20 and estimate, represent, solve, and justify solutions to single-step and multistep problems, including those in context, using addition and subtraction with whole numbers where addends or minuends do not exceed 100. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:3.CE",
+      "statement_code": "3.CE",
+      "grade": "3",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "404b17c0-0224-4994-add0-db226f52d18e",
+      "leaf_standards": [
+        {
+          "statement_code": "3.CE.1",
+          "description": "The student will estimate, represent, solve, and justify solutions to single-step and multistep problems, including those in context, using addition and subtraction with whole numbers where addends and minuends do not exceed 1,000. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "3.CE.2",
+          "description": "The student will recall with automaticity multiplication and division facts through $10 \\times 10$; and represent, solve, and justify solutions to single-step contextual problems using multiplication and division with whole numbers. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:4.CE",
+      "statement_code": "4.CE",
+      "grade": "4",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "cf81585c-3404-4c63-baff-4fa2e4c042b3",
+      "leaf_standards": [
+        {
+          "statement_code": "4.CE.1",
+          "description": "The student will estimate, represent, solve, and justify solutions to single-step and multistep problems, including those in context, using addition and subtraction with whole numbers. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.CE.2",
+          "description": "The student will estimate, represent, solve, and justify solutions to single-step and multistep problems, including those in context, using multiplication with whole numbers, and single-step problems, including those in context, using division with whole numbers; and recall with automaticity the multiplication facts through $12 \\times 12$ and the corresponding division facts."
+        },
+        {
+          "statement_code": "4.CE.3",
+          "description": "The student will estimate, represent, solve, and justify solutions to single-step problems, including those in context, using addition and subtraction of fractions (proper, improper, and mixed numbers with like denominators of 2, 3, 4, 5, 6, 8, 10, and 12), with and without models; and solve single-step contextual problems involving multiplication of a whole number (12 or less) and a unit fraction, with models. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.CE.4",
+          "description": "The student will estimate, represent, solve, and justify solutions to single-step and multistep problems, including those in context, using addition and subtraction of decimals through the thousandths, with and without models. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:5.CE",
+      "statement_code": "5.CE",
+      "grade": "5",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "1b2b40e3-09a7-48e9-8cca-8a2c446879e7",
+      "leaf_standards": [
+        {
+          "statement_code": "5.CE.1",
+          "description": "The student will estimate, represent, solve, and justify solutions to single-step and multistep contextual problems using addition, subtraction, multiplication, and division with whole numbers. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.CE.2",
+          "description": "The student will estimate, represent, solve, and justify solutions to single-step and multistep problems, including those in context, using addition and subtraction of fractions with like and unlike denominators (with and without models), and solve single-step contextual problems involving multiplication of a whole number and a proper fraction, with models. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.CE.3",
+          "description": "The student will estimate, represent, solve, and justify solutions to single-step and multistep problems, including those in context, using addition, subtraction, multiplication, and division with decimal numbers. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.CE.4",
+          "description": "The student will simplify numerical expressions with whole numbers using the order of operations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:6.CE",
+      "statement_code": "6.CE",
+      "grade": "6",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "8b0bd902-7bb6-4aeb-bcf9-b2374ca8c7fa",
+      "leaf_standards": [
+        {
+          "statement_code": "6.CE.1",
+          "description": "The student will estimate, demonstrate, solve, and justify solutions to problems using operations with fractions and mixed numbers, including those in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.CE.2",
+          "description": "The student will estimate, demonstrate, solve, and justify solutions to problems using operations with integers, including those in context. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:7.CE",
+      "statement_code": "7.CE",
+      "grade": "7",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "4c2701a1-17bf-453a-97b1-f4778e81578a",
+      "leaf_standards": [
+        {
+          "statement_code": "7.CE.1",
+          "description": "The student will estimate, solve, and justify solutions to multistep contextual problems involving operations with rational numbers. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.CE.2",
+          "description": "The student will solve problems, including those in context, involving proportional relationships. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:8.CE",
+      "statement_code": "8.CE",
+      "grade": "8",
+      "strand_code": "CE",
+      "strand_name": "Computation and Estimation",
+      "description": "Computation and Estimation",
+      "case_identifier_uuid": "e19c745f-f4d6-4532-8cb0-e90b4964011c",
+      "leaf_standards": [
+        {
+          "statement_code": "8.CE.1",
+          "description": "The student will estimate and apply proportional reasoning and computational procedures to solve contextual problems. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:K.MG",
+      "statement_code": "K.MG",
+      "grade": "K",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "4389546a-5155-400e-a834-da3058501512",
+      "leaf_standards": [
+        {
+          "statement_code": "K.MG.1",
+          "description": "The student will reason mathematically by making direct comparisons between two objects or events using the attributes of length, height, weight, volume, and time. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "K.MG.2",
+          "description": "The student will identify, describe, name, compare, and construct plane figures (circles, triangles, squares, and rectangles). Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "K.MG.3",
+          "description": "The student will describe the units of time represented in a calendar. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:1.MG",
+      "statement_code": "1.MG",
+      "grade": "1",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "4d87f624-4267-49e4-b74f-773bd74c65b3",
+      "leaf_standards": [
+        {
+          "statement_code": "1.MG.1",
+          "description": "The student will reason mathematically using nonstandard units to measure and compare objects by length, weight, and volume. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "1.MG.2",
+          "description": "The student will describe, sort, draw, and name plane figures (circles, triangles, squares, and rectangles), and compose larger plane figures by combining simple plane figures. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "1.MG.3",
+          "description": "The student will demonstrate an understanding of the concept of passage of time (to the nearest hour and half-hour) and the calendar. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:2.MG",
+      "statement_code": "2.MG",
+      "grade": "2",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "b2c0fdf2-e2b2-4b5b-b533-2e33af420330",
+      "leaf_standards": [
+        {
+          "statement_code": "2.MG.1",
+          "description": "The student will reason mathematically using standard units (U.S. Customary) with appropriate tools to estimate, measure, and compare objects by length, weight, and liquid volume to the nearest whole unit. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "2.MG.2",
+          "description": "The student will demonstrate an understanding of the concept of time to the nearest five minutes, using analog and digital clocks. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "2.MG.3",
+          "description": "The student will identify, describe, and create plane figures (including circles, triangles, squares, and rectangles) that have at least one line of symmetry and explain its relationship with congruency. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "2.MG.4",
+          "description": "The student will describe, name, compare, and contrast plane and solid figures (circles/spheres, squares/cubes, and rectangles/rectangular prisms). Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:3.MG",
+      "statement_code": "3.MG",
+      "grade": "3",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "8802d33c-6cf6-4d54-bff7-71a8f7e23087",
+      "leaf_standards": [
+        {
+          "statement_code": "3.MG.1",
+          "description": "The student will reason mathematically using standard units (U.S. Customary and metric) with appropriate tools to estimate and measure objects by length, weight/mass, and liquid volume to the nearest half or whole unit. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "3.MG.2",
+          "description": "The student will use multiple representations to estimate and solve problems, including those in context, involving area and perimeter (in both U.S. Customary and metric units). Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "3.MG.3",
+          "description": "The student will demonstrate an understanding of the concept of time to the nearest minute and solve single-step contextual problems involving elapsed time in one-hour increments within a 12-hour period. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "3.MG.4",
+          "description": "The student will identify, describe, classify, compare, combine, and subdivide polygons. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:4.MG",
+      "statement_code": "4.MG",
+      "grade": "4",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "5184644f-d652-4ed4-8bdc-6ededf2a6965",
+      "leaf_standards": [
+        {
+          "statement_code": "4.MG.1",
+          "description": "The student will reason mathematically to solve problems, including those in context, that involve length, weight/mass, and liquid volume using U.S. Customary and metric units. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.MG.2",
+          "description": "The student will solve single-step and multistep contextual problems involving elapsed time (limited to hours and minutes within a 12-hour period). Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.MG.3",
+          "description": "The student will use multiple representations to develop and use formulas to solve problems, including those in context, involving area and perimeter limited to rectangles and squares (in both U.S. Customary and metric units). Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.MG.4",
+          "description": "The student will identify, describe, and draw points, rays, line segments, angles, and lines, including intersecting, parallel, and perpendicular lines. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.MG.5",
+          "description": "The student will classify and describe quadrilaterals (parallelograms, rectangles, squares, rhombi, and/or trapezoids) using specific properties and attributes. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.MG.6",
+          "description": "The student will identify, describe, compare, and contrast plane and solid figures according to their characteristics (number of angles, vertices, edges, and the number and shape of faces), with and without models. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:5.MG",
+      "statement_code": "5.MG",
+      "grade": "5",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "b8b89330-e827-4ef0-b329-3839e5b24fba",
+      "leaf_standards": [
+        {
+          "statement_code": "5.MG.1",
+          "description": "The student will reason mathematically to solve problems, including those in context, that involve length, mass, and liquid volume using metric units. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.MG.2",
+          "description": "The student will use multiple representations to solve problems, including those in context, involving perimeter, area, and volume. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.MG.3",
+          "description": "The student will classify and measure angles and triangles, and solve problems, including those in context. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:6.MG",
+      "statement_code": "6.MG",
+      "grade": "6",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "05fe1ded-9d41-4609-a6eb-2fd2a3c91c0a",
+      "leaf_standards": [
+        {
+          "statement_code": "6.MG.1",
+          "description": "The student will identify the characteristics of circles and solve problems, including those in context, involving circumference and area. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.MG.2",
+          "description": "The student will reason mathematically to solve problems, including those in context, that involve the area and perimeter of triangles and parallelograms. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.MG.3",
+          "description": "The student will describe the characteristics of the coordinate plane and graph ordered pairs. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.MG.4",
+          "description": "The student will determine congruence of segments, angles, and polygons. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:7.MG",
+      "statement_code": "7.MG",
+      "grade": "7",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "33f0900a-6f6e-43ba-a97c-4e85ae136ce8",
+      "leaf_standards": [
+        {
+          "statement_code": "7.MG.1",
+          "description": "The student will investigate and determine the volume formula for right cylinders and the surface area formulas for rectangular prisms and right cylinders and apply the formulas in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.MG.2",
+          "description": "The student will solve problems and justify relationships of similarity using proportional reasoning. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.MG.3",
+          "description": "The student will compare and contrast quadrilaterals based on their properties and determine unknown side lengths and angle measures of quadrilaterals. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.MG.4",
+          "description": "The student will apply dilations of polygons in the coordinate plane. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:8.MG",
+      "statement_code": "8.MG",
+      "grade": "8",
+      "strand_code": "MG",
+      "strand_name": "Measurement and Geometry",
+      "description": "Measurement and Geometry",
+      "case_identifier_uuid": "9fb00bde-fff7-4c97-9164-652190d3fd7e",
+      "leaf_standards": [
+        {
+          "statement_code": "8.MG.1",
+          "description": "The student will use the relationships among pairs of angles that are vertical angles, adjacent angles, supplementary angles, and complementary angles to determine the measure of unknown angles. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.MG.2",
+          "description": "The student will investigate and determine the surface area of square-based pyramids and the volume of cones and square-based pyramids. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.MG.3",
+          "description": "The student will apply translations and reflections to polygons in the coordinate plane. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.MG.4",
+          "description": "The student will apply the Pythagorean Theorem to solve problems involving right triangles, including those in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.MG.5",
+          "description": "The student will solve area and perimeter problems involving composite plane figures, including those in context. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:K.PFA",
+      "statement_code": "K.PFA",
+      "grade": "K",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "d3cdc9f3-e8b0-4fef-bdac-802286e67b8e",
+      "leaf_standards": [
+        {
+          "statement_code": "K.PFA.1",
+          "description": "The student will identify, describe, extend, and create simple repeating patterns using various representations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:1.PFA",
+      "statement_code": "1.PFA",
+      "grade": "1",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "ee3c9394-7dd7-4a66-a84a-7ea6058400c3",
+      "leaf_standards": [
+        {
+          "statement_code": "1.PFA.1",
+          "description": "The student will identify, describe, extend, create, and transfer repeating patterns and increasing patterns using various representations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:2.PFA",
+      "statement_code": "2.PFA",
+      "grade": "2",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "4670e5a0-e8b8-43ea-9bfd-e38745d09c4f",
+      "leaf_standards": [
+        {
+          "statement_code": "2.PFA.1",
+          "description": "The student will describe, extend, create, and transfer repeating and increasing patterns (limited to addition of whole numbers) using various representations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:3.PFA",
+      "statement_code": "3.PFA",
+      "grade": "3",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "611f2dfb-2aa2-4d20-85e4-3ad81810dcf4",
+      "leaf_standards": [
+        {
+          "statement_code": "3.PFA.1",
+          "description": "The student will identify, describe, extend, and create increasing and decreasing patterns (limited to addition and subtraction of whole numbers), including those in context, using various representations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:4.PFA",
+      "statement_code": "4.PFA",
+      "grade": "4",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "a41f48da-8f06-4261-8ed4-94dcabd467eb",
+      "leaf_standards": [
+        {
+          "statement_code": "4.PFA.1",
+          "description": "The student will identify, describe, extend, and create increasing and decreasing patterns (limited to addition, subtraction, and multiplication of whole numbers), including those in context, using various representations. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:5.PFA",
+      "statement_code": "5.PFA",
+      "grade": "5",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "3cd836af-f72d-4693-afee-ef6ba0c1d328",
+      "leaf_standards": [
+        {
+          "statement_code": "5.PFA.1",
+          "description": "The student will identify, describe, extend, and create increasing and decreasing patterns with whole numbers, fractions, and decimals, including those in context, using various representations. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.PFA.2",
+          "description": "The student will investigate and use variables in contextual problems. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:6.PFA",
+      "statement_code": "6.PFA",
+      "grade": "6",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "6764a500-4a19-4ab3-84e8-1bd1bf492ebd",
+      "leaf_standards": [
+        {
+          "statement_code": "6.PFA.1",
+          "description": "The student will use ratios to represent relationships between quantities, including those in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.PFA.2",
+          "description": "The student will identify and represent proportional relationships between two quantities, including those in context (unit rates are limited to positive values). Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.PFA.3",
+          "description": "The student will write and solve one-step linear equations in one variable, including contextual problems that require the solution of a one-step linear equation in one variable. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.PFA.4",
+          "description": "The student will represent a contextual situation using a linear inequality in one variable with symbols and graphs on a number line. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:7.PFA",
+      "statement_code": "7.PFA",
+      "grade": "7",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "b1012ce6-a700-4ad3-b2e8-0e6c0fc1fd38",
+      "leaf_standards": [
+        {
+          "statement_code": "7.PFA.1",
+          "description": "The student will investigate and analyze proportional relationships between two quantities using verbal descriptions, tables, equations in y = mx form, and graphs, including problems in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.PFA.2",
+          "description": "The student will simplify numerical expressions, simplify and generate equivalent algebraic expressions in one variable, and evaluate algebraic expressions for given replacement values of the variables. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.PFA.3",
+          "description": "The student will write and solve two-step linear equations in one variable, including problems in context, that require the solution of a two-step linear equation in one variable. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.PFA.4",
+          "description": "The student will write and solve one- and two-step linear inequalities in one variable, including problems in context, that require the solution of a one- and two-step linear inequality in one variable. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:8.PFA",
+      "statement_code": "8.PFA",
+      "grade": "8",
+      "strand_code": "PFA",
+      "strand_name": "Patterns, Functions, and Algebra",
+      "description": "Patterns, Functions, and Algebra",
+      "case_identifier_uuid": "ceb1f3ce-2cee-46a9-bb58-9f7935cd324a",
+      "leaf_standards": [
+        {
+          "statement_code": "8.PFA.1",
+          "description": "The student will represent, simplify, and generate equivalent algebraic expressions in one variable. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.PFA.2",
+          "description": "The student will determine whether a given relation is a function and determine the domain and range of a function. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.PFA.3",
+          "description": "The student will represent and solve problems, including those in context, by using linear functions and analyzing their key characteristics (the value of the y-intercept (b) and the coordinates of the ordered pairs in graphs will be limited to integers). Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.PFA.4",
+          "description": "The student will write and solve multistep linear equations in one variable, including problems in context that require the solution of a multistep linear equation in one variable. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.PFA.5",
+          "description": "The student will write and solve multistep linear inequalities in one variable, including problems in context that require the solution of a multistep linear inequality in one variable. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:K.PS",
+      "statement_code": "K.PS",
+      "grade": "K",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "172ee018-fb9a-4b23-9464-8b318261acd3",
+      "leaf_standards": [
+        {
+          "statement_code": "K.PS.1",
+          "description": "The student will apply the data cycle (pose questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on object graphs and picture graphs. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:1.PS",
+      "statement_code": "1.PS",
+      "grade": "1",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "ac296709-89da-4676-bf16-99fffc92aaf7",
+      "leaf_standards": [
+        {
+          "statement_code": "1.PS.1",
+          "description": "The student will apply the data cycle (pose questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on object graphs, picture graphs, and tables. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:2.PS",
+      "statement_code": "2.PS",
+      "grade": "2",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "771fc6ae-79aa-400f-bbe7-9c5f21a91fc0",
+      "leaf_standards": [
+        {
+          "statement_code": "2.PS.1",
+          "description": "The student will apply the data cycle (pose questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on pictographs and bar graphs. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:3.PS",
+      "statement_code": "3.PS",
+      "grade": "3",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "43064722-68cf-4828-baca-b35714aa2275",
+      "leaf_standards": [
+        {
+          "statement_code": "3.PS.1",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on pictographs and bar graphs. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:4.PS",
+      "statement_code": "4.PS",
+      "grade": "4",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "53e0527d-cf81-48f6-b8c9-1c57d3463bcb",
+      "leaf_standards": [
+        {
+          "statement_code": "4.PS.1",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on line graphs. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "4.PS.2",
+          "description": "The student will model and determine the probability of an outcome of a simple event. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:5.PS",
+      "statement_code": "5.PS",
+      "grade": "5",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "d8407358-d45e-4dd1-9731-2202c7bde737",
+      "leaf_standards": [
+        {
+          "statement_code": "5.PS.1",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on line plots (dot plots) and stem-and-leaf plots. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.PS.2",
+          "description": "The student will solve contextual problems using measures of center and the range. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "5.PS.3",
+          "description": "The student will determine the probability of an outcome by constructing a model of a sample space and using the Fundamental (Basic) Counting Principle. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:6.PS",
+      "statement_code": "6.PS",
+      "grade": "6",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "c5561f94-1527-41e2-a3ce-1d07fd73dc1a",
+      "leaf_standards": [
+        {
+          "statement_code": "6.PS.1",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on circle graphs. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "6.PS.2",
+          "description": "The student will represent the mean as a balance point and determine the effect on statistical measures when a data point is added, removed, or changed. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:7.PS",
+      "statement_code": "7.PS",
+      "grade": "7",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "910b5ca3-9b91-45f2-a575-8d8304542673",
+      "leaf_standards": [
+        {
+          "statement_code": "7.PS.1",
+          "description": "The student will use statistical investigation to determine the probability of an event and investigate and describe the difference between the experimental and theoretical probability. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "7.PS.2",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on histograms. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    },
+    {
+      "id": "va-math-sol:8.PS",
+      "statement_code": "8.PS",
+      "grade": "8",
+      "strand_code": "PS",
+      "strand_name": "Probability and Statistics",
+      "description": "Probability and Statistics",
+      "case_identifier_uuid": "12ab244f-ed34-4e27-8726-ca0b10b92ba4",
+      "leaf_standards": [
+        {
+          "statement_code": "8.PS.1",
+          "description": "The student will use statistical investigation to determine the probability of independent and dependent events, including those in context. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.PS.2",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on boxplots. Students will demonstrate the following Knowledge and Skills:"
+        },
+        {
+          "statement_code": "8.PS.3",
+          "description": "The student will apply the data cycle (formulate questions; collect or acquire data; organize and represent data; and analyze data and communicate results) with a focus on scatterplots. Students will demonstrate the following Knowledge and Skills:"
+        }
+      ]
+    }
+  ]
+}
