@@ -40,6 +40,18 @@ So:
 - **The checker must not be able to see the producer's internals.** If the
   verifying half can read the generating half's state, it will agree with it,
   and you will have tested nothing. Give it only what a real consumer gets.
+- **The same rule applies to your own tool calls.** A summarizer is a producer
+  too, and it will agree with the thing that queried it. On any lookup that
+  decides a question — does this package exist, does this source say that,
+  does this dataset contain those edges — fetch the raw bytes and read them
+  yourself. Be most suspicious when the answer confirms exactly what you were
+  hoping to find. This is not hypothetical: in `teach-8xw.1`, WebFetch on the
+  PyPI `narrator` package returned a summary claiming it "features a motive
+  graph… personality as data structure," mirroring the searcher's own terms.
+  The real package is tweet-data visualization by an unrelated author. `curl`
+  on the same JSON showed it immediately. A fabricated confirmation is the
+  single most expensive thing you can carry into a bead, because everything
+  downstream inherits it silently.
 
 ## Working rules
 
