@@ -17,6 +17,9 @@ from teach.potential_checker import (
     _TEACH_8XW_19_REGRESSION_SENTENCES,
     _TEACH_8XW_20_SECOND_PERSON_TURN,
     _TEACH_8XW_20_THIRD_PERSON_TURN,
+    _TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN,
+    _TEACH_8XW_23_PURE_FLATTERY_TURN,
+    _TEACH_9K5_DISCLOSED_CEILING_SENTENCES,
     _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES,
     _TEACH_KMM_REGRESSION_SENTENCES,
     check_coverage,
@@ -383,8 +386,26 @@ def test_no_pronoun_no_aptitude_noun_praise_is_counted_as_seen():
     """The bead's own reproduction: sentences with no pronoun, no aptitude
     noun, and no shape `_claim_type` recognizes -- exactly the category that
     stayed invisible (`seen=0`, not even unclassified) after teach-5gf's
-    vocabulary widening."""
-    for sentence in _TEACH_8XW_19_REGRESSION_SENTENCES:
+    vocabulary widening.
+
+    teach-8xw.23 widened `_COMPARATIVE_PATTERNS` to cover hypothetical
+    named-person endorsement ("Einstein would have nodded..."), which is
+    exactly the shape of the first sentence below -- it now correctly
+    classifies and flags, which is progress, not a regression. The other
+    two sentences use shapes teach-8xw.23 did not touch and remain
+    unclassified, unchanged from teach-8xw.19."""
+    einstein_sentence, *still_unclassified = _TEACH_8XW_19_REGRESSION_SENTENCES
+    assert einstein_sentence == "Einstein would have nodded approvingly at reasoning this sharp."
+
+    cov = check_coverage(einstein_sentence)
+    assert cov.seen == (einstein_sentence,)
+    assert cov.classified == (einstein_sentence,), (
+        f"teach-8xw.23: named-person hypothetical-endorsement shape should now classify, got {cov}"
+    )
+    flags = check_lesson_text(einstein_sentence)
+    assert flags and all(f.verdict is Verdict.INFLATED for f in flags)
+
+    for sentence in still_unclassified:
         cov = check_coverage(sentence)
         assert cov.seen == (sentence,), f"{sentence!r} must be counted in seen, got {cov.seen}"
         assert cov.unclassified == (sentence,), (
@@ -492,3 +513,80 @@ def test_dnf_bond_lesson_second_person_subset_is_smaller_than_full_unclassified(
 
     cov = check_coverage(build_lesson().text)
     assert 0 < len(cov.second_person_unclassified) < len(cov.unclassified)
+
+
+def test_benign_second_person_turn_stays_unflagged():
+    """teach-8xw.23's turn A: every sentence is second-person procedural
+    address (finished/wrote/feeling/notes), none of it a potential-claim.
+    A widening aimed at catching pure flattery must not also catch this --
+    that would trade a false negative for a false positive, which the bead
+    is explicit is not obviously the better trade."""
+    assert check_lesson_text(_TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN) == ()
+
+
+def test_pure_flattery_turn_is_no_longer_invisible():
+    """teach-8xw.23's actual bug: turn B is nothing but flattery built from
+    five shapes `_claim_type` could not type (inherent-capacity, rarity-as-
+    praise, named-person comparison, bare inevitability, negated-
+    ordinariness) -- pre-fix, `check_lesson_text(B) == ()`, identical to
+    the all-clean turn A. Every sentence must now classify and flag
+    INFLATED; this is the bead's literal reproduction floor, not a claim
+    that every pronoun-free or pronoun-bearing flattery sentence in English
+    is now caught (see the blind-agent generalization check below, and the
+    handoff, for what's still measured-but-open)."""
+    cov = check_coverage(_TEACH_8XW_23_PURE_FLATTERY_TURN)
+    assert len(cov.seen) == 5
+    assert cov.classified == cov.seen, f"expected every sentence in turn B to classify, got {cov}"
+
+    flags = check_lesson_text(_TEACH_8XW_23_PURE_FLATTERY_TURN)
+    assert len(flags) == 5
+    assert all(f.verdict is Verdict.INFLATED for f in flags)
+
+
+def test_turn_a_and_turn_b_are_no_longer_indistinguishable():
+    """The bead's precise complaint: pre-fix, `check_coverage(A)` and
+    `check_coverage(B)` were identical on all six fields (5/0/5, 2p 5/0/5)
+    even though A is benign and B is pure overpromise -- and
+    `check_lesson_text` produced zero flags for both. Post-fix the coverage
+    shape is still allowed to look similar (this bead doesn't touch
+    `_SECOND_PERSON_REFERENCE` or `check_coverage` itself), but
+    `check_lesson_text` must now tell them apart."""
+    assert check_lesson_text(_TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN) == ()
+    assert len(check_lesson_text(_TEACH_8XW_23_PURE_FLATTERY_TURN)) == 5
+
+
+# --- teach-9k5: disclosed ceiling, not a fifth widening ---------------------
+#
+# teach-8xw.23's fix typed the five shapes in ITS OWN reproduction. Measured
+# against two independent blind-agent-authored held-out rounds (18
+# sentences, no repo access, the second round explicitly steered away from
+# teach-8xw.23's new vocabulary), `_claim_type` types 0/18. This is the
+# fourth bead in the teach-yn8 -> teach-kmm -> teach-5gf -> teach-8xw.19 ->
+# teach-8xw.23 lineage to hit the same wall, and teach-9k5 is closed as a
+# disclosed limitation rather than a fifth vocabulary round (see the comment
+# above `_TEACH_9K5_DISCLOSED_CEILING_SENTENCES` in potential_checker.py for
+# why). These tests hold the disclosure honest, not the classification: the
+# bar is seen+unclassified, never invisible and never falsely flagged clean.
+
+
+def test_teach_9k5_disclosed_ceiling_sentences_are_seen():
+    for sentence in _TEACH_9K5_DISCLOSED_CEILING_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.seen == (sentence,), f"{sentence!r} must be counted as seen, got {cov.seen}"
+
+
+def test_teach_9k5_disclosed_ceiling_sentences_land_in_unclassified_not_classified():
+    for sentence in _TEACH_9K5_DISCLOSED_CEILING_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.classified == (), f"{sentence!r} unexpectedly classified: {cov.classified}"
+        assert cov.unclassified == (sentence,), f"{sentence!r} must be reported unclassified, got {cov}"
+
+
+def test_teach_9k5_disclosed_ceiling_sentences_are_not_falsely_flagged_clean():
+    """Unclassified must never be silently reported as zero flags without
+    the accompanying coverage disclosure -- confirms check_lesson_text and
+    check_coverage still agree on these, per _extract_from_sentence's
+    single-source-of-truth invariant."""
+    for sentence in _TEACH_9K5_DISCLOSED_CEILING_SENTENCES:
+        assert check_lesson_text(sentence) == ()
+        assert check_coverage(sentence).unclassified == (sentence,)

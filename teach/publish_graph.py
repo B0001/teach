@@ -246,7 +246,7 @@ def publish(
     # should not need huggingface_hub's networking machinery to import
     # cleanly, and a missing/broken install of it should only break the
     # live-push path, not offline file-building.
-    from huggingface_hub import HfApi
+    from huggingface_hub import CommitOperationAdd, HfApi
 
     api = HfApi(token=token)
     repo_url = api.create_repo(
@@ -266,14 +266,23 @@ def publish(
     # actually named "owner/mathgraph-00".
     files = build_dataset_files(graph, source=source, repo_id=repo_id)
     total_bytes = sum(len(content) for content in files.values())
-    for path_in_repo, content in files.items():
-        api.upload_file(
-            path_or_fileobj=content,
-            path_in_repo=path_in_repo,
-            repo_id=repo_id,
-            repo_type="dataset",
-            commit_message=f"teach: publish {DATASET_SCHEMA_NAME} ({len(graph.nodes)} nodes, {len(graph.edges)} edges)",
-        )
+    # One commit for all four files, not one commit per file: a mid-loop
+    # failure (e.g. teach-8xw.17's dataset-card license rejection) must not
+    # be able to leave the public repo holding data files with no README --
+    # no provenance, no license, no attribution -- until a retry lands
+    # (teach-8xw.24). `upload_file` above is itself a `create_commit`
+    # wrapper around a single `CommitOperationAdd`; this is that same call
+    # made explicitly, with all operations in one list.
+    operations = [
+        CommitOperationAdd(path_in_repo=path_in_repo, path_or_fileobj=content)
+        for path_in_repo, content in files.items()
+    ]
+    api.create_commit(
+        repo_id=repo_id,
+        repo_type="dataset",
+        operations=operations,
+        commit_message=f"teach: publish {DATASET_SCHEMA_NAME} ({len(graph.nodes)} nodes, {len(graph.edges)} edges)",
+    )
 
     return PublishResult(
         repo_id=repo_id,

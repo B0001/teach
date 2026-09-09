@@ -114,3 +114,58 @@ def test_publish_dry_run_file_bytes_match_build_dataset_files_directly(monkeypat
     result = publish(graph, "org/repo", source=SOURCE)
     direct = build_dataset_files(graph, source=SOURCE, repo_id="org/repo")
     assert result.total_bytes == sum(len(c) for c in direct.values())
+
+
+def test_publish_live_pushes_all_files_in_a_single_commit(monkeypatch):
+    """teach-8xw.24: a failed publish must not leave a partially-populated
+    public dataset -- so the live path has to be one `create_commit` call
+    carrying every file, not one `upload_file` (== one commit) per file.
+    This mocks `HfApi` so the regression is caught offline, without a live
+    $HF_TOKEN; the real network behaviour was verified separately against an
+    actual scratch HF dataset repo, per the bead's acceptance criteria.
+    """
+    import huggingface_hub
+
+    create_commit_calls = []
+    upload_file_calls = []
+
+    class _FakeRepoUrl:
+        repo_id = "canonical-org/repo"
+
+        def __str__(self):
+            return "https://huggingface.co/datasets/canonical-org/repo"
+
+    class _FakeHfApi:
+        def __init__(self, token=None):
+            self.token = token
+
+        def create_repo(self, repo_id, *, repo_type, private, exist_ok):
+            return _FakeRepoUrl()
+
+        def upload_file(self, **kwargs):
+            upload_file_calls.append(kwargs)
+
+        def create_commit(self, *, repo_id, repo_type, operations, commit_message):
+            create_commit_calls.append(
+                {
+                    "repo_id": repo_id,
+                    "repo_type": repo_type,
+                    "operations": list(operations),
+                    "commit_message": commit_message,
+                }
+            )
+
+    monkeypatch.setattr(huggingface_hub, "HfApi", _FakeHfApi)
+
+    graph = _two_node_graph()
+    result = publish(graph, "org/repo", source=SOURCE, token="fake-token", dry_run=False)
+
+    assert upload_file_calls == [], "must not fall back to one-commit-per-file uploads"
+    assert len(create_commit_calls) == 1, "all files must land in exactly one commit"
+    call = create_commit_calls[0]
+    assert call["repo_id"] == "canonical-org/repo"
+    assert call["repo_type"] == "dataset"
+    paths = {op.path_in_repo for op in call["operations"]}
+    assert paths == {"nodes.jsonl", "associations.jsonl", "manifest.json", "README.md"}
+    assert result.repo_id == "canonical-org/repo"
+    assert result.dry_run is False

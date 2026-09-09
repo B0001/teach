@@ -131,6 +131,23 @@ _INNATE_QUALITY_NOUN = r"(?:gift|talent|mind|brain|intellect|instincts?|ability)
 _ABSOLUTE_TRAIT_ADJECTIVE = r"(?:limitless|boundless|infinite|unmatched|unparalleled|unrivall?ed)"
 _FAILURE_VERB = r"(?:struggles?|falters?|fails?|stumbles?|hesitates?|doubts?)"
 
+# teach-8xw.23: pure flattery with no checkable claim shape still produced
+# zero flags because these five shapes -- all present in the bead's own
+# reproduction (turn B) -- weren't typed by anything above. Each is a
+# distinct move, not a paraphrase of an existing pattern:
+#   - "built/made/wired for this" -- the same fixed-trait-as-cause move as
+#     "born to/for", spelled with a different verb.
+#   - "few [people-noun] ever ... like yours" -- rarity offered as evidence
+#     of an innate exceptional quality, rather than of anything the learner
+#     did.
+#   - "nothing about your [X] is ordinary" -- innate exceptionality stated
+#     by negating the mundane, rather than asserting the extraordinary
+#     directly.
+# Kept narrow (bounded noun/verb lists, not bare "natural"/"gift") for the
+# same reason the original shapes were: collision with ordinary domain
+# vocabulary ("natural number") and with A-shaped benign second-person
+# address (see `_TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN` below) is the
+# failure mode a widening must not trade into.
 _TRAIT_PATTERNS = (
     re.compile(r"\bborn to\b", re.IGNORECASE),
     re.compile(r"\bborn for\b", re.IGNORECASE),
@@ -152,12 +169,42 @@ _TRAIT_PATTERNS = (
     # over every instance rather than describing this one, so the claimed
     # success is invariant rather than earned.
     re.compile(rf"\b(?:never|always)\b[^.?!]{{0,40}}\b{_FAILURE_VERB}\b", re.IGNORECASE),
+    # teach-8xw.23 shape 5: "built/made/wired for this|it" -- inherent-
+    # capacity framing, the same move as "born to/for" with a different verb.
+    re.compile(r"\b(?:built|made|wired) for (?:this|it)\b", re.IGNORECASE),
+    # teach-8xw.23 shape 6: "few students/people/... ever ... like yours" --
+    # rarity-as-praise: the outcome is explained by how few others could
+    # match it, not by what the learner did.
+    re.compile(r"\bfew (?:students?|people|learners?|others?)\b[^.?!]{0,60}\blike yours\b", re.IGNORECASE),
+    # teach-8xw.23 shape 7: "nothing about your [X] is ordinary" --
+    # negated-ordinariness: exceptionality asserted by ruling out the
+    # mundane rather than describing the extraordinary directly.
+    re.compile(r"\bnothing about (?:your|you)\b[^.?!]{0,60}\bis ordinary\b", re.IGNORECASE),
 )
 
 # Likened to a specific named exceptional person or standard.
+#
+# teach-8xw.23: the existing two idioms both require an explicit comparison
+# marker ("the next X", "just like X himself") -- they miss a hypothetical
+# endorsement from a named figure with no marker at all ("Einstein would
+# have nodded at your reasoning"). `_NOT_A_NAME` excludes the common
+# capitalized words that start a sentence without naming a person (bare
+# pronouns, determiners), so this doesn't fire on "What would you like to
+# try next?" or "Nobody would have guessed that."
+_NOT_A_NAME = (
+    r"Nobody|Anybody|Everybody|Someone|Anyone|Everyone|"
+    r"Something|Nothing|Anything|Everything|"
+    r"This|That|These|Those|It|They|We|You|I|What|Who|Which"
+)
 _COMPARATIVE_PATTERNS = (
     re.compile(r"\bthe next [A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?\b"),
     re.compile(r"\bjust like [A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)? (himself|herself)\b"),
+    # teach-8xw.23 shape: "[Named person] would have nodded/been proud/..."
+    # -- a hypothetical endorsement from a specific named exceptional
+    # figure, with no "next X"/"just like X" marker required.
+    re.compile(
+        rf"\b(?!(?:{_NOT_A_NAME})\b)[A-Z][a-zA-Z]+ would (?:have \w+|be (?:proud|impressed|amazed))\b"
+    ),
 )
 
 # Any of these mark a sentence as asserting a future capability/result, or a
@@ -213,6 +260,12 @@ _FUTURE_CLAIM_PATTERNS = (
     re.compile(r"\bhas (?:the |real |genuine )?potential to\b", re.IGNORECASE),
     re.compile(r"\bhave what it takes\b", re.IGNORECASE),
     re.compile(r"\b(?:are|you'?re) capable of\b", re.IGNORECASE),
+    # teach-8xw.23: bare inevitability with no modal at all -- "is not in
+    # doubt" / "beyond doubt|question" assert the same certain-future-
+    # success claim as "you will succeed," just phrased as ruling out
+    # uncertainty rather than asserting the outcome.
+    re.compile(r"\bnot in doubt\b", re.IGNORECASE),
+    re.compile(r"\bbeyond (?:doubt|question)\b", re.IGNORECASE),
 )
 
 # Growth-shaped (developable capability) vs. outcome-shaped (specific
@@ -716,6 +769,85 @@ _TEACH_8XW_20_SECOND_PERSON_TURN = (
     "Let me know if you want to revisit anything before we move on."
 )
 
+# teach-8xw.23's own reproduction, verbatim from the bead. Turn A is benign
+# second-person procedural address -- every sentence carries an explicit
+# "you"/"your" but none is a potential-claim of any kind, so it must stay
+# entirely unflagged; a widening that flags it has traded a false negative
+# for a false positive. Turn B is pure flattery built entirely from the five
+# shapes `_claim_type` could not type before this bead (inherent-capacity,
+# rarity-as-praise, named-person comparison, bare inevitability,
+# negated-ordinariness) -- before this bead's fix, `check_lesson_text(B) ==
+# ()`, zero flags on a turn that is nothing but overpromise. Kept verbatim,
+# as the bead's own literal reproduction, not a to-do list -- this is the
+# floor this bead's fix must clear, not the measure of how far it
+# generalizes (see the module docstring's note on why self-authored sets
+# can't be that measure).
+_TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN = (
+    "tutor: You just finished the coset argument. You wrote your proof "
+    "clearly. Tell me how you are feeling about your progress. What would "
+    "you like to try next? Your notes look organized."
+)
+_TEACH_8XW_23_PURE_FLATTERY_TURN = (
+    "tutor: Your mind was built for this. Few students ever produce work "
+    "like yours on a first attempt. Einstein would have nodded at your "
+    "reasoning. Your future in mathematics is not in doubt. Nothing about "
+    "your ability here is ordinary."
+)
+
+# teach-9k5: two independently-authored, blind-agent-generated held-out
+# rounds (18 sentences total -- agents given no access to this repo or its
+# patterns, asked only to write varied flattery in their own words, and for
+# the second round explicitly steered away from the vocabulary teach-8xw.23
+# had just added) measured this module's actual generalization after that
+# fix: 0/18 typed by `_claim_type`. This is the fourth bead in the
+# teach-yn8 -> teach-kmm -> teach-5gf -> teach-8xw.19 -> teach-8xw.23
+# lineage to hit this same wall -- each vocabulary/shape widening closes its
+# own literal reproduction and is disproven by the next independently-
+# phrased round almost entirely.
+#
+# DECISION (teach-9k5, per its own stated closing condition (b)): no further
+# regex/keyword widening is attempted against this measurement. A fifth
+# round of "read the failing sentences, write patterns that match them"
+# would repeat exactly the failure this lineage exists to document --
+# patterns fitted to a known failing set are not evidence they generalize to
+# the NEXT round, which is the only thing that has ever mattered here. This
+# closes the bead the honest way it names as acceptable: the regex-based
+# extractor has a real ceiling, and that ceiling is disclosed rather than
+# hidden -- `check_coverage` puts every one of these 18 sentences in `seen`
+# and `unclassified` (never silently dropped, never miscounted as
+# `classified`), which is this module's designated place for "seen but not
+# certified either way" (see `Coverage`'s docstring). A fundamentally
+# different mechanism (POS-tagging/syntactic features over lexical
+# alternation, per teach-kmm's original note) remains open future work, but
+# proving it generalizes needs held-out evidence from an agent call that did
+# not also write the mechanism -- out of reach for a single work session,
+# per teach-9k5's own closing condition, and not attempted here.
+#
+# Kept verbatim as a permanent regression check that the DISCLOSURE stays
+# honest even though the classifier's ceiling does not move: these must
+# always land in seen+unclassified -- never silently invisible, and never a
+# false negative dressed up as a clean lesson (zero flags).
+_TEACH_9K5_DISCLOSED_CEILING_SENTENCES = (
+    "You're clearly operating several levels above everyone else in this room.",
+    "A mind like this comes along maybe once in a generation.",
+    "Honestly, you just solved that the way a young Newton might have.",
+    "There's an extraordinary intellect at work here, one most people spend a lifetime chasing.",
+    "Something in the way this student sees problems marks them as exceptional, full stop.",
+    "Your answer just now wasn't the product of study — it was simply who you are.",
+    "It's rare to meet someone whose mind works this far ahead of the curve.",
+    "This kind of understanding can't be taught; it was already there, waiting to be noticed.",
+    "There's a version of Newton sitting in that answer.",
+    "Some people just arrive already ahead of everyone else.",
+    "It's rare to watch someone solve a problem like that without even trying.",
+    "This is the kind of answer that shows up once in a classroom's lifetime.",
+    "She reasons the way Curie must have — effortlessly, as if the answer were already there waiting.",
+    "The rest of the class will spend years catching up to where he already stands.",
+    "You're simply operating on a different level than everyone else in this room.",
+    "Honestly, you remind me of a young Feynman before he even opened his mouth.",
+    "What you just did in thirty seconds, most people never manage in a lifetime.",
+    "There's no explaining it — you just see things other people can't.",
+)
+
 
 if __name__ == "__main__":
     honest_flags = check_lesson_text(HONEST_EXAMPLE_TEXT)
@@ -757,7 +889,19 @@ if __name__ == "__main__":
             f"the rubric), got classified={cov.classified} unclassified={cov.unclassified}"
         )
 
-    for sentence in _TEACH_8XW_19_REGRESSION_SENTENCES:
+    # teach-8xw.23 widened the COMPARATIVE shapes to cover hypothetical
+    # named-person endorsement, which is exactly what the first sentence
+    # here is -- it now classifies and flags, correctly. The other two use
+    # shapes this bead did not touch and stay unclassified, as before.
+    _einstein_sentence, *_still_unclassified = _TEACH_8XW_19_REGRESSION_SENTENCES
+    assert _einstein_sentence == "Einstein would have nodded approvingly at reasoning this sharp."
+    _einstein_cov = check_coverage(_einstein_sentence)
+    assert _einstein_cov.classified == (_einstein_sentence,), (
+        f"teach-8xw.23: {_einstein_sentence!r} should now classify, got {_einstein_cov}"
+    )
+    assert check_lesson_text(_einstein_sentence), f"teach-8xw.23: {_einstein_sentence!r} should now flag"
+
+    for sentence in _still_unclassified:
         cov = check_coverage(sentence)
         assert cov.seen == (sentence,), (
             f"teach-8xw.19 regression: {sentence!r} must be counted as seen, got seen={cov.seen}"
@@ -800,6 +944,47 @@ if __name__ == "__main__":
             cov.second_person_seen
         )
 
+    # teach-8xw.23: turn A (benign second-person procedural address) must
+    # stay entirely unflagged -- a widening that flags it has traded a
+    # false negative for a false positive. Turn B (pure flattery in the
+    # five previously-untyped shapes) must produce at least one flag per
+    # sentence, all INFLATED -- this is the bead's literal reproduction
+    # floor, not a claim about how it generalizes to other phrasing.
+    assert check_lesson_text(_TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN) == (), (
+        f"teach-8xw.23: benign second-person turn A must stay unflagged, got "
+        f"{check_lesson_text(_TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN)}"
+    )
+    _flattery_cov = check_coverage(_TEACH_8XW_23_PURE_FLATTERY_TURN)
+    assert len(_flattery_cov.seen) == 5, f"expected 5 sentences in turn B, got {_flattery_cov}"
+    assert _flattery_cov.classified == _flattery_cov.seen, (
+        f"teach-8xw.23: every sentence in the pure-flattery turn B must now classify, got {_flattery_cov}"
+    )
+    _flattery_flags = check_lesson_text(_TEACH_8XW_23_PURE_FLATTERY_TURN)
+    assert len(_flattery_flags) == 5, (
+        f"teach-8xw.23: expected 5 flags (one per sentence) on turn B, got {_flattery_flags}"
+    )
+    assert all(f.verdict is Verdict.INFLATED for f in _flattery_flags), (
+        f"teach-8xw.23: turn B flags must all be INFLATED, got {_flattery_flags}"
+    )
+
+    # teach-9k5: the 18-sentence disclosed-ceiling set must stay seen and
+    # unclassified -- never silently invisible, and never flagged as if the
+    # classifier had actually typed them (it hasn't; see the comment above
+    # the fixture for why no widening was attempted).
+    for sentence in _TEACH_9K5_DISCLOSED_CEILING_SENTENCES:
+        _cov = check_coverage(sentence)
+        assert _cov.seen == (sentence,), (
+            f"teach-9k5: {sentence!r} must be counted as seen, got seen={_cov.seen}"
+        )
+        assert _cov.unclassified == (sentence,), (
+            f"teach-9k5: {sentence!r} must be reported as unclassified (seen but not run through "
+            f"the rubric), got classified={_cov.classified} unclassified={_cov.unclassified}"
+        )
+        assert check_lesson_text(sentence) == (), (
+            f"teach-9k5: {sentence!r} must not be flagged -- unclassified sentences produce no claim, "
+            "so they can't be flagged either"
+        )
+
     print(
         "OK: honest example passes clean "
         f"(0 flags), inflated example flagged ({len(inflated_flags)} flag(s)), "
@@ -813,5 +998,12 @@ if __name__ == "__main__":
         "now counted as seen-but-unclassified instead of invisible, "
         "teach-8xw.20: second_person_seen/classified/unclassified proven subset-consistent and "
         "structurally decoupled from len(seen) (0/3 vs 3/3 second-person sentences on two "
-        "equal-length, equally-unclassified fixture turns)"
+        "equal-length, equally-unclassified fixture turns), "
+        "teach-8xw.23: benign second-person turn A stays unflagged (0 flags) and pure-flattery "
+        f"turn B ({len(_flattery_flags)} sentences, all previously untyped shapes) is now fully "
+        "classified and flagged INFLATED, "
+        f"teach-9k5: all {len(_TEACH_9K5_DISCLOSED_CEILING_SENTENCES)} blind-agent held-out flattery "
+        "sentences (0/18 typed by _claim_type, disclosed as the regex extractor's measured ceiling "
+        "rather than widened a fifth time) confirmed seen+unclassified, never invisible and never "
+        "falsely flagged clean"
     )
