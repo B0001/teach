@@ -56,7 +56,12 @@ from teach.concept_recovery import RecoveryResult, recover_from_lesson_text
 from teach.dummit_foote_graph import TARGET_NODE_ID, load_dummit_foote_graph
 from teach.fact_checker import FactCheck, Verdict as FactVerdict, check_lesson_text as check_facts
 from teach.math_facts import MATH_SOURCE
-from teach.potential_checker import Flag, check_lesson_text as check_potential
+from teach.potential_checker import (
+    Coverage,
+    Flag,
+    check_coverage as check_potential_coverage,
+    check_lesson_text as check_potential,
+)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -69,6 +74,7 @@ class IntegrationReport:
     recovery: RecoveryResult
     fact_checks: tuple[FactCheck, ...]
     potential_flags: tuple[Flag, ...]
+    potential_coverage: Coverage
     out_of_scope_facts: tuple[str, ...]
 
     def render(self) -> str:
@@ -87,11 +93,30 @@ class IntegrationReport:
         lines.append(f"out-of-scope for this run (not exercised, not claimed): {self.out_of_scope_facts}")
 
         lines.append("=== potential_checker ===")
+        # teach-yn8: never state the flag count without the coverage it was
+        # drawn from -- "zero flags" and "zero sentences about the learner
+        # were left unclassified" are different claims, and only the second
+        # one licenses saying "no overpromises" outright.
+        cov = self.potential_coverage
+        lines.append(
+            f"sentences about the learner: {len(cov.about_learner)} seen, "
+            f"{len(cov.classified)} classified, {len(cov.unclassified)} unclassified"
+        )
+        if cov.unclassified:
+            lines.append(
+                "unclassified -- seen but NOT run through the honesty rubric "
+                f"(not certified honest, not confirmed inflated): {cov.unclassified}"
+            )
         if self.potential_flags:
             for flag in self.potential_flags:
                 lines.append(f"[{flag.verdict.value}] {flag.reason}: {flag.claim!r}")
         else:
-            lines.append("(no claims flagged -- every extracted potential claim classified HONEST, or none were found)")
+            lines.append(
+                f"(no flags among the {len(cov.classified)} classified claims"
+                + (f"; {len(cov.unclassified)} sentence(s) about the learner were NOT checked, see above"
+                   if cov.unclassified else "")
+                + ")"
+            )
         return "\n".join(lines)
 
 
@@ -108,6 +133,7 @@ def run_integration_check(artifact: LessonArtifact) -> IntegrationReport:
         recovery=recover_from_lesson_text(artifact.text, graph),
         fact_checks=check_facts(artifact.text, MATH_SOURCE),
         potential_flags=check_potential(artifact.text),
+        potential_coverage=check_potential_coverage(artifact.text),
         out_of_scope_facts=tuple(sorted(covered_topics - exercised_topics)),
     )
 
@@ -145,14 +171,29 @@ def _self_check() -> None:
     )
     assert report.out_of_scope_facts == ("kernel-normal-subgroup",)
 
-    # potential_checker: the closing encouragement line must not be flagged.
+    # potential_checker: the closing encouragement line must not be flagged,
+    # AND (teach-yn8) that must be reported alongside how much of the
+    # lesson's about-learner text was actually classifiable, not as an
+    # unqualified "no overpromises." This lesson's six about-learner
+    # sentences are five retrospective/procedural ("you just handled...",
+    # "in your own words...") plus the one effort-conditioned promise --
+    # none of the five unclassified ones are potential claims the rubric
+    # was designed to catch, but that is this run's manual read of this
+    # specific lesson text, not something the checker itself established,
+    # which is exactly why they're surfaced instead of dropped.
     assert report.potential_flags == (), f"expected a clean honesty check, got {report.potential_flags}"
+    assert len(report.potential_coverage.about_learner) == 6
+    assert len(report.potential_coverage.classified) == 1
+    assert len(report.potential_coverage.unclassified) == 5
 
     print(report.render())
     print()
     print("OK: end-to-end Bond/D&F run -- taught concept, prerequisite, and")
     print("Lagrange's theorem all recovered correctly from lesson text alone;")
-    print("no contradicted facts; no inflated-potential flags; scope gaps disclosed above.")
+    print("no contradicted facts; no inflated-potential flags among the "
+          f"{len(report.potential_coverage.classified)} classified potential-claim sentence(s) "
+          f"({len(report.potential_coverage.unclassified)} about-learner sentence(s) left unclassified, "
+          "disclosed above, not silently passed); scope gaps disclosed above.")
 
 
 if __name__ == "__main__":

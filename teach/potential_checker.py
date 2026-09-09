@@ -44,8 +44,13 @@ from teach.honesty_rubric import ClaimType, PotentialClaim, Verdict, classify
 
 # --- claim-shape detection -------------------------------------------------
 
-# A sentence isn't a candidate at all unless it's about "you" (the learner).
-_ABOUT_LEARNER = re.compile(r"\byou\b|\byour\b", re.IGNORECASE)
+# A sentence isn't a candidate at all unless it's about the learner. Includes
+# "yours" (possessive-pronoun form, e.g. "talent like yours") -- \byour\b
+# alone does not match it, because \b requires a boundary after the "r" and
+# "yours" continues with "s". Found via teach-yn8's reproduction: "Talent
+# like yours cannot fail" was falling out at THIS gate, before extraction
+# logic ever got a chance to type it.
+_ABOUT_LEARNER = re.compile(r"\byou\b|\byour\b|\byours\b", re.IGNORECASE)
 
 # Bare vague reassurance with no checkable content -- there's no claimed
 # ceiling to compare against anything, and no way to tell if it's even
@@ -80,14 +85,47 @@ _COMPARATIVE_PATTERNS = (
     re.compile(r"\bjust like [A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)? (himself|herself)\b"),
 )
 
-# Any of these mark a sentence as asserting a future capability/result at
-# all -- the minimum bar to be a "potential claim" worth classifying.
+# Any of these mark a sentence as asserting a future capability/result, or a
+# present-tense certainty/capability about one, at all -- the minimum bar to
+# be a "potential claim" worth classifying.
+#
+# teach-yn8: this used to be five literal future-tense constructions
+# ("you'll" / "you will" / "you're going to" / "you are going to" / "you're
+# basically|practically"), and a sentence that matched none of them was
+# never even considered a claim -- not abstained on, dropped entirely. The
+# root problem there wasn't that five patterns is too few; it's that ANY
+# fixed list is a whitelist, and natural language for overpromising is
+# unbounded, so a whitelist always has an outside (see module docstring's
+# note on the same conflation the extraction-vs-classification distinction
+# exists to prevent). Widening this list to cover more *grammatical shapes*
+# (certainty/inevitability modals, negated-failure, present-tense
+# potential/capability assertions) narrows that outside considerably, but
+# does not close it -- `check_coverage` below is what makes the remaining
+# gap visible instead of silent.
 _FUTURE_CLAIM_PATTERNS = (
     re.compile(r"\byou'?ll\b", re.IGNORECASE),
     re.compile(r"\byou will\b", re.IGNORECASE),
     re.compile(r"\byou'?re going to\b", re.IGNORECASE),
     re.compile(r"\byou are going to\b", re.IGNORECASE),
     re.compile(r"\byou'?re (basically|practically)\b", re.IGNORECASE),
+    # certainty / inevitability modals -- grammatically future-oriented even
+    # without "will".
+    re.compile(r"\bguaranteed to\b", re.IGNORECASE),
+    re.compile(r"\bbound to\b", re.IGNORECASE),
+    re.compile(r"\bcertain to\b", re.IGNORECASE),
+    re.compile(r"\bsure to\b", re.IGNORECASE),
+    re.compile(r"\bdestined to\b", re.IGNORECASE),
+    re.compile(r"\bmeant to be\b", re.IGNORECASE),
+    # negated-failure -- "cannot fail" asserts the same inevitable-success
+    # claim as "you will succeed," just phrased as a negation.
+    re.compile(r"\bcan(?:not|'?t) fail\b", re.IGNORECASE),
+    re.compile(r"\bwon'?t fail\b", re.IGNORECASE),
+    # present-tense potential/capability assertions -- these claim a future
+    # achievement is already within reach, not merely likely.
+    re.compile(r"\bhave (?:the |real |genuine )?potential to\b", re.IGNORECASE),
+    re.compile(r"\bhas (?:the |real |genuine )?potential to\b", re.IGNORECASE),
+    re.compile(r"\bhave what it takes\b", re.IGNORECASE),
+    re.compile(r"\b(?:are|you'?re) capable of\b", re.IGNORECASE),
 )
 
 # Growth-shaped (developable capability) vs. outcome-shaped (specific
@@ -127,6 +165,7 @@ _EFFORT_PATTERNS = (
     re.compile(r"\bas long as you\b", re.IGNORECASE),
     re.compile(r"\bthe more you practice\b", re.IGNORECASE),
     re.compile(r"\bwork through\b", re.IGNORECASE),
+    re.compile(r"\bkeep this up\b", re.IGNORECASE),
 )
 
 
@@ -144,6 +183,9 @@ def _conditioned_on_effort(sentence: str) -> bool:
 _UNEVIDENCED_CEILING_PATTERNS = (
     re.compile(r"\bpublish(ing)? (original )?research\b", re.IGNORECASE),
     re.compile(r"\bbest .*(in|of) (your|the) generation\b", re.IGNORECASE),
+    re.compile(r"\bbest\b.*\bin the world\b", re.IGNORECASE),
+    re.compile(r"\bgreatest\b.*\b(?:who has )?ever lived\b", re.IGNORECASE),
+    re.compile(r"\bgreatest\b.*\bof all time\b", re.IGNORECASE),
     re.compile(r"\bevery (single )?problem\b", re.IGNORECASE),
     re.compile(r"\bworld'?s (greatest|best)\b", re.IGNORECASE),
     re.compile(r"\bfields medal\b", re.IGNORECASE),
@@ -218,6 +260,25 @@ def _split_sentences(turn_text: str) -> list[str]:
 # --- public API --------------------------------------------------------------
 
 
+def _extract_from_sentence(sentence: str, turn_text: str) -> PotentialClaim | None:
+    """The single place that decides whether one tutor-spoken, about-learner
+    sentence becomes a typed `PotentialClaim`. Both `extract_claims` and
+    `check_coverage` call this, so the two can never silently disagree about
+    what got classified.
+    """
+    if any(p.match(sentence) for p in _TOO_VAGUE_TO_CHECK):
+        return None
+    claim_type = _claim_type(sentence)
+    if claim_type is None:
+        return None
+    return PotentialClaim(
+        text=sentence,
+        claim_type=claim_type,
+        conditioned_on_effort=_conditioned_on_effort(sentence),
+        evidenced_ceiling=_evidenced_ceiling(sentence, turn_text, claim_type),
+    )
+
+
 def extract_claims(text: str) -> tuple[PotentialClaim, ...]:
     """Find statements about learner potential in lesson text and populate
     the rubric's three attributes for each, from the text alone.
@@ -228,26 +289,71 @@ def extract_claims(text: str) -> tuple[PotentialClaim, ...]:
     returned. Vague filler with no checkable content ("you'll get there")
     is also not returned -- see the module docstring's extraction-layer
     abstention note.
+
+    teach-yn8: this is necessarily still a whitelist of recognized claim
+    shapes -- `_claim_type` has to assign one of four concrete `ClaimType`s
+    to run the rubric's decision table, and there is no way to do that for a
+    shape the extractor has never seen. What changed is that "this sentence
+    matched no recognized shape" is no longer indistinguishable from "this
+    sentence contains no promise" at the caller's end -- see `check_coverage`.
     """
     claims: list[PotentialClaim] = []
     for turn_text in _tutor_turns(text):
         for sentence in _split_sentences(turn_text):
             if not _ABOUT_LEARNER.search(sentence):
                 continue
-            if any(p.match(sentence) for p in _TOO_VAGUE_TO_CHECK):
-                continue
-            claim_type = _claim_type(sentence)
-            if claim_type is None:
-                continue
-            claims.append(
-                PotentialClaim(
-                    text=sentence,
-                    claim_type=claim_type,
-                    conditioned_on_effort=_conditioned_on_effort(sentence),
-                    evidenced_ceiling=_evidenced_ceiling(sentence, turn_text, claim_type),
-                )
-            )
+            claim = _extract_from_sentence(sentence, turn_text)
+            if claim is not None:
+                claims.append(claim)
     return tuple(claims)
+
+
+@dataclasses.dataclass(frozen=True)
+class Coverage:
+    """How many tutor-spoken sentences about the learner this run actually
+    classified, versus how many it saw but could not fit to a recognized
+    claim shape.
+
+    teach-yn8: `check_lesson_text` reporting "zero flags" conflates two
+    different statements -- "nothing here overpromises" and "nothing here
+    matched a shape I know how to check" -- and only the extraction step
+    knows which one actually happened. `unclassified` makes the second
+    statement visible: a sentence in here was seen, is about the learner,
+    was not dismissed as vague filler, and STILL was not run through the
+    honesty rubric, because `_claim_type` didn't recognize its construction.
+    That is an unchecked sentence, not a clean one, and callers that print a
+    summary line (e.g. `dnf_bond_integration`) must say so rather than
+    folding it into "no flags."
+    """
+
+    about_learner: tuple[str, ...]
+    classified: tuple[str, ...]
+    unclassified: tuple[str, ...]
+
+
+def check_coverage(text: str) -> Coverage:
+    """Companion to `extract_claims`/`check_lesson_text`: reports what
+    fraction of the tutor's about-learner sentences the extractor was
+    actually able to classify, so an empty flag list can be told apart from
+    an empty *coverage*.
+    """
+    about_learner: list[str] = []
+    classified: list[str] = []
+    unclassified: list[str] = []
+    for turn_text in _tutor_turns(text):
+        for sentence in _split_sentences(turn_text):
+            if not _ABOUT_LEARNER.search(sentence):
+                continue
+            about_learner.append(sentence)
+            if _extract_from_sentence(sentence, turn_text) is not None:
+                classified.append(sentence)
+            else:
+                unclassified.append(sentence)
+    return Coverage(
+        about_learner=tuple(about_learner),
+        classified=tuple(classified),
+        unclassified=tuple(unclassified),
+    )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -277,12 +383,21 @@ def check_lesson_text(text: str) -> tuple[Flag, ...]:
 
     This is the checker entry point: a `LessonArtifact.text` (or any plain
     lesson text) in, a tuple of `Flag` out. Empty tuple means every
-    extracted claim classified HONEST (or none were found) -- "passes
+    EXTRACTED claim classified HONEST (or none were extracted) -- "passes
     clean" per this bead's acceptance criteria. Flags include both
     INFLATED and ABSTAIN verdicts: per sandbox-prompt.md, "prefer
     abstention to a confident answer" describes how the rubric should
     decide, not license for this checker to silently swallow the cases the
     rubric itself declined to certify as honest.
+
+    Caveat a caller must not paper over (teach-yn8): "empty tuple" is a
+    statement about the claims this function's whitelist-based extractor
+    recognized, not a statement about the whole lesson text. A sentence
+    about the learner that no recognized shape matched contributes zero
+    flags here whether or not it overpromises. Call `check_coverage`
+    alongside this and report its `unclassified` count in the same breath
+    as this function's result -- never print this function's result alone
+    as "no overpromises."
     """
     flags = []
     for claim in extract_claims(text):
@@ -311,6 +426,19 @@ INFLATED_EXAMPLE_TEXT = (
     "tutor: Honestly, you're a natural -- you're going to be the best mathematician of your generation."
 )
 
+# teach-yn8's regression bar: found by running the checker against a
+# deliberately corrupted lesson, these three sentences produced ZERO flags
+# under the old five-pattern whitelist gate, because none of them matched
+# "you'll" / "you will" / "you're going to" / "you are going to" / "you're
+# basically|practically". Kept here verbatim (not paraphrased) so a future
+# change to the pattern set is checked against the exact reproduction, not a
+# reworded stand-in.
+_TEACH_YN8_REGRESSION_SENTENCES = (
+    "Keep this up and you are guaranteed to become one of the greatest mathematicians who has ever lived.",
+    "Talent like yours cannot fail.",
+    "You have the potential to be the best mathematician in the world.",
+)
+
 
 if __name__ == "__main__":
     honest_flags = check_lesson_text(HONEST_EXAMPLE_TEXT)
@@ -321,7 +449,15 @@ if __name__ == "__main__":
         f"expected the inflated example to be flagged, got {inflated_flags}"
     )
 
+    for sentence in _TEACH_YN8_REGRESSION_SENTENCES:
+        flags = check_lesson_text(sentence)
+        assert flags, f"teach-yn8 regression: {sentence!r} passed silently with zero flags"
+        assert all(f.verdict is Verdict.INFLATED for f in flags), (
+            f"teach-yn8 regression: {sentence!r} was flagged but not as INFLATED: {flags}"
+        )
+
     print(
         "OK: honest example passes clean "
-        f"(0 flags), inflated example flagged ({len(inflated_flags)} flag(s))"
+        f"(0 flags), inflated example flagged ({len(inflated_flags)} flag(s)), "
+        f"all {len(_TEACH_YN8_REGRESSION_SENTENCES)} teach-yn8 regression sentences flagged INFLATED"
     )

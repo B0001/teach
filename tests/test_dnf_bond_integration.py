@@ -41,6 +41,23 @@ def test_checker_flags_no_dishonest_potential_claims():
     assert report.potential_flags == ()
 
 
+def test_potential_checker_coverage_gap_is_disclosed_not_hidden():
+    """teach-yn8: 'zero flags' from the potential_checker must never be
+    reported as 'no overpromises' on its own -- this lesson has five
+    about-learner sentences (retrospective/procedural framing, e.g. 'you
+    just handled...') that the extractor's recognized-shape whitelist does
+    not classify as potential claims at all. The report must say so
+    explicitly, exactly like the fact_checker's out-of-scope disclosure
+    above, rather than let an unqualified 'no claims flagged' imply every
+    about-learner sentence was checked."""
+    report = run_integration_check(build_lesson())
+    cov = report.potential_coverage
+    assert len(cov.about_learner) == 6
+    assert len(cov.classified) == 1
+    assert len(cov.unclassified) == 5
+    assert "unclassified" in report.render()
+
+
 def test_out_of_scope_coverage_is_disclosed_not_hidden():
     """teach-25o's kernel-normal-subgroup fact lives on 3.3, off this
     lesson's traversal to Lagrange -- the report must say so explicitly

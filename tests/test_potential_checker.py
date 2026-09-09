@@ -13,6 +13,7 @@ from teach.honesty_rubric import ClaimType, Verdict, WORKED_EXAMPLES, classify
 from teach.potential_checker import (
     HONEST_EXAMPLE_TEXT,
     INFLATED_EXAMPLE_TEXT,
+    check_coverage,
     check_lesson_text,
     extract_claims,
 )
@@ -176,3 +177,76 @@ def test_flags_include_abstain_not_just_inflated():
     flags = check_lesson_text(text)
     assert len(flags) == 1
     assert flags[0].verdict is Verdict.ABSTAIN
+
+
+# --- teach-yn8: overpromises outside the old 5 future-tense patterns -------
+#
+# Reproduction from the bead: running the acceptance checker against a
+# deliberately corrupted lesson, these three sentences produced ZERO flags,
+# because none of them matched "you'll" / "you will" / "you're going to" /
+# "you are going to" / "you're basically|practically" -- the whole
+# five-pattern list _claim_type used to gate on before a sentence was even
+# considered a candidate claim.
+
+
+def test_guaranteed_to_become_is_flagged():
+    text = "Keep this up and you are guaranteed to become one of the greatest mathematicians who has ever lived."
+    flags = check_lesson_text(text)
+    assert flags, "teach-yn8 regression: this sentence must not pass silently"
+    assert all(f.verdict is Verdict.INFLATED for f in flags)
+
+
+def test_cannot_fail_is_flagged():
+    text = "Talent like yours cannot fail."
+    flags = check_lesson_text(text)
+    assert flags, "teach-yn8 regression: this sentence must not pass silently"
+    assert all(f.verdict is Verdict.INFLATED for f in flags)
+
+
+def test_present_tense_potential_claim_is_flagged():
+    text = "You have the potential to be the best mathematician in the world."
+    flags = check_lesson_text(text)
+    assert flags, "teach-yn8 regression: this sentence must not pass silently"
+    assert all(f.verdict is Verdict.INFLATED for f in flags)
+
+
+def test_yours_possessive_is_recognized_as_about_the_learner():
+    """'yours' (as in 'talent like yours') doesn't match \\byour\\b -- the
+    'r' isn't followed by a word boundary. Confirmed as its own gap because
+    the sentence above only reaches classification once this is fixed."""
+    assert extract_claims("Talent like yours cannot fail.") != ()
+
+
+# --- coverage transparency --------------------------------------------------
+#
+# teach-yn8's structural fix, not just three more patterns: extraction is
+# still a whitelist of recognized claim shapes (unavoidable -- classify()
+# needs a typed PotentialClaim), so `check_coverage` makes the gap between
+# "sentences about the learner seen" and "sentences actually classified"
+# visible instead of silently collapsing into check_lesson_text's flag
+# count.
+
+
+def test_coverage_reports_unclassified_sentences_about_the_learner():
+    text = "tutor: You just solved that one beautifully."
+    cov = check_coverage(text)
+    assert cov.about_learner == ("You just solved that one beautifully.",)
+    assert cov.classified == ()
+    assert cov.unclassified == ("You just solved that one beautifully.",)
+
+
+def test_coverage_classified_matches_extract_claims():
+    text = "tutor: You'll ace next week's exam."
+    cov = check_coverage(text)
+    claims = extract_claims(text)
+    assert cov.classified == tuple(c.text for c in claims)
+    assert cov.unclassified == ()
+
+
+def test_coverage_ignores_learner_speech_like_extract_claims_does():
+    text = (
+        "tutor: How are you feeling about induction proofs?\n"
+        "learner: Honestly I think I'm going to be the best mathematician of my generation."
+    )
+    cov = check_coverage(text)
+    assert cov.about_learner == ("How are you feeling about induction proofs?",)
