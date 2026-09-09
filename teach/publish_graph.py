@@ -68,11 +68,43 @@ def _association_record(edge) -> dict:
     }
 
 
+# teach-8xw.17: HF validates the dataset card's front-matter `license` against
+# a fixed vocabulary of identifiers and rejects the ENTIRE upload when it does
+# not match -- and the VA SOL source states its license as the CC BY 4.0 URL,
+# which is not one of them. Map only the spellings we can recognize exactly;
+# anything else becomes "other", which the Hub accepts and which, unlike
+# guessing at the nearest identifier, asserts nothing about a license this code
+# did not recognize. The source's own license string is published verbatim in
+# the "## Source" block below regardless, so nothing is lost by being vague in
+# the front matter.
+_HF_LICENSE_IDS = {
+    "https://creativecommons.org/licenses/by/4.0/": "cc-by-4.0",
+    "https://creativecommons.org/licenses/by-sa/4.0/": "cc-by-sa-4.0",
+    "https://creativecommons.org/licenses/by-nc/4.0/": "cc-by-nc-4.0",
+    "https://creativecommons.org/publicdomain/zero/1.0/": "cc0-1.0",
+}
+
+
+def _hf_license_id(raw: object) -> str:
+    """The front-matter `license` value for a source's stated license.
+
+    Unrecognized input is "other", never a guess: publishing a specific
+    identifier the source did not actually state would be this repo asserting
+    a license on someone else's material on the strength of a string match.
+    """
+    if raw is None:
+        return "unknown"
+    key = str(raw).strip().lower()
+    if not key.endswith("/") and key.startswith("http"):
+        key += "/"
+    return _HF_LICENSE_IDS.get(key, "other")
+
+
 def _dataset_card(*, graph: ConceptGraph, source: dict, repo_id: str | None) -> str:
     domains = sorted({n.domain for n in graph.nodes})
     lines = [
         "---",
-        "license: " + str(source.get("license", "unknown")),
+        "license: " + _hf_license_id(source.get("license")),
         "tags:",
         "  - knowledge-graph",
         "  - prerequisite-graph",
@@ -220,6 +252,20 @@ def publish(
     repo_url = api.create_repo(
         repo_id, repo_type="dataset", private=private, exist_ok=True
     )
+    # teach-8xw.17: `create_repo` resolves a namespace-less repo id against the
+    # token owner and returns the canonical "owner/name"; `upload_file` does
+    # NOT -- it looks up the literal string and 404s. Passing the caller's
+    # `repo_id` to both therefore creates one repo and uploads to a different,
+    # nonexistent one, and the failure reads as "Repository Not Found" for a
+    # repo that was just successfully created one line above. Take the
+    # canonical id back from `create_repo` and use it from here on.
+    repo_id = repo_url.repo_id
+    # Rebuilt, not reused: `files` above was built from the caller's spelling,
+    # and the dataset card embeds it as the README title -- publishing the
+    # pre-canonical build would ship a card headed "mathgraph-00" to a repo
+    # actually named "owner/mathgraph-00".
+    files = build_dataset_files(graph, source=source, repo_id=repo_id)
+    total_bytes = sum(len(content) for content in files.values())
     for path_in_repo, content in files.items():
         api.upload_file(
             path_or_fileobj=content,
@@ -292,6 +338,13 @@ def _selfcheck() -> None:
     b = ConceptNode(id="dom:b", domain="test", label="B")
     graph = ConceptGraph(nodes=(a, b), edges=(PrerequisiteEdge(src="dom:a", dst="dom:b"),))
     source = {"provider": "self-check", "license": "n/a"}
+
+    assert _hf_license_id("https://creativecommons.org/licenses/by/4.0/") == "cc-by-4.0"
+    assert _hf_license_id("https://creativecommons.org/licenses/by/4.0") == "cc-by-4.0"
+    assert _hf_license_id("Some Bespoke Institutional License") == "other", (
+        "an unrecognized license must degrade to 'other', never to a guessed identifier"
+    )
+    assert _hf_license_id(None) == "unknown"
 
     files = build_dataset_files(graph, source=source, repo_id="example/repo")
     assert set(files) == {"nodes.jsonl", "associations.jsonl", "manifest.json", "README.md"}

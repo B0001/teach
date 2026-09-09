@@ -17,10 +17,12 @@ testpaths = ["tests"]
 # the repo is driven by, not a library the repo uses. Only what genuinely
 # differs per repo belongs here; see that package's README for every key.
 [tool.sandbox]
-# teach-8xw.17 needs a real HuggingFace credential and a live dataset repo.
-# No worker session has one, and the worker correctly refused to fabricate a
-# push result -- so stop dispatching it rather than burning an attempt.
-park = ["teach-8xw.17"]
+# Nothing is parked. teach-8xw.17 was parked here for wanting a real
+# HuggingFace credential no worker session had; it was verified live from a
+# human-run session on 2026-09-09 (and found two bugs no dry run could reach),
+# so it is closed and unparked. Park a bead when the blocker is the sandbox's,
+# not the bead's -- a missing credential, a service only the host can reach --
+# never to route around one a worker simply found hard.
 
 # narrator is a sibling repo on the host, not a package on any index. Two
 # worker sessions burned searching GitHub/PyPI for it before it was mounted.
