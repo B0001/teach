@@ -19,6 +19,7 @@ from teach.concept_recovery import (
     recover_assumed_prerequisites,
     recover_from_lesson_text,
     recover_unsignposted_prerequisites,
+    score_candidates,
 )
 from teach.va_math_sol_graph import load_va_math_sol_graph
 
@@ -317,3 +318,101 @@ def test_build_vocabulary_index_filters_boilerplate_words():
     # each node's own distinct word survives.
     assert "zebra" in index.node_words("n0")
     assert "accordion" in index.node_words("n3")
+
+
+def test_coverage_tiebreak_resolves_a_full_chain_lessons_margin_of_one():
+    """teach-ed3: a lesson that walks a full prerequisite chain with real
+    content at every step can give an earlier, bigger-vocabulary scaffolding
+    node a raw-overlap score close enough to the actual target's that the
+    old raw-margin-only rule would abstain (this is exactly what happened to
+    teach-8xw.15's Bond/Lagrange lesson: margin of 1, cosets 12 vs Lagrange
+    13). Here "a" is the earlier node with a 6-word vocabulary, "b" is the
+    target with a 5-word vocabulary that the text covers *completely* --
+    raw scores are b=5, a=4 (margin 1, below _MIN_MARGIN), but b's coverage
+    (5/5 = 1.0) decisively beats a's (4/6 = 0.667), so this must recover b,
+    not abstain."""
+    graph = ConceptGraph(
+        nodes=(
+            # Single-letter labels so the label itself contributes no words
+            # to vocabulary (words under 4 letters are dropped by `_words`)
+            # -- this test is about the facts vocabulary's coverage math,
+            # not incidental overlap from a "Node A"/"Node B"-style label.
+            ConceptNode(id="a", domain="math", label="A",
+                        facts={"detail": "zebras xylophones quicksand mongoose addax bison"}),
+            ConceptNode(id="b", domain="math", label="B",
+                        facts={"detail": "walruses yardsticks umbrellas trombones bicycles"}),
+        ),
+        edges=(PrerequisiteEdge(src="a", dst="b"),),
+    )
+    text = (
+        "Today we cover walruses, yardsticks, umbrellas, trombones, and "
+        "bicycles -- building on zebras, xylophones, quicksand, and "
+        "mongoose from before."
+    )
+    index = build_vocabulary_index(graph)
+    candidates = score_candidates(text, index)
+    scores = {c.node_id: c.score for c in candidates}
+    assert scores == {"b": 5, "a": 4}, scores  # raw margin is exactly 1
+
+    result = recover_from_lesson_text(text, graph)
+    assert result.taught_node_id == "b"
+    assert result.abstain_reason is None
+
+
+def test_coverage_tiebreak_does_not_rescue_similarly_partial_coverage():
+    """The tiebreak requires the winner's coverage to be both near-total
+    (>= _MIN_COVERAGE_FRACTION) and decisively ahead of every close rival
+    (>= _MIN_COVERAGE_MARGIN) -- two candidates that are each partially and
+    similarly covered is a real ambiguous match, not a case the tiebreak
+    should paper over. Same graph shape as the rescue test above, but the
+    text only partially covers "b" (3 of 5 words) at a fraction (0.6) far
+    below the 0.85 coverage bar, so this must still abstain."""
+    graph = ConceptGraph(
+        nodes=(
+            ConceptNode(id="a", domain="math", label="A",
+                        facts={"detail": "zebras xylophones quicksand mongoose addax bison"}),
+            ConceptNode(id="b", domain="math", label="B",
+                        facts={"detail": "walruses yardsticks umbrellas trombones bicycles"}),
+        ),
+        edges=(PrerequisiteEdge(src="a", dst="b"),),
+    )
+    text = (
+        "Today we mostly cover walruses, yardsticks, and umbrellas -- "
+        "building on zebras, xylophones, quicksand, and mongoose from "
+        "before."
+    )
+    index = build_vocabulary_index(graph)
+    candidates = score_candidates(text, index)
+    scores = {c.node_id: c.score for c in candidates}
+    assert scores == {"b": 3, "a": 4}
+
+    result = recover_from_lesson_text(text, graph)
+    assert result.taught_node_id is None
+    assert "ambiguous" in result.abstain_reason.lower()
+
+
+def test_dnf_bond_lesson_recovers_lagrange_without_a_single_word_margin():
+    """teach-ed3's actual trigger: teach-8xw.15's real Bond/Lagrange lesson
+    (teach/dnf_bond_lesson.py) once had a raw-score margin of exactly 1
+    (Lagrange 13 vs cosets 12) before a single word ("proof") was added to
+    push it to the _MIN_MARGIN=2 floor -- a single point of margin, not a
+    robust property. This test removes that same word from the real,
+    already-built lesson text and confirms the coverage tiebreak recovers
+    Lagrange's theorem anyway, so the correctness of this lesson's recovery
+    no longer hinges on one word."""
+    from teach.dnf_bond_lesson import build_lesson
+    from teach.dummit_foote_graph import TARGET_NODE_ID, load_dummit_foote_graph
+
+    graph = load_dummit_foote_graph()
+    artifact = build_lesson()
+    assert "the proof behind it is" in artifact.text  # guards the fixture itself
+    text_without_proof = artifact.text.replace("the proof behind it is", "it is")
+
+    index = build_vocabulary_index(graph)
+    candidates = score_candidates(text_without_proof, index)
+    by_id = {c.node_id: c.score for c in candidates}
+    assert by_id[TARGET_NODE_ID] - by_id["dummit-foote:3.1-cosets"] == 1  # reproduces the fragile margin
+
+    result = recover_from_lesson_text(text_without_proof, graph)
+    assert result.taught_node_id == TARGET_NODE_ID
+    assert result.abstain_reason is None

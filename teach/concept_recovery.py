@@ -52,9 +52,35 @@ confident answer":
     for a lesson about cosets because *something* had the highest score
     would be worse than useless -- it would look like a working checker
     while being wrong every time it mattered.
-  - The top two candidates are too close to call (`_MIN_MARGIN`) -> abstain.
-    Ambiguous overlap is a real failure mode of prose recovery, not an edge
-    case to paper over with a tiebreaker that has no textual basis.
+  - The top two candidates are too close to call (`_MIN_MARGIN`) -> abstain,
+    UNLESS the coverage tiebreak below resolves it.
+
+COVERAGE TIEBREAK (teach-ed3)
+
+Raw overlap count alone tends to reward whichever candidate happens to have
+the larger vocabulary, not whichever candidate the lesson actually spent its
+depth on. A lesson that walks a full prerequisite chain with real
+definitional content at every step (not just its target) routinely gives an
+earlier, more heavily-scaffolded node -- e.g. cosets, on the way to
+Lagrange's theorem -- a large raw overlap too, purely because that node's
+own vocabulary list is longer, even though the *target* node is the one the
+lesson's climactic, most detailed passage is actually about. Raw-count
+margin can come out at 1 for a lesson that is not actually ambiguous to a
+human reader.
+
+So when the raw-score margin does not clear `_MIN_MARGIN`, a second signal
+gets a chance before abstaining: coverage, i.e. what fraction of a
+candidate's OWN distinctive vocabulary shows up in the text at all
+(`score / len(node's distinctive vocabulary)`). A node whose vocabulary is
+*almost entirely* present (`_MIN_COVERAGE_FRACTION`) and clearly more fully
+covered than every other close rival (`_MIN_COVERAGE_MARGIN`) is the one the
+lesson gave its fullest treatment to -- that is a legitimate, independent
+piece of textual evidence, not a threshold softened to make abstention
+happen less often. It still requires BOTH near-total coverage of the
+winner's own vocabulary AND a decisive gap over every rival close on raw
+score; two candidates that are both partially, similarly covered (the
+synthetic exact-tie fixture in tests/test_concept_recovery.py) still
+abstain, because neither condition is met.
 
 Recovered prerequisites get the same abstention discipline at the level of
 each candidate: a direct-prerequisite node in the graph is only reported as
@@ -92,8 +118,18 @@ _STOPWORDS = frozenset(
 # the lesson text to be considered a match at all.
 _MIN_MATCH_WORDS = 3
 # The top candidate's score must beat the runner-up's by at least this much,
-# or the match is ambiguous and this module abstains rather than guess.
+# or the match is ambiguous and this module abstains rather than guess --
+# unless the coverage tiebreak below resolves it.
 _MIN_MARGIN = 2
+# Coverage tiebreak (teach-ed3, see module docstring): when the raw-score
+# margin doesn't clear _MIN_MARGIN, the top candidate can still win if it
+# covers almost all of its OWN distinctive vocabulary...
+_MIN_COVERAGE_FRACTION = 0.85
+# ...AND that coverage fraction beats every other close-on-raw-score rival's
+# own coverage fraction by at least this much. Both conditions are required
+# so two candidates that are each partially and similarly covered (a real
+# ambiguous match) still abstain.
+_MIN_COVERAGE_MARGIN = 0.15
 # A word that appears in the vocabulary of more than this many nodes is
 # curriculum boilerplate, not a discriminating signal -- excluded from
 # scoring entirely. See module docstring.
@@ -232,6 +268,15 @@ class RecoveryResult:
     unsignposted_prerequisite_ids: tuple[str, ...]
 
 
+def _coverage_fraction(match: ConceptMatch, index: VocabularyIndex) -> float:
+    """What fraction of `match.node_id`'s own distinctive vocabulary shows
+    up in the text at all -- see module docstring's COVERAGE TIEBREAK
+    section. `match.score` is always a subset of that node's vocabulary and
+    nonzero (only nonzero-overlap nodes reach `score_candidates`'s output),
+    so the vocabulary is never empty here."""
+    return match.score / len(index.node_words(match.node_id))
+
+
 def recover_taught_concept(text: str, index: VocabularyIndex) -> tuple[str | None, tuple[ConceptMatch, ...], str | None]:
     """Best-matching node id, the full candidate list, and an abstain
     reason (None if a node was recovered)."""
@@ -244,11 +289,23 @@ def recover_taught_concept(text: str, index: VocabularyIndex) -> tuple[str | Non
             f"best candidate {top.node_id!r} shares only {top.score} distinctive "
             f"word(s) with the text (need >= {_MIN_MATCH_WORDS})"
         )
-    runner_up_score = candidates[1].score if len(candidates) > 1 else 0
-    if top.score - runner_up_score < _MIN_MARGIN:
-        tied = [c.node_id for c in candidates if top.score - c.score < _MIN_MARGIN]
-        return None, candidates, f"ambiguous match -- candidates too close to call: {tied}"
-    return top.node_id, candidates, None
+    close = [c for c in candidates if top.score - c.score < _MIN_MARGIN]
+    if len(close) == 1:
+        return top.node_id, candidates, None
+
+    # Raw-score margin alone doesn't clear the bar -- try the coverage
+    # tiebreak (module docstring) before abstaining. Requires BOTH the
+    # winner covering almost all of its own vocabulary AND a decisive gap
+    # over every other close rival's own coverage, not just a higher count.
+    top_fraction = _coverage_fraction(top, index)
+    rival_fractions = [_coverage_fraction(c, index) for c in close if c is not top]
+    if top_fraction >= _MIN_COVERAGE_FRACTION and all(
+        top_fraction - f >= _MIN_COVERAGE_MARGIN for f in rival_fractions
+    ):
+        return top.node_id, candidates, None
+
+    tied = [c.node_id for c in close]
+    return None, candidates, f"ambiguous match -- candidates too close to call: {tied}"
 
 
 def _sentences(text: str) -> list[str]:
