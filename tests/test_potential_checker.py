@@ -13,6 +13,8 @@ from teach.honesty_rubric import ClaimType, Verdict, WORKED_EXAMPLES, classify
 from teach.potential_checker import (
     HONEST_EXAMPLE_TEXT,
     INFLATED_EXAMPLE_TEXT,
+    _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES,
+    _TEACH_KMM_REGRESSION_SENTENCES,
     check_coverage,
     check_lesson_text,
     extract_claims,
@@ -250,3 +252,45 @@ def test_coverage_ignores_learner_speech_like_extract_claims_does():
     )
     cov = check_coverage(text)
     assert cov.about_learner == ("How are you feeling about induction proofs?",)
+
+
+# --- teach-kmm: shape-based classification, not a wider whitelist ----------
+#
+# teach-yn8 closed by widening the pattern list; teach-kmm's bar is
+# different: the fix has to generalize to phrasing nobody wrote a pattern
+# for. Both sets below are asserted to be flagged INFLATED. The regression
+# set is the bead's own reproduction, verbatim. The generalization set is a
+# second, independently-written set using different vocabulary and a
+# different named reward/person for the same underlying shapes (obstacle-
+# negation idiom, "destined for", innate-quality-noun absolute-adjective
+# framing, "[noun] like yours", never/always + failure verb) -- if the fix
+# had merely hard-coded the five regression sentences, this second set
+# would still fall through unclassified.
+
+
+def test_teach_kmm_regression_sentences_are_flagged_inflated():
+    for sentence in _TEACH_KMM_REGRESSION_SENTENCES:
+        flags = check_lesson_text(sentence)
+        assert flags, f"{sentence!r} passed silently with zero flags"
+        assert all(f.verdict is Verdict.INFLATED for f in flags), (
+            f"{sentence!r} was flagged but not as INFLATED: {flags}"
+        )
+
+
+def test_teach_kmm_held_out_generalization_sentences_are_flagged_inflated():
+    """Same claim shapes as the regression set, different words and a
+    different named reward/person -- proves the fix generalized by shape
+    rather than memorizing five strings."""
+    for sentence in _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES:
+        flags = check_lesson_text(sentence)
+        assert flags, f"{sentence!r} passed silently with zero flags"
+        assert all(f.verdict is Verdict.INFLATED for f in flags), (
+            f"{sentence!r} was flagged but not as INFLATED: {flags}"
+        )
+
+
+def test_teach_kmm_regression_and_generalization_sets_are_disjoint():
+    """Guard against the generalization set accidentally being a paraphrase
+    (or copy) of the regression set -- they must use disjoint sentences to
+    actually test generalization."""
+    assert set(_TEACH_KMM_REGRESSION_SENTENCES).isdisjoint(_TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES)

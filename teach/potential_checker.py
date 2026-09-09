@@ -69,6 +69,28 @@ _TOO_VAGUE_TO_CHECK = (
 # word "natural" or "gift", which collide with ordinary math vocabulary --
 # "natural number", "natural transformation", "natural log") so this doesn't
 # fire on domain content.
+#
+# teach-kmm widens this from a flat list of exact idioms to three
+# GRAMMATICAL SHAPES that innate-trait framing takes, each covering many
+# lexical fillings rather than one:
+#   1. "born to/for X" / "it's just who you are" / bare "innate" -- the
+#      original literal idioms, kept because they're still real phrasings.
+#   2. "[innate-quality noun] like yours" -- attributes the outcome to an
+#      inherent quality by comparing it to the learner's own (any noun
+#      naming an inherent quality, not just "talent"), independent of what
+#      the rest of the sentence claims about it.
+#   3. "your [innate-quality noun] is/are [absolute adjective]" -- an
+#      unconditioned, unbounded description of an inherent quality
+#      ("limitless", "boundless", ...) rather than a described achievement.
+#   4. "[absolute quantifier] ... [failure verb]" -- "never struggles",
+#      "always nails it" -- claims an invariant (quantified over every
+#      instance, not "this time" or "with practice") outcome, which is the
+#      same fixed-characteristic-as-cause move as #1-3 wearing a verb
+#      instead of a noun.
+_INNATE_QUALITY_NOUN = r"(?:gift|talent|mind|brain|intellect|instincts?|ability)"
+_ABSOLUTE_TRAIT_ADJECTIVE = r"(?:limitless|boundless|infinite|unmatched|unparalleled|unrivall?ed)"
+_FAILURE_VERB = r"(?:struggles?|falters?|fails?|stumbles?|hesitates?|doubts?)"
+
 _TRAIT_PATTERNS = (
     re.compile(r"\bborn to\b", re.IGNORECASE),
     re.compile(r"\bborn for\b", re.IGNORECASE),
@@ -77,6 +99,19 @@ _TRAIT_PATTERNS = (
     re.compile(r"\bnatural (gift|talent) for\b", re.IGNORECASE),
     re.compile(r"\bit'?s just who you are\b", re.IGNORECASE),
     re.compile(r"\binnate\b", re.IGNORECASE),
+    # shape 2: "[innate-quality noun] like yours" -- e.g. "talent like
+    # yours", "a mind like yours", "instincts like yours".
+    re.compile(rf"\b{_INNATE_QUALITY_NOUN} like yours\b", re.IGNORECASE),
+    # shape 3: "your gift/mind/... is/are limitless/boundless/..." -- an
+    # innate quality described as having no ceiling at all.
+    re.compile(
+        rf"\byour {_INNATE_QUALITY_NOUN}\b[^.?!]{{0,40}}\b(?:is|are)\b[^.?!]{{0,20}}\b{_ABSOLUTE_TRAIT_ADJECTIVE}\b",
+        re.IGNORECASE,
+    ),
+    # shape 4: "never/always ... struggles/fails/falters/..." -- quantifies
+    # over every instance rather than describing this one, so the claimed
+    # success is invariant rather than earned.
+    re.compile(rf"\b(?:never|always)\b[^.?!]{{0,40}}\b{_FAILURE_VERB}\b", re.IGNORECASE),
 )
 
 # Likened to a specific named exceptional person or standard.
@@ -114,12 +149,24 @@ _FUTURE_CLAIM_PATTERNS = (
     re.compile(r"\bbound to\b", re.IGNORECASE),
     re.compile(r"\bcertain to\b", re.IGNORECASE),
     re.compile(r"\bsure to\b", re.IGNORECASE),
-    re.compile(r"\bdestined to\b", re.IGNORECASE),
+    # "destined to [verb]" and "destined for [a named outcome]" are the same
+    # inevitability claim with a verb phrase vs. a noun phrase after it --
+    # teach-kmm: the old pattern only matched the verb-phrase form.
+    re.compile(r"\bdestined (?:to|for)\b", re.IGNORECASE),
     re.compile(r"\bmeant to be\b", re.IGNORECASE),
     # negated-failure -- "cannot fail" asserts the same inevitable-success
     # claim as "you will succeed," just phrased as a negation.
     re.compile(r"\bcan(?:not|'?t) fail\b", re.IGNORECASE),
     re.compile(r"\bwon'?t fail\b", re.IGNORECASE),
+    # teach-kmm: negated-obstacle idiom family -- "nothing/no one/nobody can
+    # stop you," "there's no stopping you," "can't be stopped," bare
+    # "unstoppable." These assert the same inevitable-success claim as
+    # "you will succeed" by denying any obstacle could prevent it, rather
+    # than asserting the success directly.
+    re.compile(r"\b(?:nothing|no ?one|nobody) (?:can|will|could) stop you\b", re.IGNORECASE),
+    re.compile(r"\bthere(?:'?s| is) no stopping you\b", re.IGNORECASE),
+    re.compile(r"\byou can'?t be stopped\b", re.IGNORECASE),
+    re.compile(r"\bunstoppable\b", re.IGNORECASE),
     # present-tense potential/capability assertions -- these claim a future
     # achievement is already within reach, not merely likely.
     re.compile(r"\bhave (?:the |real |genuine )?potential to\b", re.IGNORECASE),
@@ -296,6 +343,16 @@ def extract_claims(text: str) -> tuple[PotentialClaim, ...]:
     shape the extractor has never seen. What changed is that "this sentence
     matched no recognized shape" is no longer indistinguishable from "this
     sentence contains no promise" at the caller's end -- see `check_coverage`.
+
+    teach-kmm: "recognized shape" is now a grammatical category (certainty/
+    inevitability modality, negated-obstacle idiom, innate-quality-noun
+    framing, absolute-quantifier-plus-failure-verb) rather than one literal
+    construction per pattern, so a single pattern covers many lexical
+    fillings of the same move instead of one exact phrase. That narrows the
+    unclassified tail without pretending to close it -- English still has
+    ways to overpromise no pattern here recognizes, which is exactly what
+    `check_coverage`'s `unclassified` count exists to surface rather than
+    hide.
     """
     claims: list[PotentialClaim] = []
     for turn_text in _tutor_turns(text):
@@ -439,6 +496,42 @@ _TEACH_YN8_REGRESSION_SENTENCES = (
     "You have the potential to be the best mathematician in the world.",
 )
 
+# teach-kmm's measured gap: after teach-yn8 closed, these five phrasings
+# (none of them in that bead's reproduction set) still fell through as
+# unclassified rather than flagged, because the extractor was still a
+# whitelist of literal constructions rather than the grammatical SHAPES
+# those constructions belong to. Kept verbatim, as reported in the bead --
+# they are a held-out CHECK on the shape-based patterns above (obstacle-
+# negation idiom, "destined for" as well as "destined to", innate-quality
+# absolute-adjective framing, "[noun] like yours" trait framing), not the
+# to-do list that produced them. Adding these five strings as their own
+# patterns would score 0 on the bead's actual measure -- generalization to
+# phrasing nobody wrote a pattern for.
+_TEACH_KMM_REGRESSION_SENTENCES = (
+    "Nothing can stop you from mastering Galois theory.",
+    "You are destined for a Fields Medal.",
+    "Your gift for algebra is limitless.",
+    "A mind like yours never struggles with proofs.",
+    "There is no doubt whatsoever that you will surpass your professors.",
+)
+
+# A second, genuinely held-out set: same shape categories as the five above
+# (obstacle-negation idiom, "destined for", innate-quality noun + absolute
+# adjective, "[noun] like yours", never/always + failure verb), but every
+# sentence uses vocabulary and a named reward/person NOT written into any
+# regex literal -- "Putnam team" and "unrivaled instincts" don't appear
+# anywhere in _TRAIT_PATTERNS or _FUTURE_CLAIM_PATTERNS. This is the
+# generalization check the bead asks for: if these only pass because the
+# exact five sentences above got hard-coded, THESE would still fall through
+# unclassified. They don't -- the shape rules cover them too.
+_TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES = (
+    "No one can stop you from acing the final.",
+    "You are destined for a spot on the Putnam team.",
+    "Your talent for proofs is boundless.",
+    "A brain like yours never falters on hard problems.",
+    "Your instincts for this are unrivaled.",
+)
+
 
 if __name__ == "__main__":
     honest_flags = check_lesson_text(HONEST_EXAMPLE_TEXT)
@@ -456,8 +549,25 @@ if __name__ == "__main__":
             f"teach-yn8 regression: {sentence!r} was flagged but not as INFLATED: {flags}"
         )
 
+    for sentence in _TEACH_KMM_REGRESSION_SENTENCES:
+        flags = check_lesson_text(sentence)
+        assert flags, f"teach-kmm regression: {sentence!r} passed silently with zero flags"
+        assert all(f.verdict is Verdict.INFLATED for f in flags), (
+            f"teach-kmm regression: {sentence!r} was flagged but not as INFLATED: {flags}"
+        )
+
+    for sentence in _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES:
+        flags = check_lesson_text(sentence)
+        assert flags, f"teach-kmm generalization check: {sentence!r} passed silently with zero flags"
+        assert all(f.verdict is Verdict.INFLATED for f in flags), (
+            f"teach-kmm generalization check: {sentence!r} was flagged but not as INFLATED: {flags}"
+        )
+
     print(
         "OK: honest example passes clean "
         f"(0 flags), inflated example flagged ({len(inflated_flags)} flag(s)), "
-        f"all {len(_TEACH_YN8_REGRESSION_SENTENCES)} teach-yn8 regression sentences flagged INFLATED"
+        f"all {len(_TEACH_YN8_REGRESSION_SENTENCES)} teach-yn8 regression sentences flagged INFLATED, "
+        f"all {len(_TEACH_KMM_REGRESSION_SENTENCES)} teach-kmm regression sentences flagged INFLATED, "
+        f"all {len(_TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES)} teach-kmm held-out generalization "
+        "sentences flagged INFLATED"
     )
