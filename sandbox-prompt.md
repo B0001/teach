@@ -37,6 +37,21 @@ So:
   claim a behaviour holds because it looks like it should. Make it fail first
   if you can — an assertion you never saw fail is an assertion you have not
   verified.
+- **You cannot hold out examples from yourself.** When a bead's claim is
+  that something *generalizes* — a classifier, a detector, a heuristic, any
+  rule meant to cover cases nobody enumerated — passing examples you wrote is
+  not evidence that it generalizes. Your examples inherit your idea of what
+  the input space looks like, and that idea is precisely the thing under
+  test. So: the reproduction cases on a bead are a floor, never the measure;
+  a generalization set you generated in the same session that wrote the rule
+  is not held out, whatever it is labelled; and "I tested it on differently
+  worded examples" is a claim about your own imagination, not about coverage.
+  What you *can* honestly do is report the shape of what you covered and what
+  you know you did not, and say plainly that generalization is unmeasured.
+  This has already happened twice here: `teach-yn8` and `teach-kmm` both
+  closed against self-authored sets, and both broke on the first phrasings
+  written by someone else — the second time leaving a P1 hole (`teach-5gf`)
+  underneath a safety property the first was believed to have established.
 - **The checker must not be able to see the producer's internals.** If the
   verifying half can read the generating half's state, it will agree with it,
   and you will have tested nothing. Give it only what a real consumer gets.
