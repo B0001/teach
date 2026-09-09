@@ -14,6 +14,9 @@ from teach.potential_checker import (
     HONEST_EXAMPLE_TEXT,
     INFLATED_EXAMPLE_TEXT,
     _TEACH_5GF_REGRESSION_SENTENCES,
+    _TEACH_8XW_19_REGRESSION_SENTENCES,
+    _TEACH_8XW_20_SECOND_PERSON_TURN,
+    _TEACH_8XW_20_THIRD_PERSON_TURN,
     _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES,
     _TEACH_KMM_REGRESSION_SENTENCES,
     check_coverage,
@@ -225,15 +228,14 @@ def test_yours_possessive_is_recognized_as_about_the_learner():
 # teach-yn8's structural fix, not just three more patterns: extraction is
 # still a whitelist of recognized claim shapes (unavoidable -- classify()
 # needs a typed PotentialClaim), so `check_coverage` makes the gap between
-# "sentences about the learner seen" and "sentences actually classified"
-# visible instead of silently collapsing into check_lesson_text's flag
-# count.
+# "sentences seen" and "sentences actually classified" visible instead of
+# silently collapsing into check_lesson_text's flag count.
 
 
-def test_coverage_reports_unclassified_sentences_about_the_learner():
+def test_coverage_reports_unclassified_sentences():
     text = "tutor: You just solved that one beautifully."
     cov = check_coverage(text)
-    assert cov.about_learner == ("You just solved that one beautifully.",)
+    assert cov.seen == ("You just solved that one beautifully.",)
     assert cov.classified == ()
     assert cov.unclassified == ("You just solved that one beautifully.",)
 
@@ -252,7 +254,7 @@ def test_coverage_ignores_learner_speech_like_extract_claims_does():
         "learner: Honestly I think I'm going to be the best mathematician of my generation."
     )
     cov = check_coverage(text)
-    assert cov.about_learner == ("How are you feeling about induction proofs?",)
+    assert cov.seen == ("How are you feeling about induction proofs?",)
 
 
 # --- teach-kmm: shape-based classification, not a wider whitelist ----------
@@ -303,20 +305,20 @@ def test_teach_kmm_regression_and_generalization_sets_are_disjoint():
 # was even counted as "seen" -- so pronoun-free flattery ("Genius like this
 # comes along once in a generation.") produced about_learner=0, reading as
 # "no claims about the learner" rather than "the counting gate missed this
-# too." The fix broadens what counts as a candidate (pronoun OR an aptitude
-# noun) without changing what `_claim_type` recognizes as a checkable shape
-# -- these sentences land in `unclassified`, not `classified`, because the
-# third-person "[noun] like this" / "[noun] on this scale" construction is
-# still outside what the TRAIT patterns match. That's the correct outcome
-# per this bead: visible-but-unclassified, not silently dropped.
+# too." teach-5gf's fix broadened what counted as a candidate (pronoun OR an
+# aptitude noun) without changing what `_claim_type` recognizes as a
+# checkable shape -- these sentences land in `unclassified`, not
+# `classified`, because the third-person "[noun] like this" / "[noun] on
+# this scale" construction is still outside what the TRAIT patterns match.
+# teach-8xw.19 (below) replaces the vocabulary gate entirely, but these
+# sentences are kept as a regression check: they must still be seen and
+# still land in unclassified under the new no-gate mechanism.
 
 
 def test_pronoun_free_flattery_is_counted_as_seen():
     for sentence in _TEACH_5GF_REGRESSION_SENTENCES:
         cov = check_coverage(sentence)
-        assert cov.about_learner == (sentence,), (
-            f"{sentence!r} must be counted in about_learner, got {cov.about_learner}"
-        )
+        assert cov.seen == (sentence,), f"{sentence!r} must be counted in seen, got {cov.seen}"
 
 
 def test_pronoun_free_flattery_that_classify_cannot_type_lands_in_unclassified():
@@ -329,40 +331,24 @@ def test_pronoun_free_flattery_that_classify_cannot_type_lands_in_unclassified()
 
 
 def test_extract_claims_and_check_coverage_agree_on_pronoun_free_flattery():
-    """Both callers share `_about_learner` and `_extract_from_sentence` --
-    they must never disagree about what got classified, matching this
-    module's stated invariant (see `_extract_from_sentence`'s docstring)."""
+    """Both callers share `_extract_from_sentence` -- they must never
+    disagree about what got classified, matching this module's stated
+    invariant (see `_extract_from_sentence`'s docstring)."""
     for sentence in _TEACH_5GF_REGRESSION_SENTENCES:
         assert extract_claims(sentence) == ()
         assert check_coverage(sentence).unclassified == (sentence,)
 
 
-def test_third_person_aptitude_sentence_about_someone_else_is_still_seen():
-    """The broadened gate is intentionally permissive -- it errs toward
-    over-inclusion in `about_learner` the same way every other signal in
-    this module does, rather than trying to solve third-person coreference.
-    A tutor-turn sentence praising a historical figure's talent, not the
-    learner, still lands in the coverage count (and, since no claim-shape
-    pattern fires, in `unclassified`) -- a false-positive-in-the-seen-set
-    costs a reviewer one line to dismiss, not a silent gap.
-
-    No second-person pronoun anywhere in the sentence -- this isolates the
-    aptitude-noun path specifically, distinct from the pronoun path."""
-    text = "tutor: Galois had a rare gift for algebra most students never develop."
-    cov = check_coverage(text)
-    assert len(cov.about_learner) == 1
-    assert cov.unclassified == cov.about_learner
-
-
 def test_pronoun_free_shape_that_claim_type_already_recognizes_is_flagged():
-    """The more severe half of teach-5gf's bug, found while validating this
+    """The more severe half of teach-5gf's bug, found while validating that
     fix against independently-authored examples: some `_claim_type` shapes
     (teach-kmm's never/always+failure-verb TRAIT shape) are pronoun-free BY
     DESIGN, yet the old pronoun-only gate blocked them before `_claim_type`
     ever ran -- not landing in `unclassified`, but dropped from
     `extract_claims` entirely, so a sentence the classifier could already
-    type correctly as INFLATED was never flagged. `_about_learner` must
-    defer to `_claim_type` itself, not a separate, narrower copy of it."""
+    type correctly as INFLATED was never flagged. There is no gate left to
+    make this mistake now (teach-8xw.19 removed it), but the case stays as a
+    regression check."""
     text = "A mind like this never struggles with proofs."
     claims = extract_claims(text)
     assert len(claims) == 1
@@ -371,14 +357,138 @@ def test_pronoun_free_shape_that_claim_type_already_recognizes_is_flagged():
     assert flags and all(f.verdict is Verdict.INFLATED for f in flags)
 
 
-def test_coverage_still_ignores_learner_speech_for_aptitude_nouns():
-    """The pronoun-only version of this guarantee already existed
-    (`test_coverage_ignores_learner_speech_like_extract_claims_does`); this
-    proves the broadened aptitude-noun gate is still scoped to tutor turns,
-    not applied to the whole transcript."""
+# --- teach-8xw.19: no "about the learner" gate at all -----------------------
+#
+# Three successive widenings of a vocabulary-based "is this sentence about
+# the learner" pre-filter (teach-yn8's five literal future-tense strings,
+# teach-kmm's grammatical shapes, teach-5gf's pronoun-or-aptitude-noun
+# fallback) each fixed their own reproduction and each was disproven by the
+# next round of independently-phrased praise: a named-person comparison with
+# no "next X" framing, a bare inevitability claim with no modal, an oblique
+# future-achievement implication, a superlative with no pronoun. Measured
+# directly in this bead: the aptitude-noun fallback caught 5/8 held-out
+# sentences in one round and 1/6 in a second round that avoided its
+# vocabulary on purpose -- a whitelist for this category does not converge.
+#
+# The fix is architectural, not a fourth vocabulary list: there is no more
+# pre-filter. Every tutor-spoken sentence is a coverage candidate. This is
+# provably safe for `extract_claims` (see the comment above
+# `_TOO_VAGUE_TO_CHECK` in potential_checker.py) and makes `check_coverage`
+# noisier -- ordinary domain content now shows up as `seen` too -- in
+# exchange for there being no shape left for a future round of phrasing to
+# slip past invisibly.
+
+
+def test_no_pronoun_no_aptitude_noun_praise_is_counted_as_seen():
+    """The bead's own reproduction: sentences with no pronoun, no aptitude
+    noun, and no shape `_claim_type` recognizes -- exactly the category that
+    stayed invisible (`seen=0`, not even unclassified) after teach-5gf's
+    vocabulary widening."""
+    for sentence in _TEACH_8XW_19_REGRESSION_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.seen == (sentence,), f"{sentence!r} must be counted in seen, got {cov.seen}"
+        assert cov.unclassified == (sentence,), (
+            f"{sentence!r} must be reported unclassified, not silently dropped: {cov}"
+        )
+
+
+def test_ordinary_domain_content_is_now_seen_and_unclassified():
+    """Removing the gate is not free: a tutor-turn sentence that has nothing
+    to do with the learner's potential (praising a historical figure, or
+    plain domain content) now also lands in `seen`/`unclassified`, since
+    there is no filter left to exclude it. That is the disclosed,
+    accepted-noisier trade this bead makes -- not a false claim that this
+    sentence is about the learner, since the field is no longer named that
+    way (see `Coverage.seen`'s docstring)."""
+    text = "tutor: Galois had a rare gift for algebra most students never develop."
+    cov = check_coverage(text)
+    assert cov.seen == ("Galois had a rare gift for algebra most students never develop.",)
+    assert cov.unclassified == cov.seen
+
+
+def test_coverage_still_ignores_learner_speech():
+    """Only `_tutor_turns` decides what counts as candidate text -- removing
+    the vocabulary gate does not widen coverage to the learner's own
+    speech."""
     text = (
         "tutor: How are you feeling about induction proofs?\n"
         "learner: My talent for this is clearly limitless."
     )
     cov = check_coverage(text)
-    assert cov.about_learner == ("How are you feeling about induction proofs?",)
+    assert cov.seen == ("How are you feeling about induction proofs?",)
+
+
+# --- teach-8xw.20: unclassified is a near-constant, so a secondary,        -
+# gate-free view has to actually vary with content ---------------------------
+#
+# teach-8xw.19 fixed invisibility by dropping the "about the learner" gate
+# entirely, which made `unclassified` almost always equal `len(seen) - 1`:
+# `classified` stays small for any honestly-written lesson, so the
+# unclassified count tracks lesson length, not honesty content, and reads
+# nearly the same on every lesson. `second_person_seen` /
+# `second_person_classified` / `second_person_unclassified` are a secondary
+# breakdown restricted to sentences with an explicit "you"/"your"/"yours" --
+# reported alongside the totals, never replacing them (this subset is still
+# blind to pronoun-free third-person praise, same as the old gate).
+
+
+def test_second_person_fields_are_subsets_of_the_full_coverage():
+    """Structural invariant, true by construction of `check_coverage`: the
+    second-person fields are always a subset of, and partition the same way
+    as, the full seen/classified/unclassified triple."""
+    text = (
+        "tutor: A normal subgroup is invariant under conjugation. "
+        "You just proved the kernel is one. "
+        "If you keep working through proofs like this, you'll be ready for quotient groups next."
+    )
+    cov = check_coverage(text)
+    assert set(cov.second_person_seen) <= set(cov.seen)
+    assert set(cov.second_person_classified) <= set(cov.classified)
+    assert set(cov.second_person_unclassified) <= set(cov.unclassified)
+    assert set(cov.second_person_classified) | set(cov.second_person_unclassified) == set(
+        cov.second_person_seen
+    )
+
+
+def test_second_person_seen_excludes_third_person_sentences():
+    text = "tutor: A normal subgroup is invariant under conjugation."
+    cov = check_coverage(text)
+    assert cov.seen == (text.removeprefix("tutor: "),)
+    assert cov.second_person_seen == ()
+
+
+def test_second_person_seen_includes_yours_possessive():
+    """Same 'yours' word-boundary gap as the old pronoun gate (teach-yn8) --
+    confirmed fixed for this secondary field independently, since it's a
+    fresh regex, not a reuse of removed code."""
+    cov = check_coverage("tutor: Talent like yours cannot fail.")
+    assert cov.second_person_seen == cov.seen
+
+
+def test_second_person_subset_is_structurally_decoupled_from_lesson_length():
+    """The bead's actual complaint: `unclassified` is pinned near `len(seen)`
+    regardless of content. Prove the secondary view is NOT the same kind of
+    near-constant by construction, not by sampling: two three-sentence,
+    entirely-unclassified tutor turns -- one all third-person domain
+    narration, one all second-person direct address -- have identical
+    `len(seen)` and `len(unclassified)` (3 and 3) but second_person_seen of
+    0 and 3 respectively. If the secondary count were just a relabeling of
+    the primary one, these would match."""
+    third = check_coverage(_TEACH_8XW_20_THIRD_PERSON_TURN)
+    second = check_coverage(_TEACH_8XW_20_SECOND_PERSON_TURN)
+    assert len(third.seen) == len(second.seen) == 3
+    assert third.unclassified == third.seen
+    assert second.unclassified == second.seen
+    assert third.second_person_seen == ()
+    assert second.second_person_seen == second.seen
+
+
+def test_dnf_bond_lesson_second_person_subset_is_smaller_than_full_unclassified():
+    """Mechanism check against the real lesson this bead was filed against:
+    the secondary line must be a strictly smaller, more targeted list than
+    the raw 31-of-32 unclassified total -- otherwise it's not buying a
+    reviewer anything."""
+    from teach.dnf_bond_lesson import build_lesson
+
+    cov = check_coverage(build_lesson().text)
+    assert 0 < len(cov.second_person_unclassified) < len(cov.unclassified)

@@ -44,78 +44,54 @@ from teach.honesty_rubric import ClaimType, PotentialClaim, Verdict, classify
 
 # --- claim-shape detection -------------------------------------------------
 
-# A sentence isn't a candidate at all unless it's about the learner. Includes
-# "yours" (possessive-pronoun form, e.g. "talent like yours") -- \byour\b
-# alone does not match it, because \b requires a boundary after the "r" and
-# "yours" continues with "s". Found via teach-yn8's reproduction: "Talent
-# like yours cannot fail" was falling out at THIS gate, before extraction
-# logic ever got a chance to type it.
-_ABOUT_LEARNER_PRONOUN = re.compile(r"\byou\b|\byour\b|\byours\b", re.IGNORECASE)
-
-# teach-5gf: a pronoun is sufficient evidence a sentence is about the
-# learner, but it is not necessary -- flattery in a 1:1 tutoring turn is
-# routinely phrased in the third person with the learner as the unstated,
-# implicit subject ("Genius like this comes along once in a generation.",
-# "Talent on this scale is simply rare."). Requiring a literal pronoun before
-# a sentence was even considered "about the learner" meant this register was
-# invisible not just to flagging but to the coverage count itself -- a lesson
-# that praised the learner entirely this way reported "0 seen, 0 classified,
-# 0 unclassified," which reads as "no claims about the learner" rather than
-# the true "the gate that counts sentences missed this one too."
+# teach-yn8 gated candidacy on five literal future-tense strings; teach-kmm
+# widened that to grammatical shapes; teach-5gf found the gate applied a
+# SECOND time, one level up, as a "does this sentence even count as being
+# about the learner" pre-filter (pronoun-or-aptitude-noun) that had to run
+# before a sentence was even considered for classification. Each widening
+# fixed its own reproduction and was checked against held-out sentences a
+# fresh agent wrote -- and each time, a next round of independently-phrased
+# praise (comparison to a named person with no "next X" framing, bare
+# inevitability with no modal, oblique future-achievement implication,
+# guarantee-of-outcome with no "guaranteed to", bare superlatives) fell
+# through the same hole again. teach-8xw.19 measured this directly: the
+# aptitude-noun fallback caught 5/8 held-out sentences in one round and
+# 1/6 in a second round that avoided its vocabulary on purpose. A vocabulary
+# whitelist for "is this about the learner" cannot converge -- praise that
+# implies the learner as an unstated third-person subject is not a bounded
+# set of nouns, and every fix in this lineage was disproven by the next
+# round of phrasing nobody happened to write a pattern for.
 #
-# Worse, found while checking this fix against independently-authored
-# examples: some of `_claim_type`'s OWN patterns below are already
-# pronoun-free by design -- e.g. the "never/always ... struggles/fails/..."
-# shape (teach-kmm) explicitly claims an invariant outcome without needing
-# "you" at all ("A mind like this never struggles with proofs." types as
-# TRAIT on the sentence text alone). Under the old pronoun-only gate, a
-# sentence like that was blocked before `_claim_type` ever ran -- not just
-# left `unclassified`, but silently dropped from `extract_claims` entirely,
-# never flagged INFLATED despite the classifier being fully able to type it.
-# That is a strictly worse case of this bead's bug than the coverage-only
-# gap it was filed for.
+# teach-8xw.19's fix is not a fourth widening. There is no more "about the
+# learner" pre-filter: every tutor-spoken sentence (see `_tutor_turns`) is a
+# coverage candidate, full stop. This cannot silently drop a sentence,
+# because there is no gate left to fail. Two things make this safe rather
+# than just noisier:
 #
-# So `_about_learner` below checks `_claim_type` itself, not a separate,
-# narrower copy of its vocabulary: if the classifier can already type a
-# sentence without a pronoun, it must never be gated out first. On top of
-# that, `_ABOUT_LEARNER_APTITUDE` below is a second, narrower fallback for
-# the bead's actual reproduction sentences, which use praise vocabulary
-# `_claim_type` doesn't recognize as any claim shape at all (no "like
-# yours", no absolute-adjective, no failure-verb) -- those still land in
-# `unclassified`, which is the correct, disclosed outcome for a shape this
-# module doesn't know how to type, not a silent drop.
+#   1. `extract_claims`'s actual output is UNCHANGED by removing the gate.
+#      The old gate was engineered to be a superset of what `_claim_type`
+#      can classify (pronoun OR `_claim_type(sentence) is not None` OR
+#      aptitude noun) specifically so a classifiable sentence could never be
+#      blocked before classification ran. Any sentence `_claim_type` types
+#      already passed the old gate, so `extract_claims` (which only ever
+#      returns typed claims) returns exactly the same claims either way.
+#      Nothing that used to flag stops flagging, and nothing new starts
+#      flagging just because the gate is gone.
+#   2. What changes is `check_coverage`: every tutor sentence a real lesson
+#      contains -- ordinary domain content and procedural remarks included,
+#      not just learner-directed praise -- now shows up as `seen`, and
+#      lands in `unclassified` unless `_claim_type` recognizes it. That is
+#      the noisier-but-honest trade the bead names as the alternative to
+#      another vocabulary round: `about_learner` is no longer a claim that
+#      the heuristic identified learner-directed content (a claim that kept
+#      turning out to be false), it is a plain count of what the tutor said,
+#      with disclosure of how much of that this module can actually type
+#      pushed entirely onto `unclassified` -- which was already the
+#      module's designated place for "seen but not certified either way."
 #
-# This does NOT close the general problem. Two independent rounds of
-# held-out sentences (written by an agent blind to this implementation, see
-# sandbox-handoffs/teach-5gf.md) still found pronoun-free praise this misses
-# entirely (comparison to a named person without "the next X" framing,
-# bare inevitability claims, oblique future-achievement implication) --
-# `about_learner` stays 0 for those, same failure mode as before this fix,
-# just for a narrower slice of English. That gap is filed as teach-8xw.19,
-# not silently absorbed into this bead's closure.
-_APTITUDE_NOUN = r"(?:gifts?|talents?|minds?|brains?|intellects?|instincts?|abilit(?:y|ies)|genius(?:es)?|brilliance)"
-_ABOUT_LEARNER_APTITUDE = re.compile(rf"\b{_APTITUDE_NOUN}\b", re.IGNORECASE)
-
-
-def _about_learner(sentence: str) -> bool:
-    """True if this sentence is a candidate for being about the learner --
-    used identically by `extract_claims` and `check_coverage` so the two
-    can never disagree about what counted as "seen" (see teach-5gf).
-
-    Three independent ways in, any one of which is sufficient: an explicit
-    pronoun, a sentence `_claim_type` can already type on its own (some of
-    its patterns need no pronoun -- see the comment above), or an aptitude
-    noun that names an inherent quality even where no claim-shape pattern
-    fires on the sentence. The last case is exactly what leaves
-    `check_coverage`'s `unclassified` non-empty -- seen, not silently
-    dropped, but not run through the honesty rubric either.
-    """
-    if _ABOUT_LEARNER_PRONOUN.search(sentence):
-        return True
-    if _claim_type(sentence) is not None:
-        return True
-    return bool(_ABOUT_LEARNER_APTITUDE.search(sentence))
-
+# This is why the field below is `seen`, not `about_learner`: the old name
+# asserted a filter this module can no longer honestly claim to perform.
+#
 # Bare vague reassurance with no checkable content -- there's no claimed
 # ceiling to compare against anything, and no way to tell if it's even
 # conditioned on effort. Extracting these as claims would force a guess the
@@ -265,6 +241,45 @@ def _claim_type(sentence: str) -> ClaimType | None:
     if _matches_any(_FUTURE_CLAIM_PATTERNS, sentence):
         return ClaimType.GROWTH if _matches_any(_GROWTH_PATTERNS, sentence) else ClaimType.OUTCOME
     return None
+
+
+# --- second-person disclosure (teach-8xw.20) -------------------------------
+#
+# NOT a candidacy gate. teach-yn8/teach-kmm/teach-5gf spent three rounds
+# widening a pronoun-anchored "is this about the learner" pre-filter and
+# teach-8xw.19 removed it for good, because pronoun-free third-person praise
+# ("Einstein would have nodded...") is real English and any gate built on
+# this pattern makes exactly that praise invisible again. This regex must
+# never be used to decide whether a sentence is extracted or counted in
+# `seen` -- only to compute a secondary, reported-alongside-not-instead-of
+# breakdown of `seen`/`classified`/`unclassified` (see `Coverage` below).
+#
+# Why this is worth reporting even though it can't see pronoun-free praise:
+# `unclassified = len(seen) - len(classified)`, and in a lesson with the
+# usual handful (0-2) of true potential-claims, `classified` is small and
+# roughly constant, so `unclassified` is structurally pinned near
+# `len(seen)` -- it moves in lockstep with how long the lesson is, not with
+# how much of it is about the learner at all. `len(seen)` includes every
+# tutor-spoken sentence: domain definitions, historical narration, plot
+# scaffolding, none of which is a candidate for a potential-claim in the
+# first place. A subset restricted to sentences carrying an explicit
+# second-person address ("you"/"your"/"yours") is NOT pinned to `len(seen)`
+# the same way: ordinary domain exposition ("A normal subgroup is one
+# that's invariant under conjugation.") is almost always third-person by
+# construction of the genre, so it contributes zero to this subset no
+# matter how many such sentences the lesson has, while direct
+# encouragement or procedural remarks to the learner almost always use
+# "you." Rewriting the domain content of a lesson to be longer or shorter
+# changes `len(seen)` without necessarily changing the size of this subset
+# at all -- the two counts measure genuinely different properties of the
+# text, which is what makes the second one informative where the first has
+# become a near-constant.
+#
+# This does not solve pronoun-free third-person praise -- that content
+# still shows up only in the ungated `seen`/`unclassified` totals, which
+# remain the authoritative, un-narrowed disclosure. This subset is reported
+# ALONGSIDE that total, never in place of it (see `Coverage`'s docstring).
+_SECOND_PERSON_REFERENCE = re.compile(r"\byou\b|\byour\b|\byours\b", re.IGNORECASE)
 
 
 # --- effort conditioning ---------------------------------------------------
@@ -417,12 +432,16 @@ def extract_claims(text: str) -> tuple[PotentialClaim, ...]:
     ways to overpromise no pattern here recognizes, which is exactly what
     `check_coverage`'s `unclassified` count exists to surface rather than
     hide.
+
+    teach-8xw.19: there used to be an "is this even about the learner"
+    pre-filter here (`_about_learner`) before a sentence reached
+    `_claim_type` at all. It is gone -- every tutor-spoken sentence reaches
+    `_extract_from_sentence` now (see the comment above `_TOO_VAGUE_TO_CHECK`
+    for why removing it changes nothing about which claims get extracted).
     """
     claims: list[PotentialClaim] = []
     for turn_text in _tutor_turns(text):
         for sentence in _split_sentences(turn_text):
-            if not _about_learner(sentence):
-                continue
             claim = _extract_from_sentence(sentence, turn_text)
             if claim is not None:
                 claims.append(claim)
@@ -431,49 +450,91 @@ def extract_claims(text: str) -> tuple[PotentialClaim, ...]:
 
 @dataclasses.dataclass(frozen=True)
 class Coverage:
-    """How many tutor-spoken sentences about the learner this run actually
-    classified, versus how many it saw but could not fit to a recognized
-    claim shape.
+    """How many tutor-spoken sentences this run actually classified, versus
+    how many it saw but could not fit to a recognized claim shape.
 
     teach-yn8: `check_lesson_text` reporting "zero flags" conflates two
     different statements -- "nothing here overpromises" and "nothing here
     matched a shape I know how to check" -- and only the extraction step
     knows which one actually happened. `unclassified` makes the second
-    statement visible: a sentence in here was seen, is about the learner,
-    was not dismissed as vague filler, and STILL was not run through the
-    honesty rubric, because `_claim_type` didn't recognize its construction.
-    That is an unchecked sentence, not a clean one, and callers that print a
-    summary line (e.g. `dnf_bond_integration`) must say so rather than
-    folding it into "no flags."
+    statement visible: a sentence in here was seen, was not dismissed as
+    vague filler, and STILL was not run through the honesty rubric, because
+    `_claim_type` didn't recognize its construction. That is an unchecked
+    sentence, not a clean one, and callers that print a summary line (e.g.
+    `dnf_bond_integration`) must say so rather than folding it into "no
+    flags."
+
+    teach-8xw.19: `seen` (formerly `about_learner`) is every tutor-spoken
+    sentence, not a heuristically-filtered subset. Three rounds of trying to
+    widen a vocabulary-based "is this about the learner" filter (teach-yn8,
+    teach-kmm, teach-5gf) each found a next round of independently-phrased
+    praise the filter still missed -- not `unclassified`, invisible,
+    `about_learner=0`. Renaming the field is part of the fix: `about_learner`
+    asserted the module had identified learner-directed content, which is
+    exactly the claim that kept turning out false. `seen` makes no such
+    claim -- it is a plain count of tutor sentences, with `unclassified`
+    doing all of the honest-disclosure work.
+
+    teach-8xw.20: removing that gate fixed the invisibility bug but created
+    a new problem -- `unclassified` is `len(seen) - len(classified)`, and
+    `classified` is small and roughly constant for any honestly-written
+    lesson (0-2 true potential-claims), so `unclassified` is structurally
+    pinned near `len(seen)` regardless of what the lesson actually says.
+    Every lesson reports "~N-1 unclassified" and the figure stops carrying
+    information a reviewer can act on.
+
+    `second_person_seen`/`second_person_classified`/`second_person_unclassified`
+    are the same three buckets restricted to sentences containing an
+    explicit "you"/"your"/"yours" (see `_SECOND_PERSON_REFERENCE`) -- a
+    SECONDARY, narrower view reported alongside the totals above, never
+    replacing them. This is not another candidacy gate: nothing is extracted
+    or excluded from `seen` based on it, it only re-slices numbers already
+    computed. It is not a general solution either -- pronoun-free
+    third-person praise (teach-8xw.19's own reproduction) is invisible to
+    THIS subset by construction, exactly as it was to the old vocabulary
+    gate. What it buys is a count that isn't pinned to lesson length the way
+    `unclassified` is: ordinary domain exposition is almost always
+    third-person by genre convention, so it contributes nothing to this
+    subset no matter how long the lesson runs, while direct address to the
+    learner does. A caller must report both views, never one alone -- see
+    `dnf_bond_integration.py`'s render().
     """
 
-    about_learner: tuple[str, ...]
+    seen: tuple[str, ...]
     classified: tuple[str, ...]
     unclassified: tuple[str, ...]
+    second_person_seen: tuple[str, ...]
+    second_person_classified: tuple[str, ...]
+    second_person_unclassified: tuple[str, ...]
 
 
 def check_coverage(text: str) -> Coverage:
     """Companion to `extract_claims`/`check_lesson_text`: reports what
-    fraction of the tutor's about-learner sentences the extractor was
-    actually able to classify, so an empty flag list can be told apart from
-    an empty *coverage*.
+    fraction of the tutor's sentences the extractor was actually able to
+    classify, so an empty flag list can be told apart from an empty
+    *coverage*.
     """
-    about_learner: list[str] = []
+    seen: list[str] = []
     classified: list[str] = []
     unclassified: list[str] = []
+    second_person_seen: list[str] = []
+    second_person_classified: list[str] = []
+    second_person_unclassified: list[str] = []
     for turn_text in _tutor_turns(text):
         for sentence in _split_sentences(turn_text):
-            if not _about_learner(sentence):
-                continue
-            about_learner.append(sentence)
-            if _extract_from_sentence(sentence, turn_text) is not None:
-                classified.append(sentence)
-            else:
-                unclassified.append(sentence)
+            seen.append(sentence)
+            is_classified = _extract_from_sentence(sentence, turn_text) is not None
+            (classified if is_classified else unclassified).append(sentence)
+            if _SECOND_PERSON_REFERENCE.search(sentence):
+                second_person_seen.append(sentence)
+                (second_person_classified if is_classified else second_person_unclassified).append(sentence)
     return Coverage(
-        about_learner=tuple(about_learner),
+        seen=tuple(seen),
         classified=tuple(classified),
         unclassified=tuple(unclassified),
+        second_person_seen=tuple(second_person_seen),
+        second_person_classified=tuple(second_person_classified),
+        second_person_unclassified=tuple(second_person_unclassified),
     )
 
 
@@ -603,13 +664,56 @@ _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES = (
 # recognize the third-person "[noun] like this" / "[noun] on this scale"
 # shape these sentences use (that's a separate, unclaimed extension of the
 # TRAIT patterns, out of this bead's scope). The bar this bead sets is that
-# the sentence is no longer invisible: it must show up in `about_learner`
+# the sentence is no longer invisible: it must show up in `seen` (named
+# `about_learner` at the time this bead was written; renamed by teach-8xw.19)
 # and, since it still doesn't classify, in `unclassified` -- exactly the
 # outcome the bead's third example ("Your genius comes along once in a
 # generation.") already got from the pronoun gate alone.
 _TEACH_5GF_REGRESSION_SENTENCES = (
     "Genius like this comes along once in a generation.",
     "Talent on this scale is simply rare.",
+)
+
+# teach-8xw.19's reproduction, verbatim from the bead (its three complete
+# sentences -- the bead also quotes four more as trailing-ellipsis
+# fragments, e.g. "...reminiscent of a young Feynman...", which aren't
+# standalone sentences as written and so aren't reproduced here). These are
+# exactly the phrasings that stayed invisible after teach-5gf's aptitude-noun
+# widening: no pronoun, no aptitude noun, no shape `_claim_type` recognizes.
+# The bar is the same as teach-5gf's -- seen and unclassified, not flagged
+# INFLATED -- but the mechanism is different. teach-5gf closed its gap with
+# a fourth vocabulary list; this bead's fix removes the vocabulary-gated
+# pre-filter entirely, so there is no shape left for a fifth round of
+# phrasing to slip past. These three sentences aren't a generalization test
+# of a widened pattern (there is no pattern to generalize) -- they're proof
+# that the specific reproduction this bead was filed against is now seen.
+_TEACH_8XW_19_REGRESSION_SENTENCES = (
+    "Einstein would have nodded approvingly at reasoning this sharp.",
+    "Future textbooks might well cite work that starts exactly like this.",
+    "Few students ever produce work this polished on a first attempt.",
+)
+
+# teach-8xw.20's structural proof that `second_person_seen` is not just
+# `seen` wearing a smaller number -- two three-sentence, all-unclassified
+# tutor turns, one entirely third-person (ordinary domain narration) and
+# one entirely second-person (direct-address chit-chat, still no
+# potential-claim shape in it), matched sentence-for-sentence in length and
+# claim content. `len(seen)` and `len(unclassified)` come out identical for
+# both (3 and 3) -- the exact near-constant this bead is about -- while
+# `len(second_person_seen)` comes out 0 and 3. This is not a sampling claim
+# ("I tried some lessons and the number varied"); it is a minimal
+# constructed pair showing the two counts are driven by different textual
+# properties (sentence count vs. second-person address), so the second
+# cannot be a disguised copy of the first.
+_TEACH_8XW_20_THIRD_PERSON_TURN = (
+    "tutor: A normal subgroup is one that's invariant under conjugation.\n"
+    "A homomorphism's kernel is always normal in its domain.\n"
+    "The quotient group collects the cosets of that kernel into a single group."
+)
+_TEACH_8XW_20_SECOND_PERSON_TURN = (
+    "tutor: Take a moment and tell me how you're feeling about this material.\n"
+    "Is your pace here comfortable, or would you like to slow down?\n"
+    "Let me know if you want to revisit anything before we move on."
 )
 
 
@@ -645,12 +749,55 @@ if __name__ == "__main__":
 
     for sentence in _TEACH_5GF_REGRESSION_SENTENCES:
         cov = check_coverage(sentence)
-        assert cov.about_learner == (sentence,), (
-            f"teach-5gf regression: {sentence!r} must be counted as seen, got about_learner={cov.about_learner}"
+        assert cov.seen == (sentence,), (
+            f"teach-5gf regression: {sentence!r} must be counted as seen, got seen={cov.seen}"
         )
         assert cov.unclassified == (sentence,), (
             f"teach-5gf regression: {sentence!r} must be reported as unclassified (seen but not run through "
             f"the rubric), got classified={cov.classified} unclassified={cov.unclassified}"
+        )
+
+    for sentence in _TEACH_8XW_19_REGRESSION_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.seen == (sentence,), (
+            f"teach-8xw.19 regression: {sentence!r} must be counted as seen, got seen={cov.seen}"
+        )
+        assert cov.unclassified == (sentence,), (
+            f"teach-8xw.19 regression: {sentence!r} must be reported as unclassified (seen but not run "
+            f"through the rubric), got classified={cov.classified} unclassified={cov.unclassified}"
+        )
+
+    # teach-8xw.20: prove second_person_seen is subset-consistent (never
+    # disagrees with seen/classified/unclassified about which sentences
+    # belong where) AND is not a disguised copy of len(seen) -- see the
+    # comment above the two fixture turns for why this is a structural
+    # argument, not a sampling one.
+    third_person_cov = check_coverage(_TEACH_8XW_20_THIRD_PERSON_TURN)
+    second_person_cov = check_coverage(_TEACH_8XW_20_SECOND_PERSON_TURN)
+    assert len(third_person_cov.seen) == len(second_person_cov.seen) == 3, (
+        f"expected both fixture turns to have 3 sentences, got "
+        f"{len(third_person_cov.seen)} and {len(second_person_cov.seen)}"
+    )
+    assert third_person_cov.unclassified == third_person_cov.seen, (
+        f"expected the third-person turn to be entirely unclassified, got {third_person_cov}"
+    )
+    assert second_person_cov.unclassified == second_person_cov.seen, (
+        f"expected the second-person turn to be entirely unclassified, got {second_person_cov}"
+    )
+    assert third_person_cov.second_person_seen == (), (
+        "teach-8xw.20: an all-third-person turn must contribute nothing to second_person_seen, "
+        f"got {third_person_cov.second_person_seen}"
+    )
+    assert second_person_cov.second_person_seen == second_person_cov.seen, (
+        "teach-8xw.20: an all-second-person turn's second_person_seen must equal its seen, "
+        f"got second_person_seen={second_person_cov.second_person_seen} seen={second_person_cov.seen}"
+    )
+    for cov in (third_person_cov, second_person_cov):
+        assert set(cov.second_person_seen) <= set(cov.seen)
+        assert set(cov.second_person_classified) <= set(cov.classified)
+        assert set(cov.second_person_unclassified) <= set(cov.unclassified)
+        assert set(cov.second_person_classified) | set(cov.second_person_unclassified) == set(
+            cov.second_person_seen
         )
 
     print(
@@ -660,6 +807,11 @@ if __name__ == "__main__":
         f"all {len(_TEACH_KMM_REGRESSION_SENTENCES)} teach-kmm regression sentences flagged INFLATED, "
         f"all {len(_TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES)} teach-kmm held-out generalization "
         "sentences flagged INFLATED, "
-        f"all {len(_TEACH_5GF_REGRESSION_SENTENCES)} teach-5gf pronoun-free flattery sentences now counted "
-        "as seen-but-unclassified instead of invisible"
+        f"all {len(_TEACH_5GF_REGRESSION_SENTENCES)} teach-5gf pronoun-free flattery sentences counted "
+        "as seen-but-unclassified, "
+        f"all {len(_TEACH_8XW_19_REGRESSION_SENTENCES)} teach-8xw.19 no-pronoun-no-aptitude-noun sentences "
+        "now counted as seen-but-unclassified instead of invisible, "
+        "teach-8xw.20: second_person_seen/classified/unclassified proven subset-consistent and "
+        "structurally decoupled from len(seen) (0/3 vs 3/3 second-person sentences on two "
+        "equal-length, equally-unclassified fixture turns)"
     )

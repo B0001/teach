@@ -94,26 +94,43 @@ class IntegrationReport:
 
         lines.append("=== potential_checker ===")
         # teach-yn8: never state the flag count without the coverage it was
-        # drawn from -- "zero flags" and "zero sentences about the learner
-        # were left unclassified" are different claims, and only the second
-        # one licenses saying "no overpromises" outright.
+        # drawn from -- "zero flags" and "zero tutor-spoken sentences were
+        # left unclassified" are different claims, and only the second one
+        # licenses saying "no overpromises" outright.
         cov = self.potential_coverage
         lines.append(
-            f"sentences about the learner: {len(cov.about_learner)} seen, "
+            f"tutor-spoken sentences: {len(cov.seen)} seen, "
             f"{len(cov.classified)} classified, {len(cov.unclassified)} unclassified"
         )
         if cov.unclassified:
             lines.append(
                 "unclassified -- seen but NOT run through the honesty rubric "
-                f"(not certified honest, not confirmed inflated): {cov.unclassified}"
+                "(not certified honest, not confirmed inflated):"
             )
+            lines.extend(f"  - {s}" for s in cov.unclassified)
+        # teach-8xw.20: the line above is dominated by lesson length (most
+        # tutor sentences are domain content, not potential-claims), so it
+        # reads nearly the same on every lesson. This secondary line
+        # narrows to sentences that directly address the learner
+        # ("you"/"your"/"yours") -- never replacing the total above, since
+        # this subset is blind to pronoun-free praise by construction (see
+        # `_SECOND_PERSON_REFERENCE`'s docstring) and is reported alongside
+        # it, not instead of it.
+        lines.append(
+            f"of which {len(cov.second_person_seen)} address the learner directly "
+            f'("you"/"your"/"yours"): {len(cov.second_person_classified)} classified, '
+            f"{len(cov.second_person_unclassified)} unclassified"
+        )
+        if cov.second_person_unclassified:
+            lines.append("second-person unclassified:")
+            lines.extend(f"  - {s}" for s in cov.second_person_unclassified)
         if self.potential_flags:
             for flag in self.potential_flags:
                 lines.append(f"[{flag.verdict.value}] {flag.reason}: {flag.claim!r}")
         else:
             lines.append(
                 f"(no flags among the {len(cov.classified)} classified claims"
-                + (f"; {len(cov.unclassified)} sentence(s) about the learner were NOT checked, see above"
+                + (f"; {len(cov.unclassified)} tutor-spoken sentence(s) were NOT checked, see above"
                    if cov.unclassified else "")
                 + ")"
             )
@@ -173,18 +190,48 @@ def _self_check() -> None:
 
     # potential_checker: the closing encouragement line must not be flagged,
     # AND (teach-yn8) that must be reported alongside how much of the
-    # lesson's about-learner text was actually classifiable, not as an
-    # unqualified "no overpromises." This lesson's six about-learner
-    # sentences are five retrospective/procedural ("you just handled...",
-    # "in your own words...") plus the one effort-conditioned promise --
-    # none of the five unclassified ones are potential claims the rubric
-    # was designed to catch, but that is this run's manual read of this
-    # specific lesson text, not something the checker itself established,
-    # which is exactly why they're surfaced instead of dropped.
+    # lesson's tutor-spoken text was actually classifiable, not as an
+    # unqualified "no overpromises." teach-8xw.19 removed the vocabulary-
+    # gated "is this about the learner" pre-filter (three widenings of it --
+    # teach-yn8, teach-kmm, teach-5gf -- each found a next round of
+    # independently-phrased praise it still missed entirely, invisible
+    # rather than unclassified), so `seen` is now every tutor-spoken
+    # sentence in this lesson: the domain content and Bond narration as well
+    # as the encouragement.
+    #
+    # teach-8xw.21: `seen`'s exact length is the lesson's prose length, not
+    # an honesty signal -- it moves every time the lesson text is edited for
+    # reasons that have nothing to do with potential-claims, and pinning it
+    # just teaches the next worker to bump the number past a failure instead
+    # of reading it. What the honesty check actually needs is (a) that
+    # nothing seen vanishes between the two buckets, and (b) that coverage
+    # isn't vacuously empty (the teach-yn8 failure mode) -- both of which
+    # are independent of how long this lesson happens to be.
     assert report.potential_flags == (), f"expected a clean honesty check, got {report.potential_flags}"
-    assert len(report.potential_coverage.about_learner) == 6
-    assert len(report.potential_coverage.classified) == 1
-    assert len(report.potential_coverage.unclassified) == 5
+    cov = report.potential_coverage
+    assert len(cov.seen) > 0, "expected the potential_checker to see at least one sentence"
+    assert len(cov.seen) == len(cov.classified) + len(cov.unclassified), (
+        f"seen ({len(cov.seen)}) must equal classified ({len(cov.classified)}) + "
+        f"unclassified ({len(cov.unclassified)}) -- a sentence went missing between the two buckets"
+    )
+    assert len(cov.classified) == 1
+    # teach-8xw.20: the secondary second-person breakdown must stay
+    # internally consistent (same subset invariant as above, restricted to
+    # the narrower set) and must actually be narrower than the full lesson
+    # -- this real lesson has plenty of third-person domain narration
+    # (Bond/MI6 scaffolding, group-theory definitions), so the secondary
+    # count is expected to differ from, not mirror, `len(cov.seen)`.
+    assert len(cov.second_person_seen) == len(cov.second_person_classified) + len(
+        cov.second_person_unclassified
+    ), (
+        f"second_person_seen ({len(cov.second_person_seen)}) must equal "
+        f"second_person_classified ({len(cov.second_person_classified)}) + "
+        f"second_person_unclassified ({len(cov.second_person_unclassified)})"
+    )
+    assert 0 < len(cov.second_person_seen) < len(cov.seen), (
+        "expected this lesson's second-person subset to be a proper, non-empty slice of `seen` "
+        f"(second_person_seen={len(cov.second_person_seen)}, seen={len(cov.seen)})"
+    )
 
     print(report.render())
     print()
@@ -192,8 +239,10 @@ def _self_check() -> None:
     print("Lagrange's theorem all recovered correctly from lesson text alone;")
     print("no contradicted facts; no inflated-potential flags among the "
           f"{len(report.potential_coverage.classified)} classified potential-claim sentence(s) "
-          f"({len(report.potential_coverage.unclassified)} about-learner sentence(s) left unclassified, "
-          "disclosed above, not silently passed); scope gaps disclosed above.")
+          f"({len(report.potential_coverage.unclassified)} tutor-spoken sentence(s) left unclassified, "
+          "disclosed above, not silently passed; of those, "
+          f"{len(report.potential_coverage.second_person_unclassified)} directly address the learner "
+          "and are unclassified, see above); scope gaps disclosed above.")
 
 
 if __name__ == "__main__":
