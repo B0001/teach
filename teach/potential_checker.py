@@ -50,7 +50,71 @@ from teach.honesty_rubric import ClaimType, PotentialClaim, Verdict, classify
 # "yours" continues with "s". Found via teach-yn8's reproduction: "Talent
 # like yours cannot fail" was falling out at THIS gate, before extraction
 # logic ever got a chance to type it.
-_ABOUT_LEARNER = re.compile(r"\byou\b|\byour\b|\byours\b", re.IGNORECASE)
+_ABOUT_LEARNER_PRONOUN = re.compile(r"\byou\b|\byour\b|\byours\b", re.IGNORECASE)
+
+# teach-5gf: a pronoun is sufficient evidence a sentence is about the
+# learner, but it is not necessary -- flattery in a 1:1 tutoring turn is
+# routinely phrased in the third person with the learner as the unstated,
+# implicit subject ("Genius like this comes along once in a generation.",
+# "Talent on this scale is simply rare."). Requiring a literal pronoun before
+# a sentence was even considered "about the learner" meant this register was
+# invisible not just to flagging but to the coverage count itself -- a lesson
+# that praised the learner entirely this way reported "0 seen, 0 classified,
+# 0 unclassified," which reads as "no claims about the learner" rather than
+# the true "the gate that counts sentences missed this one too."
+#
+# Worse, found while checking this fix against independently-authored
+# examples: some of `_claim_type`'s OWN patterns below are already
+# pronoun-free by design -- e.g. the "never/always ... struggles/fails/..."
+# shape (teach-kmm) explicitly claims an invariant outcome without needing
+# "you" at all ("A mind like this never struggles with proofs." types as
+# TRAIT on the sentence text alone). Under the old pronoun-only gate, a
+# sentence like that was blocked before `_claim_type` ever ran -- not just
+# left `unclassified`, but silently dropped from `extract_claims` entirely,
+# never flagged INFLATED despite the classifier being fully able to type it.
+# That is a strictly worse case of this bead's bug than the coverage-only
+# gap it was filed for.
+#
+# So `_about_learner` below checks `_claim_type` itself, not a separate,
+# narrower copy of its vocabulary: if the classifier can already type a
+# sentence without a pronoun, it must never be gated out first. On top of
+# that, `_ABOUT_LEARNER_APTITUDE` below is a second, narrower fallback for
+# the bead's actual reproduction sentences, which use praise vocabulary
+# `_claim_type` doesn't recognize as any claim shape at all (no "like
+# yours", no absolute-adjective, no failure-verb) -- those still land in
+# `unclassified`, which is the correct, disclosed outcome for a shape this
+# module doesn't know how to type, not a silent drop.
+#
+# This does NOT close the general problem. Two independent rounds of
+# held-out sentences (written by an agent blind to this implementation, see
+# sandbox-handoffs/teach-5gf.md) still found pronoun-free praise this misses
+# entirely (comparison to a named person without "the next X" framing,
+# bare inevitability claims, oblique future-achievement implication) --
+# `about_learner` stays 0 for those, same failure mode as before this fix,
+# just for a narrower slice of English. That gap is filed as teach-8xw.19,
+# not silently absorbed into this bead's closure.
+_APTITUDE_NOUN = r"(?:gifts?|talents?|minds?|brains?|intellects?|instincts?|abilit(?:y|ies)|genius(?:es)?|brilliance)"
+_ABOUT_LEARNER_APTITUDE = re.compile(rf"\b{_APTITUDE_NOUN}\b", re.IGNORECASE)
+
+
+def _about_learner(sentence: str) -> bool:
+    """True if this sentence is a candidate for being about the learner --
+    used identically by `extract_claims` and `check_coverage` so the two
+    can never disagree about what counted as "seen" (see teach-5gf).
+
+    Three independent ways in, any one of which is sufficient: an explicit
+    pronoun, a sentence `_claim_type` can already type on its own (some of
+    its patterns need no pronoun -- see the comment above), or an aptitude
+    noun that names an inherent quality even where no claim-shape pattern
+    fires on the sentence. The last case is exactly what leaves
+    `check_coverage`'s `unclassified` non-empty -- seen, not silently
+    dropped, but not run through the honesty rubric either.
+    """
+    if _ABOUT_LEARNER_PRONOUN.search(sentence):
+        return True
+    if _claim_type(sentence) is not None:
+        return True
+    return bool(_ABOUT_LEARNER_APTITUDE.search(sentence))
 
 # Bare vague reassurance with no checkable content -- there's no claimed
 # ceiling to compare against anything, and no way to tell if it's even
@@ -357,7 +421,7 @@ def extract_claims(text: str) -> tuple[PotentialClaim, ...]:
     claims: list[PotentialClaim] = []
     for turn_text in _tutor_turns(text):
         for sentence in _split_sentences(turn_text):
-            if not _ABOUT_LEARNER.search(sentence):
+            if not _about_learner(sentence):
                 continue
             claim = _extract_from_sentence(sentence, turn_text)
             if claim is not None:
@@ -399,7 +463,7 @@ def check_coverage(text: str) -> Coverage:
     unclassified: list[str] = []
     for turn_text in _tutor_turns(text):
         for sentence in _split_sentences(turn_text):
-            if not _ABOUT_LEARNER.search(sentence):
+            if not _about_learner(sentence):
                 continue
             about_learner.append(sentence)
             if _extract_from_sentence(sentence, turn_text) is not None:
@@ -532,6 +596,22 @@ _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES = (
     "Your instincts for this are unrivaled.",
 )
 
+# teach-5gf's reproduction, verbatim from the bead: pronoun-free flattery
+# that `check_coverage` used to drop entirely (about_learner=0) rather than
+# count as seen-but-unclassified. Unlike the yn8/kmm regression sets above,
+# the bar here is NOT "gets flagged INFLATED" -- `_claim_type` still doesn't
+# recognize the third-person "[noun] like this" / "[noun] on this scale"
+# shape these sentences use (that's a separate, unclaimed extension of the
+# TRAIT patterns, out of this bead's scope). The bar this bead sets is that
+# the sentence is no longer invisible: it must show up in `about_learner`
+# and, since it still doesn't classify, in `unclassified` -- exactly the
+# outcome the bead's third example ("Your genius comes along once in a
+# generation.") already got from the pronoun gate alone.
+_TEACH_5GF_REGRESSION_SENTENCES = (
+    "Genius like this comes along once in a generation.",
+    "Talent on this scale is simply rare.",
+)
+
 
 if __name__ == "__main__":
     honest_flags = check_lesson_text(HONEST_EXAMPLE_TEXT)
@@ -563,11 +643,23 @@ if __name__ == "__main__":
             f"teach-kmm generalization check: {sentence!r} was flagged but not as INFLATED: {flags}"
         )
 
+    for sentence in _TEACH_5GF_REGRESSION_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.about_learner == (sentence,), (
+            f"teach-5gf regression: {sentence!r} must be counted as seen, got about_learner={cov.about_learner}"
+        )
+        assert cov.unclassified == (sentence,), (
+            f"teach-5gf regression: {sentence!r} must be reported as unclassified (seen but not run through "
+            f"the rubric), got classified={cov.classified} unclassified={cov.unclassified}"
+        )
+
     print(
         "OK: honest example passes clean "
         f"(0 flags), inflated example flagged ({len(inflated_flags)} flag(s)), "
         f"all {len(_TEACH_YN8_REGRESSION_SENTENCES)} teach-yn8 regression sentences flagged INFLATED, "
         f"all {len(_TEACH_KMM_REGRESSION_SENTENCES)} teach-kmm regression sentences flagged INFLATED, "
         f"all {len(_TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES)} teach-kmm held-out generalization "
-        "sentences flagged INFLATED"
+        "sentences flagged INFLATED, "
+        f"all {len(_TEACH_5GF_REGRESSION_SENTENCES)} teach-5gf pronoun-free flattery sentences now counted "
+        "as seen-but-unclassified instead of invisible"
     )

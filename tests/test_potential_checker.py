@@ -13,6 +13,7 @@ from teach.honesty_rubric import ClaimType, Verdict, WORKED_EXAMPLES, classify
 from teach.potential_checker import (
     HONEST_EXAMPLE_TEXT,
     INFLATED_EXAMPLE_TEXT,
+    _TEACH_5GF_REGRESSION_SENTENCES,
     _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES,
     _TEACH_KMM_REGRESSION_SENTENCES,
     check_coverage,
@@ -294,3 +295,90 @@ def test_teach_kmm_regression_and_generalization_sets_are_disjoint():
     (or copy) of the regression set -- they must use disjoint sentences to
     actually test generalization."""
     assert set(_TEACH_KMM_REGRESSION_SENTENCES).isdisjoint(_TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES)
+
+
+# --- teach-5gf: coverage must not depend on the same gate as classification -
+#
+# _ABOUT_LEARNER used to require a literal you/your/yours before a sentence
+# was even counted as "seen" -- so pronoun-free flattery ("Genius like this
+# comes along once in a generation.") produced about_learner=0, reading as
+# "no claims about the learner" rather than "the counting gate missed this
+# too." The fix broadens what counts as a candidate (pronoun OR an aptitude
+# noun) without changing what `_claim_type` recognizes as a checkable shape
+# -- these sentences land in `unclassified`, not `classified`, because the
+# third-person "[noun] like this" / "[noun] on this scale" construction is
+# still outside what the TRAIT patterns match. That's the correct outcome
+# per this bead: visible-but-unclassified, not silently dropped.
+
+
+def test_pronoun_free_flattery_is_counted_as_seen():
+    for sentence in _TEACH_5GF_REGRESSION_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.about_learner == (sentence,), (
+            f"{sentence!r} must be counted in about_learner, got {cov.about_learner}"
+        )
+
+
+def test_pronoun_free_flattery_that_classify_cannot_type_lands_in_unclassified():
+    for sentence in _TEACH_5GF_REGRESSION_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.classified == (), f"{sentence!r} unexpectedly classified: {cov.classified}"
+        assert cov.unclassified == (sentence,), (
+            f"{sentence!r} must be reported unclassified, not silently dropped: {cov}"
+        )
+
+
+def test_extract_claims_and_check_coverage_agree_on_pronoun_free_flattery():
+    """Both callers share `_about_learner` and `_extract_from_sentence` --
+    they must never disagree about what got classified, matching this
+    module's stated invariant (see `_extract_from_sentence`'s docstring)."""
+    for sentence in _TEACH_5GF_REGRESSION_SENTENCES:
+        assert extract_claims(sentence) == ()
+        assert check_coverage(sentence).unclassified == (sentence,)
+
+
+def test_third_person_aptitude_sentence_about_someone_else_is_still_seen():
+    """The broadened gate is intentionally permissive -- it errs toward
+    over-inclusion in `about_learner` the same way every other signal in
+    this module does, rather than trying to solve third-person coreference.
+    A tutor-turn sentence praising a historical figure's talent, not the
+    learner, still lands in the coverage count (and, since no claim-shape
+    pattern fires, in `unclassified`) -- a false-positive-in-the-seen-set
+    costs a reviewer one line to dismiss, not a silent gap.
+
+    No second-person pronoun anywhere in the sentence -- this isolates the
+    aptitude-noun path specifically, distinct from the pronoun path."""
+    text = "tutor: Galois had a rare gift for algebra most students never develop."
+    cov = check_coverage(text)
+    assert len(cov.about_learner) == 1
+    assert cov.unclassified == cov.about_learner
+
+
+def test_pronoun_free_shape_that_claim_type_already_recognizes_is_flagged():
+    """The more severe half of teach-5gf's bug, found while validating this
+    fix against independently-authored examples: some `_claim_type` shapes
+    (teach-kmm's never/always+failure-verb TRAIT shape) are pronoun-free BY
+    DESIGN, yet the old pronoun-only gate blocked them before `_claim_type`
+    ever ran -- not landing in `unclassified`, but dropped from
+    `extract_claims` entirely, so a sentence the classifier could already
+    type correctly as INFLATED was never flagged. `_about_learner` must
+    defer to `_claim_type` itself, not a separate, narrower copy of it."""
+    text = "A mind like this never struggles with proofs."
+    claims = extract_claims(text)
+    assert len(claims) == 1
+    assert claims[0].claim_type is ClaimType.TRAIT
+    flags = check_lesson_text(text)
+    assert flags and all(f.verdict is Verdict.INFLATED for f in flags)
+
+
+def test_coverage_still_ignores_learner_speech_for_aptitude_nouns():
+    """The pronoun-only version of this guarantee already existed
+    (`test_coverage_ignores_learner_speech_like_extract_claims_does`); this
+    proves the broadened aptitude-noun gate is still scoped to tutor turns,
+    not applied to the whole transcript."""
+    text = (
+        "tutor: How are you feeling about induction proofs?\n"
+        "learner: My talent for this is clearly limitless."
+    )
+    cov = check_coverage(text)
+    assert cov.about_learner == ("How are you feeling about induction proofs?",)
