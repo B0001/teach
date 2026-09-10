@@ -43,37 +43,148 @@ import re
 from teach.fact_checker import SourceFact
 
 
+# "codomain" is the Dummit & Foote term, but a lesson (or a learner echoing
+# one back) is not obliged to use it -- "target group"/"target" and "range
+# of the {map,homomorphism,function}"/"range" are the ordinary synonyms for
+# the same wrong group, and teach-8xw.25's reproduction is exactly this: the
+# identical false claim phrased with "target group" and "range of the map"
+# both slipped past a false_patterns set keyed to the literal word
+# "codomain". Every codomain-shaped false_pattern below must use this
+# alternation, not the bare word, or the same bug reopens at the next
+# synonym.
+_CODOMAIN_SYNONYMS = (
+    r"(?:codomain"
+    r"|target(?:\s+group)?"
+    r"|range(?:\s+of\s+the\s+(?:map|homomorphism|function))?"
+    r"|receiving\s+(?:group|end(?:\s+of\s+the\s+(?:map|homomorphism|function))?)"
+    r"|output\s+group)"
+)
+
 _KERNEL_NORMAL_SUBGROUP = SourceFact(
     topic="kernel-normal-subgroup",
     citation="Dummit & Foote, Abstract Algebra, 3rd ed., section 3.2, Proposition 7",
     topic_patterns=(
-        re.compile(r"(?=.*\bkernel\b)(?=.*\bnormal\b)", re.IGNORECASE | re.DOTALL),
+        # kernels? -- \bkernel\b alone never matches inside "kernels" because
+        # no word boundary sits between "l" and "s"; a true claim phrased in
+        # the plural was falling all the way through to CANNOT_VERIFY.
+        re.compile(r"(?=.*\bkernels?\b)(?=.*\bnormal\b)", re.IGNORECASE | re.DOTALL),
         re.compile(
-            r"(?=.*\bimage\b)(?=.*\bnormal\b)(?=.*\bcodomain\b)",
+            rf"(?=.*\bimage\b)(?=.*\bnormal\b)(?=.*{_CODOMAIN_SYNONYMS}\b)",
             re.IGNORECASE | re.DOTALL,
         ),
     ),
     false_patterns=(
         # Direct negation: "not (necessarily) a normal subgroup".
-        re.compile(r"\bkernel\b.{0,80}\bnot\b.{0,40}\bnormal\b", re.IGNORECASE | re.DOTALL),
-        # Wrong target group: the kernel lives in the domain, not the codomain.
+        re.compile(r"\bkernels?\b.{0,80}\bnot\b.{0,40}\bnormal\b", re.IGNORECASE | re.DOTALL),
+        # Wrong target group: the kernel lives in the domain, not the codomain
+        # (or any of its ordinary synonyms -- see _CODOMAIN_SYNONYMS above).
         re.compile(
-            r"\bkernel\b.{0,80}\bnormal\b.{0,60}\bcodomain\b", re.IGNORECASE | re.DOTALL
+            rf"\bkernels?\b.{{0,80}}\bnormal\b.{{0,60}}{_CODOMAIN_SYNONYMS}\b",
+            re.IGNORECASE | re.DOTALL,
         ),
         re.compile(
-            r"\bkernel\b.{0,80}\bcodomain\b.{0,60}\bnormal\b", re.IGNORECASE | re.DOTALL
+            rf"\bkernels?\b.{{0,80}}{_CODOMAIN_SYNONYMS}\b.{{0,60}}\bnormal\b",
+            re.IGNORECASE | re.DOTALL,
         ),
         # A different, false-in-general claim: the image is normal in the codomain.
         re.compile(
-            r"\bimage\b.{0,80}\bnormal\b.{0,60}\bcodomain\b", re.IGNORECASE | re.DOTALL
+            rf"\bimage\b.{{0,80}}\bnormal\b.{{0,60}}{_CODOMAIN_SYNONYMS}\b",
+            re.IGNORECASE | re.DOTALL,
         ),
     ),
+    # This used to be "kernel ... is/are ... normal" with NO constraint on
+    # which group -- so any claim not caught by false_patterns' enumerated
+    # synonym list defaulted to CONFIRMED. That default is exactly backwards
+    # per sandbox-prompt.md's "prefer abstention to a confident answer": a
+    # blind round of independently-authored paraphrases (teach-8xw.25) found
+    # false claims naming the wrong group structurally -- "a normal subgroup
+    # that lives where the arrows point to", "H is the group being mapped
+    # into, [and] the kernel is simply one of H's normal subgroups" -- that
+    # no false_patterns synonym list will ever fully enumerate (open-ended
+    # English, the same ceiling documented for teach/potential_checker.py's
+    # lineage). Rather than keep chasing synonyms, true_patterns now only
+    # confirms when the claim explicitly names the domain -- anything else
+    # (unqualified, or naming some other/ambiguous group) abstains instead
+    # of guessing confirmed. This trades recall on rare unqualified-true
+    # phrasing for eliminating the dangerous direction on unenumerated wrong-
+    # group phrasing.
     true_patterns=(
         re.compile(
-            r"\bkernel\b.{0,80}\b(?:is|are)\b.{0,40}\bnormal\b", re.IGNORECASE | re.DOTALL
+            r"\bkernels?\b.{0,80}\b(?:is|are)\b.{0,40}\bnormal\b.{0,60}\bdomain\b",
+            re.IGNORECASE | re.DOTALL,
         ),
     ),
 )
+
+# teach-8xw.33's finding: a blind round of 12 independently-authored
+# paraphrases of the reversed/false Lagrange claim -- using "cardinality",
+# "size", "goes into", "is a multiple of", and a container/contained
+# metaphor instead of the literal "order"/"divides"/"group"/"subgroup"
+# wording above -- measured 0/12 caught. Landing on CANNOT_VERIFY was the
+# safe direction (true_patterns' exact-phrase requirement meant no reversed
+# paraphrase was ever wrongly CONFIRMED), but it's still a real recall gap,
+# so -- same move as _CODOMAIN_SYNONYMS above -- these widen false_patterns'
+# vocabulary. true_patterns is deliberately NOT widened the same way: per
+# the kernel topic's precedent, false-catching is safe to broaden
+# aggressively (worst case is an extra CANNOT_VERIFY->CONTRADICTED that was
+# already a false claim), but confirming is kept narrow on purpose so a
+# loose synonym match never manufactures a false CONFIRMED.
+_SIZE_SYNONYMS = r"(?:order|cardinality|size|count)"
+
+# A bare determiner list ("the"/"a"/"any") missed quantifiers like "every"
+# subgroup / "each" subgroup / "all" subgroups -- teach-8xw.33's second blind
+# round (round 2, used to tune this fix) found a sentence using "every"
+# that fell through the literal false_pattern below straight to the loose
+# `lagrange...divides` true_pattern, landing the DANGEROUS false-CONFIRMED
+# verdict this repo's whole checker design exists to avoid, not just the
+# disclosed-safe CANNOT_VERIFY this bead was filed for. Any determiner list
+# used to recognize a structure phrase needs every ordinary English
+# quantifier, not just the three that happened to be in the first example.
+_ANY_DETERMINER = r"(?:the |a |any |every |each |all )?"
+
+_BIG_ADJ = r"(?:whole|entire|big|bigger|larger|large|outer|ambient|parent|enclosing|finite)"
+_SMALL_ADJ = r"(?:small|smaller|little|child|inner|enclosed)"
+
+_BIG_STRUCTURE_SYNONYMS = rf"(?:(?:{_BIG_ADJ}\s+)?(?:groups?|containers?|boxes?))"
+
+_SMALL_STRUCTURE_SYNONYMS = (
+    rf"(?:(?:{_SMALL_ADJ}\s+)?(?:subgroups?|boxes?)"
+    r"|contained (?:groups?|structures?|sets?)"
+    r"|things?(?:\s+that)? it contains"
+    r"|what it contains)"
+)
+
+# "goes into"/"fits into" and "a factor/divisor of" are ordinary-English
+# synonyms for "divides" that keep the same grammatical direction (A divides
+# B / A goes into B / A fits into B / A is a factor of B all put the smaller
+# quantity first). The verb before "a factor/divisor of" ("is", "must be",
+# "will always be", ...) is deliberately not anchored -- round 2 found
+# "must be a factor of" -- so only the noun phrase itself is matched.
+_DIVIDES_SYNONYMS = (
+    r"(?:divides|go(?:es)?\s+into|fits?\s+(?:evenly\s+)?into|(?:a\s+)?(?:divisor|factor)\s+of)"
+)
+
+# "is a multiple of" states the identical relation with the operands
+# swapped (B is a multiple of A <=> A divides B), so it needs its own
+# patterns rather than folding into _DIVIDES_SYNONYMS above.
+_MULTIPLE_OF_SYNONYMS = r"(?:(?:is\s+)?an?(?:\s+integer)? multiple of)"
+
+
+def _size_phrase(structure: str) -> str:
+    """Any of three grammatical forms for naming a structure's size:
+    "order of the group", "the group's order", or "number of elements in
+    the group" (each with the cardinality/size/count synonyms, and every
+    ordinary-English quantifier, not just "the/a/any")."""
+    return (
+        rf"(?:{_SIZE_SYNONYMS}s? of {_ANY_DETERMINER}{structure}"
+        rf"|{_ANY_DETERMINER}{structure}'?s?\s+{_SIZE_SYNONYMS}s?"
+        rf"|number of elements (?:in|of) {_ANY_DETERMINER}{structure})"
+    )
+
+
+_BIG_SIZE = _size_phrase(_BIG_STRUCTURE_SYNONYMS)
+_SMALL_SIZE = _size_phrase(_SMALL_STRUCTURE_SYNONYMS)
+
 
 _LAGRANGE_ORDER_DIVIDES = SourceFact(
     topic="lagrange-order-divides",
@@ -82,6 +193,16 @@ _LAGRANGE_ORDER_DIVIDES = SourceFact(
         re.compile(r"\blagrange\b", re.IGNORECASE),
         re.compile(
             r"(?=.*\border\b)(?=.*\bsubgroup\b)(?=.*\bdivid)", re.IGNORECASE | re.DOTALL
+        ),
+        # Synonym-vocabulary aboutness gate: a sentence naming a size word,
+        # a big-or-small structure word, and a divisibility relation (in any
+        # order) is about this topic even without the literal "order" /
+        # "subgroup" / "divid-" words above.
+        re.compile(
+            rf"(?=.*\b{_SIZE_SYNONYMS}\b)"
+            rf"(?=.*\b(?:{_BIG_STRUCTURE_SYNONYMS}|{_SMALL_STRUCTURE_SYNONYMS})\b)"
+            rf"(?=.*(?:\b{_DIVIDES_SYNONYMS}\b|{_MULTIPLE_OF_SYNONYMS}))",
+            re.IGNORECASE | re.DOTALL,
         ),
     ),
     false_patterns=(
@@ -94,6 +215,19 @@ _LAGRANGE_ORDER_DIVIDES = SourceFact(
         re.compile(
             r"\border of (?:the |a |any )?(?:finite )?group\b.{0,60}\bdivides\b.{0,60}"
             r"\border of (?:the |a |any )?subgroup\b",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        # Same reversed direction, synonym vocabulary: big-structure's size
+        # divides small-structure's size (either grammatical form of "size").
+        re.compile(
+            rf"{_BIG_SIZE}\b.{{0,80}}\b{_DIVIDES_SYNONYMS}\b.{{0,100}}{_SMALL_SIZE}",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        # Same reversed direction stated with "multiple of": small's size is
+        # a multiple of big's size (subgroup's size a multiple of the
+        # group's -- backwards; the true relation is the other way).
+        re.compile(
+            rf"{_SMALL_SIZE}\b.{{0,80}}{_MULTIPLE_OF_SYNONYMS}\b.{{0,100}}{_BIG_SIZE}",
             re.IGNORECASE | re.DOTALL,
         ),
     ),

@@ -111,6 +111,35 @@ class PotentialClaim:
     conditioned_on_effort: bool
     evidenced_ceiling: bool | None  # None = text gives no basis to decide
 
+    def __post_init__(self) -> None:
+        """Enforce the contract at runtime, not just in type hints.
+
+        `classify`'s rule 1 (TRAIT is a hard rule, not a default -- see
+        module docstring) tests `claim.claim_type is ClaimType.TRAIT` by
+        identity, and rule 3 tests `evidenced_ceiling` by `is None` / plain
+        truthiness. Both tests silently do the wrong thing if a caller
+        hands in something that merely looks right (a string, a truthy
+        int) instead of the real enum member / bool -- so the hard-rule
+        guarantee this module claims would hold only by caller convention,
+        not by anything checkable. Raise loud instead of guessing.
+        """
+        if not isinstance(self.claim_type, ClaimType):
+            raise TypeError(
+                f"claim_type must be a ClaimType member, got {self.claim_type!r}"
+            )
+        if not isinstance(self.conditioned_on_effort, bool):
+            raise TypeError(
+                "conditioned_on_effort must be a bool, got "
+                f"{self.conditioned_on_effort!r}"
+            )
+        if self.evidenced_ceiling is not None and not isinstance(
+            self.evidenced_ceiling, bool
+        ):
+            raise TypeError(
+                "evidenced_ceiling must be a bool or None, got "
+                f"{self.evidenced_ceiling!r}"
+            )
+
 
 def classify(claim: PotentialClaim) -> Verdict:
     """The decision table described in this module's docstring."""

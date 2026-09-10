@@ -5,7 +5,15 @@ enough that teach-8xw.13 (the overpromise detector) can be implemented
 directly against it. These tests are the proof the decision table actually
 decides consistently -- including proof it isn't vacuously permissive (an
 inflated claim must be caught, not waved through).
+
+teach-8xw.30 adds the runtime-validation regression tests below: the
+decision table only holds its "TRAIT is a hard rule, not a default"
+guarantee if `PotentialClaim` actually rejects malformed inputs rather than
+silently misclassifying them (see that bead for the reproductions this
+guards against).
 """
+import pytest
+
 from teach.honesty_rubric import (
     ClaimType,
     PotentialClaim,
@@ -95,3 +103,56 @@ def test_conditioned_claim_with_unknown_ceiling_abstains():
         evidenced_ceiling=None,
     )
     assert classify(claim) is Verdict.ABSTAIN
+
+
+def test_malformed_claim_type_string_raises_instead_of_misclassifying():
+    """teach-8xw.30 repro: a claim_type that merely looks like TRAIT (the
+    string 'trait' instead of ClaimType.TRAIT) used to sail past rule 1's
+    identity check and classify HONEST -- silently defeating the one hard
+    rule this module has. It must raise instead."""
+    with pytest.raises(TypeError):
+        PotentialClaim(
+            text="You have a natural gift for this, and you worked so hard for it.",
+            claim_type="trait",
+            conditioned_on_effort=True,
+            evidenced_ceiling=True,
+        )
+
+
+def test_truthy_non_bool_evidenced_ceiling_raises():
+    """teach-8xw.30 repro: a truthy non-bool (e.g. the string 'no') used to
+    be accepted as evidenced_ceiling=True by plain truthiness, classifying
+    HONEST regardless of the caller's actual intent."""
+    with pytest.raises(TypeError):
+        PotentialClaim(
+            text="t",
+            claim_type=ClaimType.GROWTH,
+            conditioned_on_effort=True,
+            evidenced_ceiling="no",
+        )
+
+
+def test_falsy_non_bool_evidenced_ceiling_raises():
+    """teach-8xw.30 repro: a falsy non-bool (e.g. 0) used to be silently
+    treated as evidenced_ceiling=False rather than flagged as malformed."""
+    with pytest.raises(TypeError):
+        PotentialClaim(
+            text="t",
+            claim_type=ClaimType.GROWTH,
+            conditioned_on_effort=True,
+            evidenced_ceiling=0,
+        )
+
+
+def test_non_bool_conditioned_on_effort_raises():
+    """Same root cause as the two reproductions above, applied to
+    `conditioned_on_effort` (also typed as a plain bool, also tested by
+    truthiness in `classify`'s rule 2) -- a non-bool here is just as capable
+    of silently defeating the effort-conditioning rule."""
+    with pytest.raises(TypeError):
+        PotentialClaim(
+            text="t",
+            claim_type=ClaimType.GROWTH,
+            conditioned_on_effort="yes",
+            evidenced_ceiling=True,
+        )

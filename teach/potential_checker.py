@@ -545,7 +545,12 @@ class Coverage:
     computed. It is not a general solution either -- pronoun-free
     third-person praise (teach-8xw.19's own reproduction) is invisible to
     THIS subset by construction, exactly as it was to the old vocabulary
-    gate. What it buys is a count that isn't pinned to lesson length the way
+    gate. teach-8xw.32 found a second, distinct family with the same blind
+    spot: group-generalization ("everyone who masters X goes on to...") and
+    cited-authority ("mathematicians agree that...") claims never address the
+    learner with a pronoun either, so they too are only ever visible in the
+    full `seen`/`unclassified` totals, never in this narrower subset. What it
+    buys is a count that isn't pinned to lesson length the way
     `unclassified` is: ordinary domain exposition is almost always
     third-person by genre convention, so it contributes nothing to this
     subset no matter how long the lesson runs, while direct address to the
@@ -848,6 +853,50 @@ _TEACH_9K5_DISCLOSED_CEILING_SENTENCES = (
     "There's no explaining it — you just see things other people can't.",
 )
 
+# teach-8xw.32: a DISTINCT shape family from teach-9k5's, not covered by its
+# fixture set. teach-9k5's 18 sentences are all direct second-person praise
+# of the individual learner ("you're...", "your mind...") -- pronoun-free by
+# accident of phrasing in a few cases, but still about the learner as the
+# subject. These four are structurally different: a claim about a COHORT the
+# learner is implicitly a member of ("everyone who masters cosets...",
+# "students who reach this point...") or a claim attributed to a third-party
+# AUTHORITY ("mathematicians agree that..."), never naming or addressing the
+# learner directly at all. `_claim_type` has no pattern for either shape, so
+# all four land unclassified exactly like teach-9k5's set -- but because none
+# contains "you"/"your"/"yours", ALL FOUR also miss `second_person_seen`
+# entirely (0/4, not some fraction the way teach-9k5's mixed set does), so
+# they are invisible to teach-8xw.20's short-list disclosure and visible only
+# in the full seen/unclassified totals. That is the concrete, worse-than-
+# teach-9k5 gap this bead measures and this fixture set locks in as disclosed.
+#
+# DECISION (teach-8xw.32, following teach-9k5's own precedent): closed via
+# the bead's option (b), not (a). The bead's own reproduction sentences were
+# written by whoever filed the bead, in the same lineage of sessions that
+# maintains this module -- not held-out evidence from an agent call in a
+# session that never saw this mechanism, which is what the bead's option (a)
+# requires and which teach-9k5 already established is structurally
+# unreachable from a single work session (see teach-9k5's own comment block
+# and sandbox-handoffs/teach-9k5.md). Writing four regexes that match exactly
+# these four sentences would score a self-congratulated 4/4 and prove nothing
+# about the next independently-phrased round of cohort/authority claims --
+# precisely the failure this repo's lineage (teach-yn8, teach-kmm, teach-5gf,
+# teach-8xw.19, teach-8xw.23) has already repeated four times. No pattern
+# list below is touched by this bead.
+#
+# Kept verbatim as a permanent regression check that the disclosure stays
+# honest for this shape family too: these four sentences must always land in
+# seen+unclassified (never silently invisible, never falsely flagged clean),
+# AND must always be absent from second_person_seen (proving, rather than
+# merely asserting, that this shape bypasses the short-list subset -- if a
+# future change to `_SECOND_PERSON_REFERENCE` or `_claim_type` ever made that
+# false, this test catches it).
+_TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES = (
+    "Everyone who masters cosets goes on to breeze through Lagrange Theorem.",
+    "Mathematicians agree that a student who reasons like this is on track for real results.",
+    "Students who reach this point almost always go on to master group theory with ease.",
+    "Only a handful of students each year make it this far in the material.",
+)
+
 
 if __name__ == "__main__":
     honest_flags = check_lesson_text(HONEST_EXAMPLE_TEXT)
@@ -985,6 +1034,29 @@ if __name__ == "__main__":
             "so they can't be flagged either"
         )
 
+    # teach-8xw.32: the four group-generalization/cited-authority sentences
+    # must stay seen and unclassified like teach-9k5's set, AND (the new,
+    # worse finding this bead measures) must be entirely absent from
+    # second_person_seen -- proving they bypass the short-list subset, not
+    # just the full disclosure.
+    for sentence in _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES:
+        _cov32 = check_coverage(sentence)
+        assert _cov32.seen == (sentence,), (
+            f"teach-8xw.32: {sentence!r} must be counted as seen, got seen={_cov32.seen}"
+        )
+        assert _cov32.unclassified == (sentence,), (
+            f"teach-8xw.32: {sentence!r} must be reported as unclassified (seen but not run through "
+            f"the rubric), got classified={_cov32.classified} unclassified={_cov32.unclassified}"
+        )
+        assert _cov32.second_person_seen == (), (
+            f"teach-8xw.32: {sentence!r} must be absent from second_person_seen (no \"you\"/\"your\"), "
+            f"got {_cov32.second_person_seen}"
+        )
+        assert check_lesson_text(sentence) == (), (
+            f"teach-8xw.32: {sentence!r} must not be flagged -- unclassified sentences produce no claim, "
+            "so they can't be flagged either"
+        )
+
     print(
         "OK: honest example passes clean "
         f"(0 flags), inflated example flagged ({len(inflated_flags)} flag(s)), "
@@ -1005,5 +1077,8 @@ if __name__ == "__main__":
         f"teach-9k5: all {len(_TEACH_9K5_DISCLOSED_CEILING_SENTENCES)} blind-agent held-out flattery "
         "sentences (0/18 typed by _claim_type, disclosed as the regex extractor's measured ceiling "
         "rather than widened a fifth time) confirmed seen+unclassified, never invisible and never "
-        "falsely flagged clean"
+        "falsely flagged clean, "
+        f"teach-8xw.32: all {len(_TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES)} group-generalization/"
+        "cited-authority sentences confirmed seen+unclassified AND absent from second_person_seen "
+        "(a distinct, worse-disclosed shape family than teach-9k5's, per the bead's own decision (b))"
     )

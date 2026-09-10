@@ -1,0 +1,825 @@
+{
+  "schema": "va-reading-sol-k8-strand-groupings-v1",
+  "source": {
+    "provider": "Learning Commons (learningcommons.org), Knowledge Graph v1.13.0",
+    "author": "Virginia Department of Education",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "attribution": "Knowledge Graph is provided by Learning Commons under the CC BY-4.0 license. Virginia English Language Arts standards provided by the Virginia Department of Education available at https://www.doe.virginia.gov/home/showpublisheddocument/53643/638499760936600000.",
+    "retrieved_via": "https://cdn.learningcommons.org/knowledge-graph/v1.13.0/exports/{nodes,relationships}.jsonl"
+  },
+  "grade_order": [
+    "K",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8"
+  ],
+  "strands": {
+    "RI": "Reading: Informational Texts",
+    "RL": "Reading: Fiction"
+  },
+  "groupings": [
+    {
+      "id": "va-reading-sol:K.RI",
+      "statement_code": "K.RI",
+      "grade": "K",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of informational texts heard.",
+      "case_identifier_uuid": "48a0207d-5a2e-4b50-af20-f47af5f19dd1",
+      "leaf_standards": [
+        {
+          "statement_code": "K.RI.1.A",
+          "description": "With prompting and support, ask and answer literal (who, what, when, where) or inferential (why, how) questions about what is read."
+        },
+        {
+          "statement_code": "K.RI.1.B",
+          "description": "With prompting and support, identify the main topic and key details of a text."
+        },
+        {
+          "statement_code": "K.RI.2.A",
+          "description": "With prompting and support, identify the purpose of common text features: table of contents, headings, bolded words, and pictures."
+        },
+        {
+          "statement_code": "K.RI.3.A",
+          "description": "With prompting and support, identify basic similarities in and differences between two texts on the same topic."
+        },
+        {
+          "statement_code": "K.RI.3.B",
+          "description": "With prompting and support, describe the connection between two individuals, events, ideas, or pieces of information in a text."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:K.RL",
+      "statement_code": "K.RL",
+      "grade": "K",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of literary texts heard, to include fantasy, humor, fable/fairy tale, realistic fiction, historical fiction, and folklore/tall tale.",
+      "case_identifier_uuid": "bd48de5c-b538-422d-945b-2ddb0da46df1",
+      "leaf_standards": [
+        {
+          "statement_code": "K.RL.1.A",
+          "description": "With prompting and support, activate prior (experience) and background (content) knowledge and make connections to what is read."
+        },
+        {
+          "statement_code": "K.RL.1.B",
+          "description": "With prompting and support, demonstrate knowledge of story structure by orally identifying characters, setting,important events, and details."
+        },
+        {
+          "statement_code": "K.RL.1.C",
+          "description": "With prompting and support, orally re-tell a familiar story in sequential order (beginning, middle, end)."
+        },
+        {
+          "statement_code": "K.RL.1.D",
+          "description": "With prompting and support, generate predictions about story characters and events using the text."
+        },
+        {
+          "statement_code": "K.RL.3.A",
+          "description": "With prompting and support, describe the relationship between illustrations and the story in which they appear (e.g., what moment in a story an illustration depicts)."
+        },
+        {
+          "statement_code": "K.RL.3.B",
+          "description": "With prompting and support, compare and contrast characters, plot events, or settings between two familiar stories."
+        },
+        {
+          "statement_code": "K.RL.3.C",
+          "description": "With prompting and support, monitor listening comprehension."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:1.RI",
+      "statement_code": "1.RI",
+      "grade": "1",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of informational texts heard or read.",
+      "case_identifier_uuid": "d0671a1d-e2ff-4414-ad0d-5adece62aead",
+      "leaf_standards": [
+        {
+          "statement_code": "1.RI.1.A",
+          "description": "Ask and answer literal (who, what, when, where) and inferential (why, how) questions about what is read, including demonstrating an understanding of the main topics."
+        },
+        {
+          "statement_code": "1.RI.1.B",
+          "description": "Identify the main idea and supporting details of a text."
+        },
+        {
+          "statement_code": "1.RI.1.C",
+          "description": "Explain the difference between facts and opinions in a text."
+        },
+        {
+          "statement_code": "1.RI.2.A",
+          "description": "Identify and use common text features to gain information: table of contents, headings, bolded words, and pictures, captions, and diagrams."
+        },
+        {
+          "statement_code": "1.RI.2.B",
+          "description": "Distinguish between information provided by pictures or other illustrations and information provided by the words in a text."
+        },
+        {
+          "statement_code": "1.RI.3.A",
+          "description": "Identify basic similarities in and differences between two texts on the same topic."
+        },
+        {
+          "statement_code": "1.RI.3.B",
+          "description": "Describe the connection between two individuals, events, ideas, or pieces of information in a text."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:1.RL",
+      "statement_code": "1.RL",
+      "grade": "1",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of literary texts heard or read including fantasy, humor, fable/fairy tale, realistic fiction, historical fiction, and folklore/tall tale.",
+      "case_identifier_uuid": "7a3c52d3-170e-4b82-a5e4-a52377437a1a",
+      "leaf_standards": [
+        {
+          "statement_code": "1.RL.1.A",
+          "description": "Retell familiar stories sequentially and demonstrate an understanding of the story structure, the central message or lesson, and the details."
+        },
+        {
+          "statement_code": "1.RL.1.B",
+          "description": "Identify the elements of a familiar story, including the characters, setting, and important events (e.g., conflict and resolution)."
+        },
+        {
+          "statement_code": "1.RL.1.C",
+          "description": "Ask and answer literal (who, what, when, where) or inferential (how, why) questions about what is read."
+        },
+        {
+          "statement_code": "1.RL.1.D",
+          "description": "Generate predictions about story characters and events using the text."
+        },
+        {
+          "statement_code": "1.RL.3.A",
+          "description": "Set a purpose for reading by providing a guiding question, activating prior (experience) and background (content) knowledge."
+        },
+        {
+          "statement_code": "1.RL.3.B",
+          "description": "Make connections between characters, settings, and major events in stories heard, using key details."
+        },
+        {
+          "statement_code": "1.RL.3.C",
+          "description": "Compare and contrast the adventures or experiences of characters in stories heard, using key details."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:2.RI",
+      "statement_code": "2.RI",
+      "grade": "2",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate and build knowledge from a variety of grade level complex informational texts heard or read.",
+      "case_identifier_uuid": "8143c195-ae3b-435d-9765-a3238906dc3a",
+      "leaf_standards": [
+        {
+          "statement_code": "2.RI.1.A",
+          "description": "Ask and answer literal and inferential questions (who, what, where, when, how, and why) about key details in a text."
+        },
+        {
+          "statement_code": "2.RI.1.B",
+          "description": "Retell key details of texts that demonstrate an understanding of the main topics of texts."
+        },
+        {
+          "statement_code": "2.RI.1.C",
+          "description": "Differentiate facts from opinions within a text."
+        },
+        {
+          "statement_code": "2.RI.2.A",
+          "description": "Use text features (table of contents, headings, pictures, captions, maps, and charts) to preview, set a purpose for reading and gain information."
+        },
+        {
+          "statement_code": "2.RI.2.B",
+          "description": "Identify the main purpose of a text, including what the author wants to answer, explain, or describe."
+        },
+        {
+          "statement_code": "2.RI.3.A",
+          "description": "Use prior (experience) and background (content) knowledge as context for new learning."
+        },
+        {
+          "statement_code": "2.RI.3.B",
+          "description": "Compare and contrast the most important points presented by two texts on the same topic."
+        },
+        {
+          "statement_code": "2.RI.3.C",
+          "description": "Describe the interactions between two individuals, events, ideas, or pieces of information in texts."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:2.RL",
+      "statement_code": "2.RL",
+      "grade": "2",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of grade-level complex literary texts heard or read to include fantasy, humor, fable/fairy tale, realistic fiction, historical fiction, and folklore/tall tale, with a focus on fables/fairytales from a variety of cultures.",
+      "case_identifier_uuid": "35447a52-35aa-4691-9c6e-f08d7fdb03a3",
+      "leaf_standards": [
+        {
+          "statement_code": "2.RL.1.A",
+          "description": "Retell stories sequentially, including their overall structure, essential story events, and the central message, lesson, or moral."
+        },
+        {
+          "statement_code": "2.RL.1.B",
+          "description": "Identify a story’s central conflict using events from the plot as evidence."
+        },
+        {
+          "statement_code": "2.RL.1.C",
+          "description": "Describe character’s attributes (e.g., traits, motivations, or feelings) and how they respond to major events and challenges."
+        },
+        {
+          "statement_code": "2.RL.1.D",
+          "description": "Generate predictions about story characters and events using the text."
+        },
+        {
+          "statement_code": "2.RL.3.A",
+          "description": "Set a purpose for reading by providing guiding questions, activating prior (experience) and background (content) knowledge."
+        },
+        {
+          "statement_code": "2.RL.3.B",
+          "description": "Recognize dialogue in text and explain how it can reveal characters’ thoughts and perspectives."
+        },
+        {
+          "statement_code": "2.RL.3.C",
+          "description": "Compare and contrast characters, settings, and plots in two versions of the same story from different cultures (e.g., Cinderella stories)."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:3.RI",
+      "statement_code": "3.RI",
+      "grade": "3",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from grade-level complex informational texts read.",
+      "case_identifier_uuid": "43f037c9-868f-42d3-a720-4f095cbe4cf4",
+      "leaf_standards": [
+        {
+          "statement_code": "3.RI.1.A",
+          "description": "Determine the main idea of multi-paragraph texts as well as specific paragraphs within them."
+        },
+        {
+          "statement_code": "3.RI.1.B",
+          "description": "Summarize texts using language that pertains to time, sequence, and cause and effect, referring to historical events, scientific ideas, or steps in technical procedures."
+        },
+        {
+          "statement_code": "3.RI.1.C",
+          "description": "Identify and explain how an author uses reasons and evidence to support specific points in texts."
+        },
+        {
+          "statement_code": "3.RI.2.A",
+          "description": "Describe major structural differences between the organizational patterns of different informational texts (e.g., cause/effect, comparison/contrast, problem/solution, description, sequence, and chronological order) and how they support a reader’s understanding of the text."
+        },
+        {
+          "statement_code": "3.RI.2.B",
+          "description": "Use text features and search tools (e.g., sidebars, hyperlink) to locate and gain information efficiently."
+        },
+        {
+          "statement_code": "3.RI.2.C",
+          "description": "Identify the author’s purpose for writing, including what the author wants to answer, explain, or describe."
+        },
+        {
+          "statement_code": "3.RI.3.A",
+          "description": "Use prior (experience) and background (content) knowledge as context for new learning."
+        },
+        {
+          "statement_code": "3.RI.3.B",
+          "description": "Compare and contrast the most important points and key details presented in two texts on the same topic."
+        },
+        {
+          "statement_code": "3.RI.3.C",
+          "description": "Describe the connection between a series of historical events, scientific ideas or concepts, or steps in technical procedures in a text."
+        },
+        {
+          "statement_code": "3.RI.3.D",
+          "description": "Demonstrate comprehension by writing about what is read using the text for support."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:3.RL",
+      "statement_code": "3.RL",
+      "grade": "3",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of grade-level complex literary texts read to include fantasy, humor, fable/fairy tale, realistic fiction, historical fiction, biography, autobiography, and folklore/tall tale, with a focus on folklore and tall tales.",
+      "case_identifier_uuid": "41e7d190-20d6-4d01-b45b-ac4b26808859",
+      "leaf_standards": [
+        {
+          "statement_code": "3.RL.1.A",
+          "description": "Identify thematic topics of stories (e.g. friendship, survival, determination) and the lessons learned."
+        },
+        {
+          "statement_code": "3.RL.1.B",
+          "description": "Identify the central conflict and resolution using events from the plot to summarize the text."
+        },
+        {
+          "statement_code": "3.RL.1.C",
+          "description": "Describe a character’s attributes, including their traits, motivations, or feelings and how they develop throughout the text."
+        },
+        {
+          "statement_code": "3.RL.2.A",
+          "description": "Discuss how an author uses characters and settings to advance the plot."
+        },
+        {
+          "statement_code": "3.RL.2.B",
+          "description": "Identify and explain how an author uses sensory language (e.g., sights, sounds, smells, and tastes) to impact a reader’s understanding of characters, settings, and plot events."
+        },
+        {
+          "statement_code": "3.RL.2.C",
+          "description": "Identify the narrator of a story and the speaker of a poem."
+        },
+        {
+          "statement_code": "3.RL.2.D",
+          "description": "Identify the characteristics of different genres."
+        },
+        {
+          "statement_code": "3.RL.3.A",
+          "description": "Set a purpose for reading by looking at the illustrations and activating prior (experience) and background (content) knowledge."
+        },
+        {
+          "statement_code": "3.RL.3.B",
+          "description": "Compare and contrast details in paired literary and informational nonfiction texts including their treatment of similar themes, topics, and patterns of events."
+        },
+        {
+          "statement_code": "3.RL.3.C",
+          "description": "Compare and contrast the themes, settings, and plots of stories written by the same author about the same or similar characters."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:4.RI",
+      "statement_code": "4.RI",
+      "grade": "4",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from grade-level complex informational texts read.",
+      "case_identifier_uuid": "ab45cfc4-7a5b-4df7-86f8-85700ef12c00",
+      "leaf_standards": [
+        {
+          "statement_code": "4.RI.1.A",
+          "description": "Summarize the main idea of multi-paragraph texts and the specific paragraphs within them, explaining how key details support the main ideas."
+        },
+        {
+          "statement_code": "4.RI.1.B",
+          "description": "Summarize events, procedures, ideas, or concepts in historical, scientific, or technical texts, including what happened and why."
+        },
+        {
+          "statement_code": "4.RI.1.C",
+          "description": "Distinguish between fact and opinion and explain how an author uses reasons and evidence to support opinions within texts."
+        },
+        {
+          "statement_code": "4.RI.2.A",
+          "description": "Explain how authors select an organizational pattern (e.g., cause/effect, comparison/contrast, problem/solution) using transitional words and phrases to support their purpose and a reader’s understanding of the text."
+        },
+        {
+          "statement_code": "4.RI.2.B",
+          "description": "Apply knowledge of text features and search tools in multiple print and digital sources to locate and categorize information efficiently and gain meaning."
+        },
+        {
+          "statement_code": "4.RI.2.C",
+          "description": "Explain the author’s purpose for writing, including what the author wants to answer, explain, or describe based on the connections between particular sentences and paragraphs."
+        },
+        {
+          "statement_code": "4.RI.3.A",
+          "description": "Use prior (experience) and background (content) knowledge as context for new learning."
+        },
+        {
+          "statement_code": "4.RI.3.B",
+          "description": "Compare and contrast multiple accounts of the same event or topic and describe the differences in focus and the information provided."
+        },
+        {
+          "statement_code": "4.RI.3.C",
+          "description": "Describe the relationships between a series of historical events, scientific concepts, or steps in technical procedures using words that pertain to comparison, sequence, or cause and effect."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:4.RL",
+      "statement_code": "4.RL",
+      "grade": "4",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of grade-level complex literary texts read to include fantasy, humor, poetry, realistic fiction, historical fiction, biography, autobiography, and folklore/tall tales, with a focus on poetry, realistic fiction and historical fiction.",
+      "case_identifier_uuid": "7aaeff5e-ab41-45ee-91ad-bc785e80b8b9",
+      "leaf_standards": [
+        {
+          "statement_code": "4.RL.1.A",
+          "description": "Summarize the theme of stories, dramas, or poetry, including the thematic topic (e.g., courage, loyalty, family) and how characters respond to challenges."
+        },
+        {
+          "statement_code": "4.RL.1.B",
+          "description": "Describe the central conflict and explain the resolution using an understanding of text structure and events from the plot as evidence."
+        },
+        {
+          "statement_code": "4.RL.1.C",
+          "description": "Analyze characters in-depth, drawing on specific details from the text, including their words, actions, or a character’s thoughts."
+        },
+        {
+          "statement_code": "4.RL.2.A",
+          "description": "Determine how an author uses language (dialogue, sensory language, and dialect), characters, and settings to advance the plot."
+        },
+        {
+          "statement_code": "4.RL.2.B",
+          "description": "Identify the characteristics of different genres of literary texts (e.g., drama, poems, stories) and refer to the structural elements of each."
+        },
+        {
+          "statement_code": "4.RL.2.C",
+          "description": "Identify the narrator of a story and the speaker of a poem."
+        },
+        {
+          "statement_code": "4.RL.2.D",
+          "description": "Differentiate between first-and third-person point of view."
+        },
+        {
+          "statement_code": "4.RL.3.A",
+          "description": "Set a purpose for reading by activating prior (experience) and background (content) knowledge."
+        },
+        {
+          "statement_code": "4.RL.3.B",
+          "description": "Compare and contrast details in paired literary and informational nonfiction texts including their treatment of similar themes, topics, and patterns of events."
+        },
+        {
+          "statement_code": "4.RL.3.C",
+          "description": "Explain the overall structure of stories, poems, and plays and how each successive part builds on earlier sections."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:5.RI",
+      "statement_code": "5.RI",
+      "grade": "5",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from grade-level complex informational texts read.",
+      "case_identifier_uuid": "a5e23510-9fb1-412c-8299-ebbdbe93da4e",
+      "leaf_standards": [
+        {
+          "statement_code": "5.RI.1.A",
+          "description": "Summarize the main ideas of texts and specific paragraphs within them, including how they are developed through the details."
+        },
+        {
+          "statement_code": "5.RI.1.B",
+          "description": "Summarize events, procedures, ideas, or concepts in historical, scientific, or technical texts, including what happened, how, and why."
+        },
+        {
+          "statement_code": "5.RI.1.C",
+          "description": "Describe how an author uses reasons, evidence, and opinions to support points in a text, by identifying (and accurately quoting) which reasons and evidence support which point(s)."
+        },
+        {
+          "statement_code": "5.RI.2.A",
+          "description": "Describe the overall organization patterns of texts (e.g., cause/effect, comparison/contrast, problem/solution, description, sequence, and chronological) and how each successive part builds on earlier sections, using available transitional words and phrases."
+        },
+        {
+          "statement_code": "5.RI.2.B",
+          "description": "Examine text features and search tools in multiple print and digital sources to evaluate and gain meaning from the information found."
+        },
+        {
+          "statement_code": "5.RI.2.C",
+          "description": "Determine the author’s purpose(s) and describe how the author’s perspective (e.g., beliefs, assumptions, biases) influences the meaning of the text."
+        },
+        {
+          "statement_code": "5.RI.3.A",
+          "description": "Use prior (experience) and background (content) knowledge as context for new learning."
+        },
+        {
+          "statement_code": "5.RI.3.B",
+          "description": "Analyze multiple accounts of the same event or topic, noting important similarities and differences in the point of view they represent."
+        },
+        {
+          "statement_code": "5.RI.3.C",
+          "description": "Explain the relationships or interactions between two or more individuals, events, procedures, ideas, or concepts in a historical, scientific, or technical texts, including what happened and why based on specific information in the text."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:5.RL",
+      "statement_code": "5.RL",
+      "grade": "5",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of grade-level complex literary texts read to include poetry, fantasy, humor, mystery, adventure, realistic fiction, historical fiction, and folklore/tall tales, with a focus on fantasy.",
+      "case_identifier_uuid": "cd56776d-05ef-4f14-a499-e08b40fc2cbf",
+      "leaf_standards": [
+        {
+          "statement_code": "5.RL.1.A",
+          "description": "Summarize the story or play, including the overarching theme and lessons learned, and explain how they are developed or conveyed through specific details."
+        },
+        {
+          "statement_code": "5.RL.1.B",
+          "description": "Describe plots in stories as a sequence of events that develops the central conflict and resolution, including initiating events, climax, and resolution."
+        },
+        {
+          "statement_code": "5.RL.1.C",
+          "description": "Explain how events from the plot cause the character(s) to change or evolve and how the development of character(s) or settings impact the plot."
+        },
+        {
+          "statement_code": "5.RL.2.A",
+          "description": "Describe how an author develops a character through what characters say, think, do, and how other characters respond."
+        },
+        {
+          "statement_code": "5.RL.2.B",
+          "description": "Analyze the author’s use of language (e.g., synonyms, figurative language, sensory words, dialogue, dialect) and their impact on understanding characters, setting, and plot events."
+        },
+        {
+          "statement_code": "5.RL.2.C",
+          "description": "Analyze how the characteristics of a poem and the author’s use of patterns of sound (e.g., rhyme, rhythm, alliteration, consonance) impact meaning."
+        },
+        {
+          "statement_code": "5.RL.3.A",
+          "description": "Set a purpose for reading by activating prior (experience) and background (content) knowledge."
+        },
+        {
+          "statement_code": "5.RL.3.B",
+          "description": "Compare and contrast the point of view from which different stories are narrated, including the difference between first-and third-person narratives."
+        },
+        {
+          "statement_code": "5.RL.3.C",
+          "description": "Compare and contrast details in paired literary and informational nonfiction texts including their treatment of similar themes, topics, and patterns of events."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:6.RI",
+      "statement_code": "6.RI",
+      "grade": "6",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from grade-level complex informational texts read.",
+      "case_identifier_uuid": "5424bda5-108f-43bc-a116-c12994dcb7df",
+      "leaf_standards": [
+        {
+          "statement_code": "6.RI.1.A",
+          "description": "Summarize texts, including their main idea(s) and how they are developed with specific details."
+        },
+        {
+          "statement_code": "6.RI.1.B",
+          "description": "Describe how a key individual, event or idea is introduced, illustrated, and elaborated in historical, scientific, or technical texts (e.g., through examples or anecdotes)."
+        },
+        {
+          "statement_code": "6.RI.1.C",
+          "description": "Trace the argument and specific claims in texts, distinguishing claims that are supported by evidence and reasons, from claims that are not."
+        },
+        {
+          "statement_code": "6.RI.2.A",
+          "description": "Determine the purpose of text features (e.g., boldface and italics type; type set in color; underlining; graphics and photographs; and headings and subheadings)."
+        },
+        {
+          "statement_code": "6.RI.2.B",
+          "description": "Explain how an author’s word choice, organizational pattern, and language structure convey the author’s purpose."
+        },
+        {
+          "statement_code": "6.RI.2.C",
+          "description": "Explain how an author establishes and conveys a perspective or purpose in an informational text."
+        },
+        {
+          "statement_code": "6.RI.3.A",
+          "description": "Describe ideas within and between selections including how specific sentences, paragraphs, or sections contribute to the development of ideas."
+        },
+        {
+          "statement_code": "6.RI.3.B",
+          "description": "Compare and contrast one author’s presentation of ideas or events with another’s, identifying where the texts agree or disagree."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:6.RL",
+      "statement_code": "6.RL",
+      "grade": "6",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of grade-level complex literary texts read to include short stories, literary nonfiction, novels, poetry, and drama.",
+      "case_identifier_uuid": "53a5fb04-3e04-4dd9-9d18-cb93da267927",
+      "leaf_standards": [
+        {
+          "statement_code": "6.RL.1.A",
+          "description": "Summarize texts, including determining the central theme of stories, plays, or poems, and how they are conveyed through specific details."
+        },
+        {
+          "statement_code": "6.RL.1.B",
+          "description": "Describe plot developments in stories and dramas by examining the exposition, initiating event, central conflict, rising action, climax, falling action, and resolution."
+        },
+        {
+          "statement_code": "6.RL.1.C",
+          "description": "Differentiate between internal and external conflicts (e.g., individual vs. Individual, individual vs. Nature, individual vs. Society, individual vs. Technology, and individual vs. Self) and explain how they impact character development and plot."
+        },
+        {
+          "statement_code": "6.RL.1.D",
+          "description": "Explain how static and dynamic characters impact the plot."
+        },
+        {
+          "statement_code": "6.RL.1.E",
+          "description": "Explain the role of the protagonist and antagonist on plot events."
+        },
+        {
+          "statement_code": "6.RL.2.A",
+          "description": "Describe the poetic elements in prose and poetry (e.g., rhyme, rhythm, repetition, alliteration, and onomatopoeia) and their intended impact on the reader."
+        },
+        {
+          "statement_code": "6.RL.2.B",
+          "description": "Explain elements of author’s style as purposeful choices (e.g., imagery, figurative language, and word choice) to develop tone."
+        },
+        {
+          "statement_code": "6.RL.2.C",
+          "description": "Explain how an author develops the point of view (e.g., first-person, third person limited, third-person omniscient) of the narrator or speaker in a text and influences how events are described in stories, plays, or poems."
+        },
+        {
+          "statement_code": "6.RL.3.A",
+          "description": "Describe how the interactions between individuals, settings, events, and ideas within a text influence one another."
+        },
+        {
+          "statement_code": "6.RL.3.B",
+          "description": "Compare and contrast details in two or more paired literary fiction and nonfiction texts on the same topic or with similar themes, including how chapters, scenes, or stanzas work together to provide the overall structure of each text."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:7.RI",
+      "statement_code": "7.RI",
+      "grade": "7",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from grade-level complex informational texts read.",
+      "case_identifier_uuid": "2cf8e624-839a-4f1f-92ae-cb52dbd5f3a3",
+      "leaf_standards": [
+        {
+          "statement_code": "7.RI.1.A",
+          "description": "Create a main idea statement and provide an accurate summary of how key events or ideas develop through the text."
+        },
+        {
+          "statement_code": "7.RI.1.B",
+          "description": "Analyze how the author unfolds a perspective or series of ideas or events in historical, scientific, or technical texts, including the order in which the points are made and how they are introduced and developed."
+        },
+        {
+          "statement_code": "7.RI.1.C",
+          "description": "Trace the argument and specific claims in texts and assess whether all the evidence presented is relevant and whether irrelevant evidence was introduced."
+        },
+        {
+          "statement_code": "7.RI.2.A",
+          "description": "Analyze how an author uses text features (e.g., boldface and italics; type set in color; underlining; indentation; sidebars; illustrations, graphics and photographs; headings and subheadings; footnotes and annotations) to enhance and support the reader’s comprehension."
+        },
+        {
+          "statement_code": "7.RI.2.B",
+          "description": "Analyze how an author’s word choice, organizational pattern, and language structure impact the author’s purpose and support the reader’s comprehension."
+        },
+        {
+          "statement_code": "7.RI.2.C",
+          "description": "Analyze how an author’s purpose(s) reflects the author’s perspective (e.g., beliefs, assumptions, biases) and influences the meaning of an informational text."
+        },
+        {
+          "statement_code": "7.RI.3.A",
+          "description": "Analyze ideas within and between selections including how specific sentences, paragraphs, or sections contribute to the development and meaning of ideas."
+        },
+        {
+          "statement_code": "7.RI.3.B",
+          "description": "Compare and contrast how two or more authors writing about the same topic shape their presentations or viewpoints of key information by emphasizing different facts, opinions, and reasoning."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:7.RL",
+      "statement_code": "7.RL",
+      "grade": "7",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of grade-level complex literary texts read to include short stories, literary nonfiction, novels, poetry, and drama.",
+      "case_identifier_uuid": "0785550b-e88c-4969-bdfb-48fdc2feaaf5",
+      "leaf_standards": [
+        {
+          "statement_code": "7.RL.1.A",
+          "description": "Describe stated or implied themes of texts and analyze their development throughout the texts using specific details."
+        },
+        {
+          "statement_code": "7.RL.1.B",
+          "description": "Analyze how the central conflict and key elements (e.g., exposition, initiating event, rising action, climax, falling action, and resolution) impact plot development."
+        },
+        {
+          "statement_code": "7.RL.1.C",
+          "description": "Explain how static and dynamic characters and the roles of protagonist and antagonist influence plot events."
+        },
+        {
+          "statement_code": "7.RL.2.A",
+          "description": "Analyze how elements of authors’ styles (e.g., word choice, dialogue, form, voice, rhyme, rhythm, and/or sound devices) contribute to meaning in various forms of prose and poetry."
+        },
+        {
+          "statement_code": "7.RL.2.B",
+          "description": "Analyze how the elements of an author’s style (e.g., word choice, sentence structure, dialogue, figurative language, imagery) are used to influence and develop tone."
+        },
+        {
+          "statement_code": "7.RL.2.C",
+          "description": "Explain how an author develops the points of view of different characters in a text (e.g., first-person, third person limited, third-person omniscient) and how they affect the reader’s interpretation of a text."
+        },
+        {
+          "statement_code": "7.RL.3.A",
+          "description": "Explain how particular elements of stories or dramas interact including how settings shape and influence characters and plot."
+        },
+        {
+          "statement_code": "7.RL.3.B",
+          "description": "Compare and contrast texts in different forms or genres (e.g., stories and poems; historical novels and fantasy stories) in terms of their approaches to similar themes and topics."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:8.RI",
+      "statement_code": "8.RI",
+      "grade": "8",
+      "strand_code": "RI",
+      "strand_name": "Reading: Informational Texts",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from grade-level complex informational texts read.",
+      "case_identifier_uuid": "5c7212d4-1e67-4afc-8eac-0b4fb8f8a8ef",
+      "leaf_standards": [
+        {
+          "statement_code": "8.RI.1.A",
+          "description": "Create a main idea statement and provide an accurate summary, clarifying the relationships among the key details and ideas or events."
+        },
+        {
+          "statement_code": "8.RI.1.B",
+          "description": "Analyze how the author unfolds a perspective or series of ideas or events in historical, scientific, or technical texts, including the order in which the points are made, how they are introduced and developed, and the connections drawn between them."
+        },
+        {
+          "statement_code": "8.RI.1.C",
+          "description": "Trace and evaluate the argument and specific claims in a text, assessing whether the reasoning and evidence are relevant and sufficient to support the claims."
+        },
+        {
+          "statement_code": "8.RI.2.A",
+          "description": "Evaluate an author’s use of text features (e.g., boldface and italics; type set in color; underlining; indentation; sidebars; illustrations, graphics, and photographs; headings and subheadings; footnotes and annotations) to enhance and support the reader’s comprehension."
+        },
+        {
+          "statement_code": "8.RI.2.B",
+          "description": "Analyze how an author’s word choice, organizational pattern, language structure, viewpoints, and qualifications impact meaning and credibility of a text."
+        },
+        {
+          "statement_code": "8.RI.2.C",
+          "description": "Analyze how an author establishes and conveys a perspective or purpose in a text and acknowledges and responds to conflicting evidence or viewpoints."
+        },
+        {
+          "statement_code": "8.RI.3.A",
+          "description": "Analyze ideas within and between selections including how specific sentences, paragraphs, sections, and text features contribute to the development and refinement of the ideas presented."
+        },
+        {
+          "statement_code": "8.RI.3.B",
+          "description": "Compare and contrast how two or more authors present conflicting information on the same topic by assessing where the texts disagree in reasoning and evidence."
+        }
+      ]
+    },
+    {
+      "id": "va-reading-sol:8.RL",
+      "statement_code": "8.RL",
+      "grade": "8",
+      "strand_code": "RL",
+      "strand_name": "Reading: Fiction",
+      "description": "The student will use textual evidence to demonstrate comprehension and build knowledge from a variety of grade-level complex literary texts read to include short stories, literary nonfiction, novels, poetry, and drama.",
+      "case_identifier_uuid": "23360311-f5eb-483d-9cf5-dac29d5bd530",
+      "leaf_standards": [
+        {
+          "statement_code": "8.RL.1.A",
+          "description": "Analyze and explain the development of theme(s) over the course of texts and their relationship to the characters, settings, plots, and overall messages."
+        },
+        {
+          "statement_code": "8.RL.1.B",
+          "description": "Explain how different plot patterns (e.g., comedy, drama, tragedy) and subplots create meaning and examine their influence on characters, theme, pacing, and point of view."
+        },
+        {
+          "statement_code": "8.RL.1.C",
+          "description": "Justify the decisions and actions of dynamic versus static characters using dialogue or specific events from the text."
+        },
+        {
+          "statement_code": "8.RL.2.A",
+          "description": "Interpret the meaning and analyze the impact of poetic elements in prose and poetry (e.g., rhyme, rhythm, repetition, alliteration, and onomatopoeia) on the reader."
+        },
+        {
+          "statement_code": "8.RL.2.B",
+          "description": "Analyze how the elements of an author’s style (e.g., dialogue, sentence structure and word choices) are used to influence and develop tone and voice."
+        },
+        {
+          "statement_code": "8.RL.2.C",
+          "description": "Analyze how an author develops and contrasts the points of view of different characters or narrators in a text."
+        },
+        {
+          "statement_code": "8.RL.2.D",
+          "description": "Analyze how an author’s use of literary devices including foreshadowing, flashback, symbolism, and irony are used to build mystery, suspense, or surprise."
+        },
+        {
+          "statement_code": "8.RL.3.A",
+          "description": "Compare and contrast the structure of two or more stories, poems, and plays and analyze how the differing structure of each literary text contributes to its meaning and style."
+        },
+        {
+          "statement_code": "8.RL.3.B",
+          "description": "Compare and contrast fictional portrayals of a time, place, or character with historical accounts of the same period as a means of understanding how authors of fiction use or alter history."
+        },
+        {
+          "statement_code": "8.RL.3.C",
+          "description": "Compare and contrast texts in different forms or genres (e.g., stories and poems; historical novels and fantasy stories; literary nonfiction and informational) in terms of their approaches to similar themes and topics."
+        }
+      ]
+    }
+  ]
+}

@@ -19,6 +19,7 @@ from teach.potential_checker import (
     _TEACH_8XW_20_THIRD_PERSON_TURN,
     _TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN,
     _TEACH_8XW_23_PURE_FLATTERY_TURN,
+    _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES,
     _TEACH_9K5_DISCLOSED_CEILING_SENTENCES,
     _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES,
     _TEACH_KMM_REGRESSION_SENTENCES,
@@ -589,4 +590,48 @@ def test_teach_9k5_disclosed_ceiling_sentences_are_not_falsely_flagged_clean():
     single-source-of-truth invariant."""
     for sentence in _TEACH_9K5_DISCLOSED_CEILING_SENTENCES:
         assert check_lesson_text(sentence) == ()
+
+
+# --- teach-8xw.32: a distinct shape family, disclosed the same way ----------
+#
+# Group-generalization ("everyone who masters X goes on to...") and
+# cited-authority ("mathematicians agree that...") claims are not in
+# teach-9k5's fixture set -- that set is entirely direct second-person praise
+# of the individual learner. These four never name or address the learner at
+# all, so unlike teach-9k5's mixed set they also miss `second_person_seen`
+# 4/4, not just some fraction -- invisible to the short-list disclosure
+# teach-8xw.20 built, visible only in the full seen/unclassified totals. Per
+# this bead's own decision (b), no pattern was added for these four
+# sentences; these tests hold the disclosure honest, matching teach-9k5's
+# tests plus one more proving the second-person-subset miss specifically.
+
+
+def test_teach_8xw_32_disclosed_ceiling_sentences_are_seen():
+    for sentence in _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.seen == (sentence,), f"{sentence!r} must be counted as seen, got {cov.seen}"
+
+
+def test_teach_8xw_32_disclosed_ceiling_sentences_land_in_unclassified_not_classified():
+    for sentence in _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.classified == (), f"{sentence!r} unexpectedly classified: {cov.classified}"
+        assert cov.unclassified == (sentence,), f"{sentence!r} must be reported unclassified, got {cov}"
+
+
+def test_teach_8xw_32_disclosed_ceiling_sentences_are_not_falsely_flagged_clean():
+    for sentence in _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES:
+        assert check_lesson_text(sentence) == ()
+
+
+def test_teach_8xw_32_disclosed_ceiling_sentences_miss_second_person_subset():
+    """The new finding this bead measures: unlike teach-9k5's mixed set,
+    NONE of these four sentences contain "you"/"your"/"yours", so they are
+    invisible even to the short-list `second_person_unclassified` disclosure
+    teach-8xw.20 built -- not just to `_claim_type`."""
+    for sentence in _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES:
+        cov = check_coverage(sentence)
+        assert cov.second_person_seen == (), (
+            f"{sentence!r} unexpectedly landed in second_person_seen: {cov.second_person_seen}"
+        )
         assert check_coverage(sentence).unclassified == (sentence,)

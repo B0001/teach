@@ -25,6 +25,28 @@ here too. `_node_vocabulary` below never reads a named key like
 `facts` (whatever shape a domain gave it) plus `label`, so a reading-domain
 or foreign-language graph plugs in without this module changing.
 
+GENERICITY: MEASURED, NOT JUST DESIGNED-FOR (teach-8xw.29)
+
+The paragraph above is a design intent, not by itself evidence: until
+teach-8xw.29, every graph this module had actually been exercised against
+was math (VA Math SOL, Dummit & Foote). It is now also exercised against a
+real, curriculum-scale non-math graph: `teach/va_reading_sol_graph.py`, the
+Virginia English SOL reading strands (RI/RL) grades K-8, sourced the same
+way teach-8xw.5 sourced VA Math SOL -- real VDOE standard text, not
+synthetic filler written to make this module look good (see
+tests/test_concept_recovery_non_math_domain.py, and sandbox-prompt.md's "you
+cannot hold out examples from yourself"). That graph has the same
+boilerplate-heavy, grade-to-grade-overlapping structure VA Math SOL has (see
+"WHY OVERLAP-COUNTING ALONE IS NOT ENOUGH" below), and recovery, both
+prerequisite outcomes, and the abstention/ambiguity gates all measurably
+work against it. What this does NOT establish: the lesson text in that test
+file is still hand-written by the session that wrote this note, not a held-
+out generalization set (same limit CORRECT_RECOVERY_TEXT/ABSTAIN_TEXT below
+have always had for math) -- so "recovery works on VA Reading SOL K-8 given
+these specific lesson texts" is measured; "recovery generalizes to
+arbitrary reading, writing, or foreign-language lesson text" is not, and
+this module does not claim it is.
+
 WHY OVERLAP-COUNTING ALONE IS NOT ENOUGH
 
 Curriculum standards are boilerplate-heavy: "The student will use
@@ -82,24 +104,81 @@ score; two candidates that are both partially, similarly covered (the
 synthetic exact-tie fixture in tests/test_concept_recovery.py) still
 abstain, because neither condition is met.
 
+A FAITHFUL PARAPHRASE CAN STILL LOOK LIKE NOTHING MATCHED (teach-8xw.26)
+
+Raw exact-word overlap has no stemming or synonym handling: a lesson that
+paraphrases a real node's content ("rules" for "formulas", "space covered"
+for "area", "four-sided shapes with square corners" for "rectangles and
+squares") shares almost none of that node's literal distinctive vocabulary,
+even though a human reader would recognize it instantly. Left alone, that
+collapses the correct node's score down near unrelated neighbors and the
+match goes ambiguous -- not because the text was actually unclear, but
+because the matcher's notion of "the same word" was too narrow.
+
+So when raw-vocabulary scoring (`score_candidates`) abstains -- either no
+candidate clears `_MIN_MATCH_WORDS`, or the top candidates are too close to
+call and the coverage tiebreak doesn't resolve it -- a second, strictly
+narrower-scope tier gets a try before giving up: `score_candidates_semantic`
+re-scores the same text against the same per-node vocabulary, but counts a
+node word as matched if the text contains that word, its WordNet lemma, or
+a word sharing a WordNet synset with it (`_semantic_match`). This is a
+generic, off-the-shelf normalization -- the same lemma/synonym linkage
+applies uniformly to any domain's vocabulary -- not a hand-curated synonym
+table tuned to any one lesson's specific word choices. It is deliberately
+scoped to fire ONLY as a fallback: any text the raw exact-match tier already
+resolves is untouched, so this tier cannot change behavior on the common,
+already-working case, only offer a second chance on the case that would
+otherwise abstain. The same abstention thresholds apply to the semantic
+tier as to the raw one -- a paraphrase vague enough to stay ambiguous even
+with synonym credit still abstains, per this module's whole design.
+
+WordNet coverage is real but partial: it links close everyday synonyms
+("cross"/"intersect", "rule"/"formula") but not every paraphrase a persona
+might produce ("area" and "space" share no synset), and it has essentially
+nothing for graduate-level technical vocabulary (Dummit & Foote's "coset",
+"homomorphism"). This tier narrows the gap; it does not close it, and
+nothing in this module claims it does -- see the generalization measurement
+recorded against teach-8xw.26 for the actually-measured hit rate.
+
 Recovered prerequisites get the same abstention discipline at the level of
 each candidate: a direct-prerequisite node in the graph is only reported as
 "assumed" if the text both (a) signals that *something* is being treated as
-already known (a "you already..."/"recall.../"you learned..." phrase) and
-(b) that phrase's sentence overlaps that specific node's distinctive
-vocabulary. A generic "you've got this" with no content-bearing overlap to
-any candidate is not evidence that a specific prerequisite was assumed, and
-is not reported as one.
+already known (a "you already..."/"recall.../"remember.../"you learned..."
+phrase) and (b) that phrase's sentence, or one of the
+`_ASSUMED_KNOWN_WINDOW_SENTENCES` sentences immediately following it,
+overlaps that specific node's distinctive vocabulary. The forward window
+exists because an ordinary teaching announcement often splits the cue from
+its elaboration across an adjacent sentence or two ("Remember polygons from
+last year? Great. Now we'll combine and subdivide them..." -- teach-8xw.27)
+rather than always packing both into one sentence. A generic "you've got
+this" with no content-bearing overlap to any candidate within that window is
+not evidence that a specific prerequisite was assumed, and is not reported
+as one.
 """
 from __future__ import annotations
 
 import dataclasses
 import re
+from functools import lru_cache
 from typing import Iterator
 
 from teach.concept_graph import ConceptGraph, ConceptNode
 
 _WORD = re.compile(r"[a-z]+")
+
+# Bookkeeping identifiers (e.g. va_math_sol_graph.py's case_identifier_uuid)
+# sit in ConceptNode.facts as opaque UUID4 strings, not curriculum content --
+# but _flatten_strings has to stay ignorant of key names (concept_graph.py's
+# opacity rule, teach-8xw.10), so there is no "skip this field" option. This
+# strips UUID-*shaped* substrings out of harvested text before it is
+# word-tokenized, so their hex-letter runs ("ededf", "baca", ...) never enter
+# a node's vocabulary as if they were real words (teach-klm). Matches
+# anywhere in a string, not just a whole-string match, in case a future
+# domain embeds an id inside a longer sentence rather than as its own field.
+_UUID = re.compile(
+    r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b",
+    re.IGNORECASE,
+)
 
 _STOPWORDS = frozenset(
     """
@@ -134,6 +213,20 @@ _MIN_COVERAGE_MARGIN = 0.15
 # curriculum boilerplate, not a discriminating signal -- excluded from
 # scoring entirely. See module docstring.
 _MAX_DOCUMENT_FREQ = 4
+# The semantic fallback tier's margin requirement (teach-8xw.26) -- stricter
+# than _MIN_MARGIN. WordNet synonym links include ordinary-English pairs
+# with no domain content at all ("want"/"require", "answer"/"solution"),
+# so a semantic-tier match can clear the raw tier's margin by accident: the
+# blind generalization set this was calibrated against had exactly this
+# happen (a probability/statistics paraphrase mentioning "the information
+# we want" and "an answer" spuriously out-scored its own true topic's
+# node -- see the teach-8xw.26 handoff for the full measurement). Margin 2
+# let that false positive through; margin 3 rejects it while still
+# resolving both this bead's own reproduction (margin 3) and every
+# genuine paraphrase-driven recovery in that same measurement (margin >=
+# 5). This is a calibration against one held-out set, not a proof it can
+# never happen again at margin 3 -- a wider set could still surface one.
+_SEMANTIC_MIN_MARGIN = 3
 # A direct prerequisite is reported as UNSIGNPOSTED USE (teach-20c) when the
 # lesson text as a whole shares at least this many distinctive words with
 # that prerequisite's vocabulary and no "assumed known" phrase covers it.
@@ -148,12 +241,25 @@ _ASSUMED_KNOWN_PATTERNS = (
     re.compile(r"\byou can already\b", re.IGNORECASE),
     re.compile(r"\brecall\b", re.IGNORECASE),
     re.compile(r"\bremember (when|how|that)\b", re.IGNORECASE),
+    # Bare "remember <topic>" ("Remember polygons from last year?") is the
+    # same already-known cue as "remember when/how/that" -- just aimed at a
+    # noun phrase instead of a clause. Excludes "remember to <verb>", which
+    # is a forward-looking instruction ("remember to bring your homework"),
+    # not a recall-of-prior-content signal.
+    re.compile(r"\bremember\b(?!\s+to\b)", re.IGNORECASE),
     re.compile(r"\blast (year|grade|time) you\b", re.IGNORECASE),
     re.compile(r"\byou (already )?know how to\b", re.IGNORECASE),
 )
+# An already-known cue's referent is often elaborated a sentence or two
+# later ("Remember X? Good. Now we'll build on it...") rather than always
+# sharing its own sentence with the prerequisite's vocabulary -- teach-8xw.27.
+# The window looks forward only: in ordinary teaching dialogue the cue
+# announces first and the elaboration follows, never the reverse.
+_ASSUMED_KNOWN_WINDOW_SENTENCES = 2
 
 
 def _words(text: str) -> set[str]:
+    text = _UUID.sub(" ", text)
     return {w for w in _WORD.findall(text.lower()) if len(w) >= 4 and w not in _STOPWORDS}
 
 
@@ -237,6 +343,105 @@ def score_candidates(text: str, index: VocabularyIndex) -> tuple[ConceptMatch, .
     return tuple(matches)
 
 
+@lru_cache(maxsize=None)
+def _wordnet_lemmatizer():
+    """Lazily construct (and cache) the WordNet-backed lemmatizer. Returns
+    None if the WordNet corpus isn't available (no network on first use, or
+    a stripped-down environment) -- callers degrade to treating a word as
+    its own lemma with no synonym expansion rather than crashing, per this
+    module's abstention discipline: no semantic credit is still a safe
+    answer, a crash is not."""
+    try:
+        from nltk.corpus import wordnet
+        wordnet.synsets("test")  # forces the corpus to load / fail here
+    except LookupError:
+        try:
+            import nltk
+            nltk.download("wordnet", quiet=True)
+            from nltk.corpus import wordnet
+            wordnet.synsets("test")
+        except Exception:
+            return None
+    from nltk.stem import WordNetLemmatizer
+    return WordNetLemmatizer()
+
+
+@lru_cache(maxsize=None)
+def _lemma(word: str) -> str:
+    """Canonical singular/base form of `word` (e.g. "formulas" ->
+    "formula", "classify"/"classifying" -> "classify"), used only inside
+    the semantic fallback tier -- see module docstring's "A FAITHFUL
+    PARAPHRASE..." section. Falls back to `word` unchanged if WordNet isn't
+    available."""
+    lemmatizer = _wordnet_lemmatizer()
+    if lemmatizer is None:
+        return word
+    for pos in ("n", "v", "a"):
+        reduced = lemmatizer.lemmatize(word, pos=pos)
+        if reduced != word:
+            return reduced
+    return word
+
+
+@lru_cache(maxsize=None)
+def _synonym_lemmas(word: str) -> frozenset[str]:
+    """Every single-word WordNet lemma reachable from `word`'s synsets,
+    across all parts of speech, itself reduced to `_lemma` form -- a
+    generic semantic neighborhood built the same way for every word in
+    every domain, not a table curated for any one lesson's phrasing (see
+    module docstring). Falls back to `{_lemma(word)}` if WordNet has
+    nothing for this word (unknown or too technical -- e.g. "coset") or
+    isn't available at all, which means the semantic tier contributes no
+    extra credit for that word rather than guessing at a synonym."""
+    base = _lemma(word)
+    lemmatizer = _wordnet_lemmatizer()
+    if lemmatizer is None:
+        return frozenset({base})
+    from nltk.corpus import wordnet
+    out = {base}
+    for synset in wordnet.synsets(word):
+        for lemma_obj in synset.lemmas():
+            name = lemma_obj.name().lower()
+            if "_" in name or "-" in name:
+                continue  # multi-word lemma phrases don't map onto single vocabulary tokens
+            out.add(_lemma(name))
+    return frozenset(out)
+
+
+def _semantic_match(text_word: str, node_word: str) -> bool:
+    """True if `text_word` and `node_word` are the same word, the same
+    WordNet lemma, or lie in each other's WordNet synonym neighborhood.
+    Symmetric and word-level only -- this cannot bridge multi-word
+    paraphrases ("space covered" for "area") or vocabulary WordNet simply
+    doesn't cover."""
+    if text_word == node_word:
+        return True
+    text_lemma, node_lemma = _lemma(text_word), _lemma(node_word)
+    if text_lemma == node_lemma:
+        return True
+    return node_lemma in _synonym_lemmas(text_word) or text_lemma in _synonym_lemmas(node_word)
+
+
+def score_candidates_semantic(text: str, index: VocabularyIndex) -> tuple[ConceptMatch, ...]:
+    """Same shape and ranking as `score_candidates`, but a node word counts
+    as matched if the text contains it, its WordNet lemma, or a WordNet
+    synonym of it (`_semantic_match`) -- see module docstring's "A FAITHFUL
+    PARAPHRASE..." section. This is the fallback tier `recover_taught_concept`
+    reaches for only after raw exact-word scoring has already abstained.
+    """
+    text_words = _words(text)
+    matches = []
+    for node in index.graph.nodes:
+        node_words = index.node_words(node.id)
+        overlap = frozenset(
+            nw for nw in node_words if any(_semantic_match(tw, nw) for tw in text_words)
+        )
+        if overlap:
+            matches.append(ConceptMatch(node_id=node.id, score=len(overlap), matched_words=overlap))
+    matches.sort(key=lambda m: (-m.score, m.node_id))
+    return tuple(matches)
+
+
 @dataclasses.dataclass(frozen=True)
 class RecoveryResult:
     """What this checker could establish from lesson text alone.
@@ -277,21 +482,29 @@ def _coverage_fraction(match: ConceptMatch, index: VocabularyIndex) -> float:
     return match.score / len(index.node_words(match.node_id))
 
 
-def recover_taught_concept(text: str, index: VocabularyIndex) -> tuple[str | None, tuple[ConceptMatch, ...], str | None]:
-    """Best-matching node id, the full candidate list, and an abstain
-    reason (None if a node was recovered)."""
-    candidates = score_candidates(text, index)
+def _resolve_candidates(
+    candidates: tuple[ConceptMatch, ...], index: VocabularyIndex, min_margin: int = _MIN_MARGIN
+) -> tuple[str | None, str | None]:
+    """Apply this module's abstention thresholds (min-match, margin, then
+    the coverage tiebreak) to an already-scored candidate list. Shared by
+    the raw exact-word tier and the semantic fallback tier so both tiers
+    abstain under exactly the same discipline by default -- the fallback
+    tier is a broader notion of "the same word", never a looser bar for
+    calling a match. `min_margin` lets a caller require more daylight than
+    `_MIN_MARGIN` before calling a winner (the semantic tier passes
+    `_SEMANTIC_MIN_MARGIN` -- see that constant's comment). Returns
+    (taught_node_id or None, abstain_reason or None)."""
     if not candidates:
-        return None, candidates, "no graph node's vocabulary overlaps this text at all"
+        return None, "no graph node's vocabulary overlaps this text at all"
     top = candidates[0]
     if top.score < _MIN_MATCH_WORDS:
-        return None, candidates, (
+        return None, (
             f"best candidate {top.node_id!r} shares only {top.score} distinctive "
             f"word(s) with the text (need >= {_MIN_MATCH_WORDS})"
         )
-    close = [c for c in candidates if top.score - c.score < _MIN_MARGIN]
+    close = [c for c in candidates if top.score - c.score < min_margin]
     if len(close) == 1:
-        return top.node_id, candidates, None
+        return top.node_id, None
 
     # Raw-score margin alone doesn't clear the bar -- try the coverage
     # tiebreak (module docstring) before abstaining. Requires BOTH the
@@ -302,10 +515,39 @@ def recover_taught_concept(text: str, index: VocabularyIndex) -> tuple[str | Non
     if top_fraction >= _MIN_COVERAGE_FRACTION and all(
         top_fraction - f >= _MIN_COVERAGE_MARGIN for f in rival_fractions
     ):
-        return top.node_id, candidates, None
+        return top.node_id, None
 
     tied = [c.node_id for c in close]
-    return None, candidates, f"ambiguous match -- candidates too close to call: {tied}"
+    return None, f"ambiguous match -- candidates too close to call: {tied}"
+
+
+def recover_taught_concept(text: str, index: VocabularyIndex) -> tuple[str | None, tuple[ConceptMatch, ...], str | None]:
+    """Best-matching node id, the full candidate list, and an abstain
+    reason (None if a node was recovered).
+
+    Tries raw exact-word scoring first; if and only if that abstains, tries
+    the semantic fallback tier (WordNet lemma/synonym matching -- module
+    docstring's "A FAITHFUL PARAPHRASE..." section, teach-8xw.26) under the
+    identical thresholds before giving up. A text the raw tier already
+    resolves never reaches the semantic tier, so this cannot change the
+    outcome for any lesson that already worked."""
+    candidates = score_candidates(text, index)
+    taught_node_id, abstain_reason = _resolve_candidates(candidates, index)
+    if taught_node_id is not None:
+        return taught_node_id, candidates, None
+
+    semantic_candidates = score_candidates_semantic(text, index)
+    semantic_taught_node_id, semantic_abstain_reason = _resolve_candidates(
+        semantic_candidates, index, min_margin=_SEMANTIC_MIN_MARGIN
+    )
+    if semantic_taught_node_id is not None:
+        return semantic_taught_node_id, semantic_candidates, None
+
+    # Both tiers abstained -- report the raw-tier candidates and reason:
+    # they're what the common case debugs against, and reporting two
+    # different candidate lists/reasons for one abstention would be noise,
+    # not evidence.
+    return None, candidates, abstain_reason
 
 
 def _sentences(text: str) -> list[str]:
@@ -314,11 +556,14 @@ def _sentences(text: str) -> list[str]:
 
 def recover_assumed_prerequisites(text: str, index: VocabularyIndex, taught_node_id: str) -> tuple[str, ...]:
     """Direct-prerequisite nodes of `taught_node_id` that this text signals
-    as already established, per the module docstring's two-part test
-    (assumed-known phrase + vocabulary overlap in the same sentence).
-    Returns in graph-edge order; empty if no candidate clears the bar --
-    that means this text gave no recoverable signal, not that the lesson
-    assumed nothing.
+    as already established, per the module docstring's two-part test:
+    an assumed-known phrase, plus vocabulary overlap within that phrase's
+    sentence OR the `_ASSUMED_KNOWN_WINDOW_SENTENCES` sentences immediately
+    following it (teach-8xw.27 -- an ordinary discourse-marker gap, e.g. a
+    short acknowledgment sentence between the cue and its elaboration, must
+    not make a signposted prerequisite look silent). Returns in graph-edge
+    order; empty if no candidate clears the bar -- that means this text gave
+    no recoverable signal, not that the lesson assumed nothing.
     """
     prereq_ids = tuple(
         edge.src for edge in index.graph.edges if edge.dst == taught_node_id
@@ -326,15 +571,20 @@ def recover_assumed_prerequisites(text: str, index: VocabularyIndex, taught_node
     if not prereq_ids:
         return ()
 
-    signaled_sentences = [s for s in _sentences(text) if any(p.search(s) for p in _ASSUMED_KNOWN_PATTERNS)]
-    if not signaled_sentences:
+    sentences = _sentences(text)
+    signaled_windows = [
+        _words(" ".join(sentences[i : i + 1 + _ASSUMED_KNOWN_WINDOW_SENTENCES]))
+        for i, sentence in enumerate(sentences)
+        if any(p.search(sentence) for p in _ASSUMED_KNOWN_PATTERNS)
+    ]
+    if not signaled_windows:
         return ()
 
     assumed = []
     for prereq_id in prereq_ids:
         prereq_words = index.node_words(prereq_id)
-        for sentence in signaled_sentences:
-            if _words(sentence) & prereq_words:
+        for window_words in signaled_windows:
+            if window_words & prereq_words:
                 assumed.append(prereq_id)
                 break
     return tuple(assumed)
