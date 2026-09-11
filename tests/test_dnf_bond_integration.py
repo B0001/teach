@@ -67,19 +67,25 @@ def test_potential_checker_coverage_gap_is_disclosed_not_hidden():
     non-empty (the teach-yn8 vacuous-pass failure mode), and exactly the one
     real potential claim in this lesson is classified.
 
-    teach-8xw.20: with the gate gone, `unclassified` on this lesson is 31 of
-    32 -- a number that would read almost the same on any lesson of similar
+    teach-8xw.20: with the gate gone, `unclassified` is most of `seen` --
+    a number that would read almost the same on any lesson of similar
     length, regardless of content (see teach/potential_checker.py's
     `Coverage` docstring). The secondary `second_person_*` breakdown is
     checked here too: same subset invariant, and it must actually be a
     proper subset of `seen` on this real lesson (there IS third-person
     domain/Bond content this lesson contains that isn't second-person
-    address), not a value that just mirrors `unclassified`."""
+    address), not a value that just mirrors `unclassified`.
+
+    teach-8xw.35: wiring the Cialdini layer into the real traversal added a
+    second genuine, effort-conditioned potential claim (commitment_
+    consistency's "if you keep working that way, you'll be ready to tackle
+    the group axioms next") alongside the pre-existing closing encouragement
+    line -- both HONEST, so `classified` moved from 1 to 2, not 0 or 3+."""
     report = run_integration_check(build_lesson())
     cov = report.potential_coverage
     assert len(cov.seen) > 0
     assert len(cov.seen) == len(cov.classified) + len(cov.unclassified)
-    assert len(cov.classified) == 1
+    assert len(cov.classified) == 2
     assert len(cov.unclassified) > 0
     assert "unclassified" in report.render()
     assert len(cov.second_person_seen) == len(cov.second_person_classified) + len(

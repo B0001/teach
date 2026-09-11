@@ -87,16 +87,39 @@ generation logic, not one hand-authored string per principle) from a
 minimal fake `MotivationMoment`. It does not decide *when* in a real
 traversal each principle should fire (that is `teach/dnf_bond_lesson.py` or
 a future integration's job, same division of labor `cbt_primitives.py`
-draws for the CBT layer), and it does not import anything checker-side --
-`teach/cialdini_integration_check.py` is the separate module that crosses
-that line, mirroring the `dnf_bond_lesson.py` / `dnf_bond_integration.py`
-split.
+draws for the CBT layer).
+
+`teach/cialdini_integration_check.py` remains the module that runs this
+one's *output* through the checker for measurement and reports the result
+side by side with the naive alternative -- that direction of the boundary
+(checker-shaped analysis of rendered text, after the fact) is unchanged by
+this module.
+
+teach-8xw.38 changed one thing: `render_authority`'s `authority_fact` field
+is free text a caller could fill with an overpromise dressed as a citation
+("Dummit and Foote states this plainly: every student who masters this
+theorem goes on to prove new results with ease") -- unlike
+`render_social_proof`'s `peer_difficulty`, which the fixed templates only
+ever slot into difficulty-shaped sentences, `authority_fact` is embedded
+verbatim with no wrapping constraint at all. So `render_authority` now
+imports `teach.potential_checker` (`extract_claims`, the same public
+extraction entry point the real checker uses) as an INPUT guard on that one
+field, at render time, before any text reaches a learner -- see
+`_looks_like_overpromise` below. This is not the checker reading the
+producer's internals (the direction sandbox-prompt.md's split forbids): it
+is the producer calling the checker's already-independently-built, public
+classification function to reject its own input. The checker, when it
+later runs over whatever this module emits, still does so with zero
+knowledge that this guard ran, exactly as blind as before.
 """
 from __future__ import annotations
 
 import dataclasses
 import enum
+import re
 from typing import Callable
+
+from teach import potential_checker
 
 
 @dataclasses.dataclass(frozen=True)
@@ -125,6 +148,84 @@ def _require(moment: MotivationMoment, field: str) -> str:
     if not value:
         raise ValueError(
             f"MotivationMoment.{field} is required to render this principle, got {value!r}"
+        )
+    return value
+
+
+# --- authority_fact domain-fact guard (teach-8xw.38) -----------------------
+#
+# teach-8xw.32 measured `teach.potential_checker` as structurally blind to
+# cohort-generalization ("everyone who masters X goes on to Y") and cited-
+# authority ("mathematicians agree that...") claims, and closed that bead by
+# disclosing the gap rather than widening the general extractor's pattern
+# list -- widening that whitelist has repeatedly looked like progress and
+# then failed the next independently-phrased round (teach-yn8 -> teach-kmm
+# -> teach-5gf -> teach-8xw.19 -> teach-8xw.23 -> teach-9k5 -> teach-8xw.32).
+# That decision was correctly scoped to `potential_checker`'s own job:
+# classifying arbitrary lesson text it never chose the shape of.
+#
+# `authority_fact` is a narrower problem than arbitrary lesson text. This
+# field is documented to hold exactly one thing -- a domain fact
+# attributable to the cited source -- never a claim about the learner or a
+# cohort of learners. A caller who fills it with a promise (of any shape,
+# recognized by the general checker or not) is misusing this specific
+# field, so this guard can afford to be strict exactly where the general
+# checker chose to abstain. It is a local, field-scoped heuristic, not a
+# reopening of teach-8xw.32's decision: it does not modify
+# `potential_checker`, and it makes no claim to generalize to lesson text at
+# large -- only to this one field, at render time, before the text exists
+# for a learner to read.
+#
+# Two independent rejection conditions, matching the bead's own framing of
+# "both are suspicious for this field":
+#
+#   1. `potential_checker.extract_claims` recognizes ANY potential-claim
+#      shape in it at all (TRAIT/COMPARATIVE/GROWTH/OUTCOME) -- regardless
+#      of what `honesty_rubric.classify` would say about it. Even an
+#      honestly-conditioned promise is still a promise, not a domain fact,
+#      and this field is not the place for one.
+#   2. It structurally resembles the cohort-generalization/cited-authority
+#      shape teach-8xw.32 confirmed the general extractor cannot type at
+#      all -- a cohort-of-people noun phrase ("everyone who...", "students
+#      who...", "mathematicians") within one clause of a future-outcome verb
+#      ("goes on to", "will", "almost always", "with ease", "agree that").
+#      This is intentionally narrow (bounded noun/verb vocabulary, not bare
+#      "everyone" or bare "will") for the same reason every pattern above it
+#      in `potential_checker` is kept narrow: it must not collide with
+#      ordinary domain exposition ("every element", "the group will act
+#      transitively"). It is a heuristic, not a proof -- it can still miss
+#      phrasing neither check recognizes, exactly like every pattern list
+#      this repo has ever shipped -- so it errs toward rejecting the
+#      ambiguous case for this one field rather than admitting it.
+_AUTHORITY_COHORT_GENERALIZATION_PATTERN = re.compile(
+    r"\b(everyone|every student|every learner|all students|all learners|"
+    r"students? who|learners? who|anyone who|people who|mathematicians)\b"
+    r"[^.?!]{0,80}?"
+    r"\b(goes? on to|will\b|almost always|with ease|agree that)\b",
+    re.IGNORECASE,
+)
+
+
+def _looks_like_overpromise(fact: str) -> bool:
+    """True if `fact` is unfit for `authority_fact` because it reads as a
+    claim about a learner's (or a cohort's) potential rather than a domain
+    fact -- see the comment above for the two conditions checked and why."""
+    if potential_checker.extract_claims(fact):
+        return True
+    return bool(_AUTHORITY_COHORT_GENERALIZATION_PATTERN.search(fact))
+
+
+def _require_domain_fact(moment: MotivationMoment, field: str) -> str:
+    """Same gate as `_require`, plus the overpromise guard above. Used only
+    for AUTHORITY's `authority_fact` -- the one field in this module that
+    embeds caller-supplied free text with no templated wrapping constraint
+    of its own."""
+    value = _require(moment, field)
+    if _looks_like_overpromise(value):
+        raise ValueError(
+            f"MotivationMoment.{field} must be a checkable domain fact attributable to "
+            f"the cited source, not a promise about the learner's (or a cohort's) "
+            f"potential -- got {value!r}"
         )
     return value
 
@@ -197,9 +298,12 @@ def render_authority(moment: MotivationMoment, variant: int = 0) -> str:
     anonymous crowd) and `authority_fact` (the domain fact attributed to
     it). Deliberately narrow: this backs a checkable domain claim, not a
     promise about the learner, and the source must be nameable, not a bare
-    'experts agree.'"""
+    'experts agree.' `authority_fact` is additionally run through
+    `_require_domain_fact`'s overpromise guard (teach-8xw.38): a caller
+    cannot smuggle a promise about the learner's potential through this
+    field just because it's dressed as a citation."""
     source = _require(moment, "cited_source")
-    fact = _require(moment, "authority_fact")
+    fact = _require_domain_fact(moment, "authority_fact")
     templates = (
         (
             f"{source} states this plainly for {moment.concept_name}: {fact}. "

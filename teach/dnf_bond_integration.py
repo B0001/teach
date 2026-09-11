@@ -214,7 +214,18 @@ def _self_check() -> None:
         f"seen ({len(cov.seen)}) must equal classified ({len(cov.classified)}) + "
         f"unclassified ({len(cov.unclassified)}) -- a sentence went missing between the two buckets"
     )
-    assert len(cov.classified) == 1
+    # teach-8xw.35: wiring the Cialdini layer into this lesson added a
+    # second genuine, effort-conditioned potential claim --
+    # render_commitment_consistency's "if you keep working that way, you'll
+    # be ready to tackle the group axioms next" -- alongside the
+    # pre-existing closing encouragement line. Both are classified GROWTH,
+    # effort-conditioned, and evidenced (the template's own "you just
+    # handled a moment ago" / "next" wording), so both land HONEST, not
+    # flagged. Pinned at exactly 2, same rationale as the pre-.35 pin at 1:
+    # this is a real, meaningful signal count (how many sentences this
+    # lesson actually asserts something checkable about the learner's
+    # potential), not lesson-length noise like `seen`/`unclassified` above.
+    assert len(cov.classified) == 2
     # teach-8xw.20: the secondary second-person breakdown must stay
     # internally consistent (same subset invariant as above, restricted to
     # the narrower set) and must actually be narrower than the full lesson

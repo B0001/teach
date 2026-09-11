@@ -138,6 +138,54 @@ def test_lagrange_reversed_direction_synonym_paraphrase_is_now_contradicted():
     assert verify_claim(claim, MATH_SOURCE) is Verdict.CONTRADICTED
 
 
+def test_lagrange_round_3_held_out_paraphrase_now_contradicted():
+    """teach-8xw.33's held-out measurement: round-1 and round-2 blind
+    paraphrases were both spent TUNING _LAGRANGE_ORDER_DIVIDES's widened
+    false_patterns in the same session that wrote them, so neither counted
+    as evidence the fix generalizes (sandbox-prompt.md: a generalization
+    set authored in the same session as the rule is not held out). This
+    sentence is from a genuinely fresh round-3 -- 12 more independently-
+    authored paraphrases from a no-repo-access Agent call made AFTER the
+    widening was already committed -- and is the one round-3 sentence the
+    widened false_patterns actually caught (1/12)."""
+    claim = (
+        "It's kind of counterintuitive, but the outer group's order is a "
+        "divisor of the inner subgroup's order, not the other way round."
+    )
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CONTRADICTED
+
+
+def test_lagrange_round_3_verb_metaphor_paraphrase_abstains_not_confirms():
+    """Same round-3 measurement, one of the 11/12 misses: a verb-phrase
+    metaphor ("fit into that box a whole number of times") that never trips
+    _LAGRANGE_ORDER_DIVIDES's topic_patterns at all -- no recognized size-
+    or divisibility-word -- so it falls all the way through to CANNOT_VERIFY
+    without the fact ever being looked up. Locked in as the disclosed
+    ceiling: open-ended verb-phrase paraphrase is not enumerable by a
+    synonym list, same as the kernel topic's unenumerable wrong-group
+    phrasing above. What must not happen is this drifting to CONFIRMED."""
+    claim = (
+        "Picture the little subgroup as a box — the whole group's size "
+        "needs to fit into that box a whole number of times."
+    )
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CANNOT_VERIFY
+
+
+def test_lagrange_round_3_recognized_topic_still_abstains_not_confirms():
+    """Same round-3 measurement, the other miss flavor: a sentence that DOES
+    trip topic_patterns (names "order" and "group"/"subgroup" and a
+    divides-synonym) but whose structure ("gets divided out of ... with
+    nothing left over") doesn't match either false_patterns or the narrow
+    true_patterns -- so it correctly abstains rather than falling through to
+    true_patterns' loose lagrange+divides pattern and landing the dangerous
+    false-CONFIRMED verdict."""
+    claim = (
+        "The overall group order gets divided out of the subgroup order "
+        "with nothing left over — that's the rule."
+    )
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CANNOT_VERIFY
+
+
 def test_lagrange_true_claim_confirmed():
     claim = "In a finite group, the order of any subgroup divides the order of the group."
     assert verify_claim(claim, MATH_SOURCE) is Verdict.CONFIRMED
@@ -151,6 +199,87 @@ def test_lagrange_reversed_direction_is_contradicted():
     of that order exists), which this source does not cover at all."""
     claim = "The order of the finite group divides the order of the subgroup."
     assert verify_claim(claim, MATH_SOURCE) is Verdict.CONTRADICTED
+
+
+def test_lagrange_reversed_possessive_is_contradicted_not_confirmed():
+    """teach-8xw.34: false_patterns' reversed-direction patterns had their
+    own inline "(?:the |a |any )?" determiner list instead of sharing
+    _ANY_DETERMINER, so "its" was never recognized as a determiner. That let
+    this exact sentence slip past every false_pattern and fall through to
+    true_patterns' loose `lagrange...divides` fallback, landing a dangerous
+    false CONFIRMED on a reversed (false) claim -- not merely the disclosed-
+    safe CANNOT_VERIFY recall gap teach-8xw.33 measured. Must be
+    CONTRADICTED, the same as the "the/a/any/each subgroup" phrasings
+    already covered."""
+    claim = (
+        "Lagrange's theorem: the order of the group divides the order of "
+        "its subgroups."
+    )
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CONTRADICTED
+
+
+def test_lagrange_reversed_quantifier_plus_possessive_is_contradicted():
+    """Same teach-8xw.34 gap, compound quantifier+possessive form ("any of
+    its subgroups") -- the sentence from the bead's own reproduction of the
+    bug through teach/cialdini.py's render_authority AUTHORITY move, proving
+    this is reachable from a real producer code path and not just a
+    hand-crafted verify_claim call."""
+    claim = (
+        "Lagrange's theorem: the order of the group divides the order of "
+        "any of its subgroups."
+    )
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CONTRADICTED
+
+
+def test_lagrange_reversed_their_possessive_is_contradicted():
+    """Same gap, "their" rather than "its" -- _POSSESSIVE_DETERMINER covers
+    both, and this locks in the second pronoun so a future edit narrowing it
+    back to "its" alone fails loudly."""
+    claim = (
+        "Lagrange's theorem: the order of the group divides the order of "
+        "their subgroups."
+    )
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CONTRADICTED
+
+
+def test_lagrange_true_claim_with_possessive_determiner_is_confirmed():
+    """_ANY_DETERMINER is shared between the reversed (false_patterns) and
+    correct-direction (true_patterns) literal patterns, so the possessive
+    fix must not make the checker abstain on a CORRECT claim phrased with
+    "its" -- only reject the reversed direction."""
+    claim = "In a finite group, the order of its subgroups divides the order of the group."
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CONFIRMED
+
+
+def test_lagrange_possessive_held_out_paraphrase_caught_as_contradicted():
+    """teach-8xw.34's held-out measurement, after the _ANY_DETERMINER
+    possessive fix landed: 12 fresh reversed-Lagrange paraphrases from a
+    no-repo-access Agent call, deliberately steered toward possessive and
+    determiner-adjacent phrasing ("its", "their", "any of its", "the
+    group's own", ...) -- the exact failure mode this bug was about, not
+    the general open-ended-English ceiling teach-8xw.33 already measured.
+    Result: 3/12 CONTRADICTED, 9/12 CANNOT_VERIFY, 0/12 CONFIRMED -- the
+    safety property (no dangerous false-CONFIRMED) held on every sentence
+    in this round. This is one of the 3 catches."""
+    claim = (
+        "Lagrange's theorem tells us that a group's order is always a "
+        "factor of the order of each of its subgroups."
+    )
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CONTRADICTED
+
+
+def test_lagrange_possessive_held_out_paraphrase_abstains_not_confirms():
+    """Same teach-8xw.34 held-out round, one of the 9/12 misses: "the size
+    of the whole group goes evenly into the size of any of its subgroups"
+    breaks _DIVIDES_SYNONYMS' "go(?:es)?\\s+into" match because "evenly"
+    sits between "goes" and "into" -- an open-ended-English gap in the verb
+    phrase, not the possessive-determiner gap this bead fixed. Locked in as
+    the disclosed ceiling: what must not happen is this landing CONFIRMED."""
+    claim = (
+        "Per Lagrange, the size of the whole group goes evenly into the "
+        "size of any of its subgroups."
+    )
+    assert verify_claim(claim, MATH_SOURCE) is Verdict.CANNOT_VERIFY
 
 
 def test_converse_of_lagrange_is_a_different_uncovered_topic():

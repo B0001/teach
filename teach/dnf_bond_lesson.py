@@ -46,6 +46,20 @@ REUSE, NOT REIMPLEMENTATION
     past the target in the graph itself, not an invented reach. This is the
     bounded-Cialdini layer teach-8xw.8 specified applied to real text for
     the first time, rather than only to the module's own worked examples.
+  - `teach.cialdini` -- all seven principles fire here, for real, as part of
+    this traversal (teach-8xw.35; `teach.cialdini`'s own docstring named this
+    module as the "future integration" that decides *when* each principle
+    fires). Every `MotivationMoment` below is built from this lesson's own
+    content -- the learner's actual prior turn, the actual textbook section
+    just narrated, the actual next node in the traversal -- not
+    `teach.cialdini.FAKE_CONTEXTS` or a hand-built demo transcript
+    (`teach.cialdini_integration_check`'s `build_demo_lesson` remains a
+    separate, smaller, self-contained check; this is the real artifact
+    teach-8xw.15's acceptance test actually runs). Rendered, not
+    re-authored: every persuasion turn below calls `teach.cialdini`'s
+    unmodified `render_*` functions, so the honesty properties that
+    module's own docstring argues for (bounded SOCIAL_PROOF and AUTHORITY
+    shapes, in particular) carry over here rather than being reinvented.
 
 BOND FRAMING IS FLAVOR, NOT SUBSTITUTE CONTENT
 
@@ -67,6 +81,16 @@ from teach.cbt_primitives import (
     render_graded_exposure,
     render_identify_stuck_belief,
     render_spaced_retrieval,
+)
+from teach.cialdini import (
+    MotivationMoment,
+    render_authority,
+    render_commitment_consistency,
+    render_liking,
+    render_reciprocity,
+    render_scarcity,
+    render_social_proof,
+    render_unity,
 )
 from teach.dummit_foote_graph import TARGET_NODE_ID, load_dummit_foote_graph, prerequisite_closure
 from teach.persona import Backend, Persona, beats, conforms
@@ -223,7 +247,38 @@ def build_planner_state() -> PlannerState:
             "come out right by the end of this. Let's get there properly, "
             "one definition at a time."
         ),
+        # LIKING: the shared frame is the actual reason this lesson is
+        # Bond-framed at all -- the learner's own stated interest, not an
+        # invented rapport move -- so it fires before any content, setting
+        # the frame the rest of the lesson stays inside.
+        _tutor(
+            _bond_voice(
+                render_liking(
+                    MotivationMoment(
+                        concept_name="Sets and Functions",
+                        shared_frame="the Bond briefing",
+                    )
+                )
+            )
+        ),
         _tutor(BOND_BACKEND(BOND_HANDLER, by_id["dummit-foote:0.1-sets-and-functions"].node_id)),
+        # RECIPROCITY: hand the learner the worked mapping above before
+        # asking for the next small piece of effort -- the gift is the
+        # narration that just ran, not a separate invented resource.
+        _tutor(
+            _bond_voice(
+                render_reciprocity(
+                    MotivationMoment(
+                        concept_name="Sets and Functions",
+                        given_first="the roster mapping between assets and handlers, worked through above",
+                        next_ask=(
+                            "write down, in your own words, what makes an "
+                            "assignment from assets to handlers bijective"
+                        ),
+                    )
+                )
+            )
+        ),
         _tutor(
             _bond_voice(
                 render_behavioral_activation(
@@ -241,8 +296,43 @@ def build_planner_state() -> PlannerState:
             "Bijective means every asset gets exactly one handler and every "
             "handler gets covered -- nobody's unassigned, nobody's doubled up."
         ),
+        # COMMITMENT_CONSISTENCY: point back at the answer the learner just
+        # gave rather than open the group axioms as a fresh, unrelated ask.
+        _tutor(
+            _bond_voice(
+                render_commitment_consistency(
+                    MotivationMoment(
+                        concept_name="Sets and Functions",
+                        prior_commitment=(
+                            "Bijective means every asset gets exactly one "
+                            "handler and every handler gets covered -- "
+                            "nobody's unassigned, nobody's doubled up"
+                        ),
+                        consistent_next_step="the group axioms",
+                    )
+                )
+            )
+        ),
         _tutor(BOND_BACKEND(BOND_HANDLER, by_id["dummit-foote:1.1-groups"].node_id)),
         _tutor(BOND_BACKEND(BOND_HANDLER, by_id["dummit-foote:2.1-subgroups"].node_id)),
+        # AUTHORITY: back the subgroup criterion with the actual named,
+        # checkable textbook section this lesson is drawn from -- a domain
+        # fact, not a claim about the learner.
+        _tutor(
+            _bond_voice(
+                render_authority(
+                    MotivationMoment(
+                        concept_name="the subgroup criterion",
+                        cited_source="Dummit and Foote's Abstract Algebra, section 2.1",
+                        authority_fact=(
+                            "a nonempty subset H of a group G is a subgroup "
+                            "exactly when H is closed under the operation "
+                            "and closed under taking inverses"
+                        ),
+                    )
+                )
+            )
+        ),
         _tutor(
             _bond_voice(
                 render_graded_exposure(
@@ -261,6 +351,22 @@ def build_planner_state() -> PlannerState:
             "I don't know -- there are a lot of these definitions stacking "
             "up now. I'm not sure I'm cut out for this kind of maths."
         ),
+        # SOCIAL_PROOF: normalize the struggle the learner just voiced --
+        # names a shared difficulty, never a shared outcome (see
+        # teach.cialdini's module docstring for why that boundary matters).
+        _tutor(
+            _bond_voice(
+                render_social_proof(
+                    MotivationMoment(
+                        concept_name="subgroups",
+                        peer_difficulty=(
+                            "feeling like the definitions are stacking up "
+                            "faster than they can stick"
+                        ),
+                    )
+                )
+            )
+        ),
         _tutor(
             _bond_voice(
                 render_identify_stuck_belief(
@@ -273,7 +379,38 @@ def build_planner_state() -> PlannerState:
                 )
             )
         ),
+        # UNITY: reframe the next step as shared work between tutor and
+        # learner (Pre-Suasion's distinction from LIKING -- a shared
+        # identity, not just a shared interest) right after naming the
+        # stuck belief, before moving back into content.
+        _tutor(
+            _bond_voice(
+                render_unity(
+                    MotivationMoment(
+                        concept_name="subgroups",
+                        shared_identity="Q Branch, working this case together",
+                    )
+                )
+            )
+        ),
         _tutor(BOND_BACKEND(BOND_HANDLER, by_id["dummit-foote:3.1-cosets"].node_id)),
+        # SCARCITY: the one easy-to-skim-past detail in what was just
+        # narrated -- attention as the scarce resource, not a fabricated
+        # deadline.
+        _tutor(
+            _bond_voice(
+                render_scarcity(
+                    MotivationMoment(
+                        concept_name="cosets and normal subgroups",
+                        scarce_detail=(
+                            "normal means every conjugate gHg-inverse folds "
+                            "back into H, not just the ones for one "
+                            "particular g"
+                        ),
+                    )
+                )
+            )
+        ),
         _tutor(
             _bond_voice(
                 render_spaced_retrieval(
@@ -343,6 +480,78 @@ def _self_check() -> None:
     # The fact this lesson is actually built to let a checker confirm:
     # Lagrange's theorem, stated in the source's own true-pattern phrasing.
     assert "order of the subgroup divides the order of the finite group" in artifact.text
+
+    # teach-8xw.35: prove all seven Cialdini/Pre-Suasion principles actually
+    # rendered into THIS artifact's text, not just that teach.cialdini's own
+    # module self-check passed against its fake contexts. Re-render each
+    # move from the exact MotivationMoment this module built and confirm the
+    # resulting string is really in the lesson -- so a future edit that
+    # drops a call site (rather than just deleting an import) still fails
+    # loud here instead of silently reopening this bead.
+    liking = render_liking(MotivationMoment(concept_name="Sets and Functions", shared_frame="the Bond briefing"))
+    reciprocity = render_reciprocity(
+        MotivationMoment(
+            concept_name="Sets and Functions",
+            given_first="the roster mapping between assets and handlers, worked through above",
+            next_ask=(
+                "write down, in your own words, what makes an assignment "
+                "from assets to handlers bijective"
+            ),
+        )
+    )
+    commitment = render_commitment_consistency(
+        MotivationMoment(
+            concept_name="Sets and Functions",
+            prior_commitment=(
+                "Bijective means every asset gets exactly one handler and "
+                "every handler gets covered -- nobody's unassigned, "
+                "nobody's doubled up"
+            ),
+            consistent_next_step="the group axioms",
+        )
+    )
+    authority = render_authority(
+        MotivationMoment(
+            concept_name="the subgroup criterion",
+            cited_source="Dummit and Foote's Abstract Algebra, section 2.1",
+            authority_fact=(
+                "a nonempty subset H of a group G is a subgroup exactly "
+                "when H is closed under the operation and closed under "
+                "taking inverses"
+            ),
+        )
+    )
+    social_proof = render_social_proof(
+        MotivationMoment(
+            concept_name="subgroups",
+            peer_difficulty="feeling like the definitions are stacking up faster than they can stick",
+        )
+    )
+    unity = render_unity(
+        MotivationMoment(concept_name="subgroups", shared_identity="Q Branch, working this case together")
+    )
+    scarcity = render_scarcity(
+        MotivationMoment(
+            concept_name="cosets and normal subgroups",
+            scarce_detail=(
+                "normal means every conjugate gHg-inverse folds back into "
+                "H, not just the ones for one particular g"
+            ),
+        )
+    )
+    for principle_name, rendered in (
+        ("reciprocity", reciprocity),
+        ("commitment_consistency", commitment),
+        ("liking", liking),
+        ("authority", authority),
+        ("scarcity", scarcity),
+        ("unity", unity),
+        ("social_proof", social_proof),
+    ):
+        assert rendered in artifact.text, (
+            f"{principle_name}: rendered move never made it into the lesson text -- "
+            "teach-8xw.35 requires all seven principles wired into the real traversal"
+        )
 
     print(
         f"OK: built a {len(artifact.turns)}-turn Bond-framed D&F lesson "
