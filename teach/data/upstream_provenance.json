@@ -1,0 +1,22 @@
+{
+  "applies_to": "Extracts built from these bytes ON OR AFTER retrieved_at.",
+  "base_url": "https://cdn.learningcommons.org/knowledge-graph/v1.13.0/exports/",
+  "does_not_apply_to": "The extracts already committed in teach/data/ (va_math_sol_k8.json, va_math_sol_hs.json, va_reading_sol_k8.json, va_writing_sol_k12.json). Those predate this record and the downloads they were built from were deleted as re-downloadable, so the upstream bytes behind them are UNRECORDED and cannot be recovered. These hashes describe today's upstream, not theirs -- do not attach them to those files (teach-8xw.54).",
+  "files": {
+    "nodes.jsonl": {
+      "content_length": 342814190,
+      "sha256": "4d1384128ecbc46152978876155fd1907dd8a03de57335f5c88e474264255c50",
+      "upstream_etag": "\"b0703360c25cbf0bc6fac1fc28afb6a0-41\"",
+      "upstream_last_modified": "Mon, 31 Aug 2026 16:40:44 GMT"
+    },
+    "relationships.jsonl": {
+      "content_length": 570898344,
+      "sha256": "93ca04a481a52c1b110bb19ccddfc27dcd6d8affeb13b942fd79c409816f7a46",
+      "upstream_etag": "\"4701f0b8991aed4a1c8f4da8d6df09d0-69\"",
+      "upstream_last_modified": "Mon, 31 Aug 2026 16:40:43 GMT"
+    }
+  },
+  "local_cache": "~/.cache/teach-upstream/learningcommons-v1.13.0 (OUTSIDE this repo, by design -- see teach/upstream_provenance.py)",
+  "provider": "Learning Commons (learningcommons.org), Knowledge Graph v1.13.0",
+  "retrieved_at": "2026-09-12T01:38:51+00:00"
+}

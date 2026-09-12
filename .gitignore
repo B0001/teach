@@ -8,3 +8,8 @@ __pycache__/
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# Upstream Learning Commons exports (881MB) live OUTSIDE this repo, in
+# ~/.cache/teach-upstream/ -- see teach/upstream_provenance.py. This line is
+# belt-and-braces for the most likely accidental placement.
+teach/data/*.jsonl
