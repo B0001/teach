@@ -33,6 +33,52 @@ Two design choices bound that honestly instead of hiding it:
     layer, alongside `evidenced_ceiling=None` (abstention at the
     classification layer) -- both exist because sandbox-prompt.md prefers
     "cannot tell" to a confident guess.
+
+WHAT "EVIDENCED" CANNOT MEAN, AND THE ONE NARROW THING IT CAN (teach-8xw.45)
+
+A lesson can say "you just solved 10 problems in a row" whether or not the
+learner did -- self-consistency (does a later ceiling-claim match an
+earlier performance-claim in the SAME text) is strictly weaker than
+truthfulness (did the earlier performance-claim itself really happen), and
+nothing in this module can close that gap in general. Confirming a
+performance claim's content actually occurred would require exactly the
+producer-side ground truth (planner state, an answer key, a transcript the
+learner didn't see) the blind-checker boundary forbids this module from
+reading. That limitation is fundamental, not a to-do.
+
+One narrow cross-reference IS available without crossing the boundary,
+because it stays entirely inside the same transcript: `_JUST_DID_PATTERN`
+("you just carried/solved/handled/...") asserts the LEARNER acted a moment
+ago, and this transcript's own turn order either has a learner turn
+adjacent to that claim or it doesn't. `_tutor_turns_with_precedent` /
+`_evidenced_ceiling` use exactly that -- when no learner turn immediately
+precedes a "you just did X" claim, the transcript itself contradicts the
+claim's premise, and `evidenced_ceiling` reports `False` rather than the
+`True` a text-only pattern match would have handed out. This caught real
+cases, not a hypothetical one: `teach.dnf_bond_lesson`'s closing line ("You
+just carried that coset argument through to Lagrange's Theorem on your
+own") follows eight consecutive tutor-only turns with no learner
+contribution about cosets or Lagrange anywhere in them, and
+`teach.cialdini_integration_check`'s demo lesson renders all seven
+Cialdini moves as consecutive tutor turns with the one learner turn
+appended only at the end -- see `tests/test_dnf_bond_integration.py`,
+`tests/test_cialdini_integration_check.py`, and
+`sandbox-handoffs/teach-8xw.45.md` for the reproductions, and teach-8xw.51
+for the follow-up bead fixing those two producers.
+
+This is still a narrow, structural check, not a truthfulness oracle. Two
+things it explicitly does NOT catch, so a caller never mistakes silence
+here for a clean bill of health:
+
+  - When a learner turn IS adjacent, this module has no way to confirm
+    that turn's *content* actually is the claimed action -- only that the
+    turn-taking shape is consistent with it. "Learner speaks, tutor
+    immediately claims a match to whatever the learner just said" always
+    reads as evidenced here, whether or not the match is real.
+  - Performance disguised as the learner's own work -- the producer
+    solving the problem within a tutor turn and then crediting the
+    learner for it -- has a learner turn nowhere in sight to check against
+    at all, and looks identical to ordinary tutor narration.
 """
 from __future__ import annotations
 
@@ -180,6 +226,27 @@ _TRAIT_PATTERNS = (
     # negated-ordinariness: exceptionality asserted by ruling out the
     # mundane rather than describing the extraordinary directly.
     re.compile(r"\bnothing about (?:your|you)\b[^.?!]{0,60}\bis ordinary\b", re.IGNORECASE),
+    # teach-8xw.50 shape 8: bare aptitude/instinct possession with NO
+    # comparative marker ("like yours") and no "natural" qualifier -- just a
+    # flat "you have/have got a(n) [innate-quality noun]" declarative. Two
+    # variants because natural phrasing splits here: an intensifying
+    # adjective (real/genuine/true/good/great/such) makes the noun read as
+    # trait-praise even with no object at all ("you have good instincts");
+    # without an intensifier, an explicit "for X" object is what marks it as
+    # praise rather than a neutral capability reference ("you have the
+    # ability to do this with practice" is ordinary effort-conditioned
+    # growth phrasing on its own, and must not become TRAIT just because
+    # "ability" is in the noun list).
+    re.compile(
+        rf"\byou(?:'ve|(?: (?:just|really|simply|definitely))? have) (?:got )?(?:a |an )?"
+        rf"(?:real|genuine|true|good|great|such) {_INNATE_QUALITY_NOUN}\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        rf"\byou(?:'ve|(?: (?:just|really|simply|definitely))? have) (?:got )?(?:a |an )?"
+        rf"{_INNATE_QUALITY_NOUN} for\b",
+        re.IGNORECASE,
+    ),
 )
 
 # Likened to a specific named exceptional person or standard.
@@ -381,7 +448,12 @@ _JUST_DID_PATTERN = re.compile(
 _ORDINARY_NEXT_STEP_PATTERN = re.compile(r"\bnext\b|\bsimilar\b|\blike this one\b", re.IGNORECASE)
 
 
-def _evidenced_ceiling(sentence: str, context: str, claim_type: ClaimType) -> bool | None:
+def _evidenced_ceiling(
+    sentence: str,
+    context: str,
+    claim_type: ClaimType,
+    preceded_by_learner: bool | None,
+) -> bool | None:
     """bool | None: True/False when the text gives a basis to decide,
     None (abstain) when it doesn't.
 
@@ -389,6 +461,27 @@ def _evidenced_ceiling(sentence: str, context: str, claim_type: ClaimType) -> bo
     because the evidence for "this is an ordinary next step" is often in an
     earlier sentence of the same turn ("You just did X." "... you'll be
     ready for Y next.") rather than the claim sentence itself.
+
+    teach-8xw.45: `_JUST_DID_PATTERN` matching `context` only proves the
+    TUTOR *said* "you just did X" -- it cannot, on its own, distinguish a
+    real demonstrated performance from a narrated one, which is exactly the
+    gap teach-8xw.8's own design note flagged as a standing limitation
+    ("this rubric can only ever verify internal consistency of a lesson...
+    not whether the transcript's own claims of demonstrated performance are
+    truthful"). `preceded_by_learner` (see `_tutor_turns_with_precedent`)
+    is the one cross-reference available without crossing the producer/
+    checker boundary: does THIS SAME transcript's own turn order show a
+    learner turn immediately before the claim, for "just" to be referring
+    to? `preceded_by_learner is False` means the transcript itself
+    contradicts the claim's premise -- nothing the learner did appears
+    adjacent to "you just did X" -- so this is treated as UNevidenced
+    (`False`), not merely abstained on. This is a narrow, structural check,
+    not a truthfulness oracle: it cannot confirm the learner turn (when one
+    IS adjacent) actually contains the claimed action, only that the turn-
+    taking shape is at least consistent with it, and it says nothing at all
+    about performance disguised as the learner's own work (the producer
+    solving it and attributing it to the learner) -- see this module's
+    docstring for the disclosed scope of what this can and can't catch.
     """
     if _matches_any(_UNEVIDENCED_CEILING_PATTERNS, context):
         return False
@@ -402,6 +495,8 @@ def _evidenced_ceiling(sentence: str, context: str, claim_type: ClaimType) -> bo
     if claim_type is ClaimType.COMPARATIVE:
         return False
     if _JUST_DID_PATTERN.search(context) and _ORDINARY_NEXT_STEP_PATTERN.search(context):
+        if preceded_by_learner is False:
+            return False
         return True
     return None
 
@@ -432,6 +527,42 @@ def _tutor_turns(text: str) -> list[str]:
     return [text]
 
 
+def _tutor_turns_with_precedent(text: str) -> list[tuple[str, bool | None]]:
+    """Same split as `_tutor_turns`, paired with whether each tutor turn is
+    IMMEDIATELY preceded, in the original transcript's own turn order, by a
+    learner-spoken turn.
+
+    This is teach-8xw.45's cross-reference signal: `_evidenced_ceiling`'s
+    "you just did X" evidence (`_JUST_DID_PATTERN`) is a claim that the
+    LEARNER performed some action a moment ago. A blind checker can never
+    confirm the claimed action's *content* happened -- that would require
+    the producer-side ground truth the boundary forbids -- but it can check
+    whether this same transcript's own turn-taking has any learner turn at
+    all adjacent to the claim for "just" to be referring to. If the
+    immediately preceding turn is tutor-only, the transcript itself shows
+    nothing the learner did there, independent of what the claim says.
+
+    `None` (not `False`) when the text has no turn structure to check at
+    all (see `_tutor_turns`'s own plain-text fallback) -- an unstructured
+    string was never going to let this check run, and that absence of
+    signal must not be conflated with the structured, turn-tagged case
+    where a learner turn was checked for and genuinely wasn't there.
+    """
+    lines = [line for line in text.splitlines() if line.strip()]
+    if not (lines and all(_SPEAKER_LINE.match(line) for line in lines)):
+        return [(text, None)]
+    parsed = [
+        (m.group("speaker").lower(), m.group("content"))
+        for line in lines
+        if (m := _SPEAKER_LINE.match(line))
+    ]
+    return [
+        (content, i > 0 and parsed[i - 1][0] == "learner")
+        for i, (speaker, content) in enumerate(parsed)
+        if speaker == "tutor"
+    ]
+
+
 def _split_sentences(turn_text: str) -> list[str]:
     return [s.strip() for s in _SENTENCE_SPLIT.split(turn_text.strip()) if s.strip()]
 
@@ -439,11 +570,21 @@ def _split_sentences(turn_text: str) -> list[str]:
 # --- public API --------------------------------------------------------------
 
 
-def _extract_from_sentence(sentence: str, turn_text: str) -> PotentialClaim | None:
+def _extract_from_sentence(
+    sentence: str, turn_text: str, preceded_by_learner: bool | None = None
+) -> PotentialClaim | None:
     """The single place that decides whether one tutor-spoken, about-learner
     sentence becomes a typed `PotentialClaim`. Both `extract_claims` and
     `check_coverage` call this, so the two can never silently disagree about
     what got classified.
+
+    `preceded_by_learner` (teach-8xw.45, see `_tutor_turns_with_precedent`):
+    whether the tutor turn this sentence came from is immediately preceded,
+    in the full transcript's own turn order, by a learner turn. Defaults to
+    `None` (unknown/not checked) for direct callers (e.g. tests exercising
+    a single sentence in isolation) that don't have turn-sequence context to
+    offer -- see `_evidenced_ceiling`'s docstring for what this does and
+    does not let it verify.
     """
     if any(p.match(sentence) for p in _TOO_VAGUE_TO_CHECK):
         return None
@@ -454,7 +595,7 @@ def _extract_from_sentence(sentence: str, turn_text: str) -> PotentialClaim | No
         text=sentence,
         claim_type=claim_type,
         conditioned_on_effort=_conditioned_on_effort(sentence),
-        evidenced_ceiling=_evidenced_ceiling(sentence, turn_text, claim_type),
+        evidenced_ceiling=_evidenced_ceiling(sentence, turn_text, claim_type, preceded_by_learner),
     )
 
 
@@ -493,9 +634,9 @@ def extract_claims(text: str) -> tuple[PotentialClaim, ...]:
     for why removing it changes nothing about which claims get extracted).
     """
     claims: list[PotentialClaim] = []
-    for turn_text in _tutor_turns(text):
+    for turn_text, preceded_by_learner in _tutor_turns_with_precedent(text):
         for sentence in _split_sentences(turn_text):
-            claim = _extract_from_sentence(sentence, turn_text)
+            claim = _extract_from_sentence(sentence, turn_text, preceded_by_learner)
             if claim is not None:
                 claims.append(claim)
     return tuple(claims)
@@ -578,10 +719,10 @@ def check_coverage(text: str) -> Coverage:
     second_person_seen: list[str] = []
     second_person_classified: list[str] = []
     second_person_unclassified: list[str] = []
-    for turn_text in _tutor_turns(text):
+    for turn_text, preceded_by_learner in _tutor_turns_with_precedent(text):
         for sentence in _split_sentences(turn_text):
             seen.append(sentence)
-            is_classified = _extract_from_sentence(sentence, turn_text) is not None
+            is_classified = _extract_from_sentence(sentence, turn_text, preceded_by_learner) is not None
             (classified if is_classified else unclassified).append(sentence)
             if _SECOND_PERSON_REFERENCE.search(sentence):
                 second_person_seen.append(sentence)
@@ -664,6 +805,32 @@ INFLATED_EXAMPLE_TEXT = (
     "tutor: Nice work on that subgroup proof.\n"
     "learner: Thanks, that one felt tricky.\n"
     "tutor: Honestly, you're a natural -- you're going to be the best mathematician of your generation."
+)
+
+# teach-8xw.45's own regression bar: two transcripts with the exact same
+# "you just did X ... you'll be ready for Y next" claim text, differing only
+# in whether a learner turn sits immediately before it. Kept side by side so
+# a future change to `_tutor_turns_with_precedent`/`_evidenced_ceiling` is
+# checked against a real minimal-pair reproduction, not just the full
+# dnf_bond_lesson/cialdini_integration_check fixtures those functions were
+# actually found and fixed against (see this module's own docstring and
+# sandbox-handoffs/teach-8xw.45.md).
+_TEACH_8XW_45_CLAIM_SENTENCE = (
+    "You just carried that argument through on your own. If you keep "
+    "working through problems like this one, you'll be ready to tackle "
+    "quotient groups next."
+)
+
+_TEACH_8XW_45_LEARNER_TURN_ADJACENT_TEXT = (
+    "tutor: Show me the kernel of this homomorphism is normal.\n"
+    "learner: The kernel absorbs every conjugate back into itself, so it's normal.\n"
+    f"tutor: {_TEACH_8XW_45_CLAIM_SENTENCE}"
+)
+
+_TEACH_8XW_45_NO_LEARNER_TURN_TEXT = (
+    "tutor: Show me the kernel of this homomorphism is normal.\n"
+    "tutor: A subgroup is normal exactly when every left coset equals the corresponding right coset.\n"
+    f"tutor: {_TEACH_8XW_45_CLAIM_SENTENCE}"
 )
 
 # teach-yn8's regression bar: found by running the checker against a
@@ -897,6 +1064,147 @@ _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES = (
     "Only a handful of students each year make it this far in the material.",
 )
 
+# teach-8xw.50: two more apparent overpromise shapes surfaced by hand-reading
+# teach-8xw.44's own 25-sentence blind round -- neither is a paraphrase of
+# anything above:
+#
+#   1. Bare aptitude/instinct possession with NO comparative marker ("like
+#      yours") and no "natural" qualifier at all -- just "you have/have got
+#      a(n) [innate-quality noun]", e.g. "you've got real instincts for
+#      this." Every existing TRAIT shape requires either an idiom ("born
+#      to/for", "innate"), a comparator ("[noun] like yours"), an absolute
+#      adjective ("your gift is limitless"), or a quantified failure-verb
+#      ("never struggles") -- a flat declarative possession claim matches
+#      none of them.
+#   2. Inevitable outcome implied via a concrete anecdote about one specific
+#      named PEER ("You and Jamie both got stuck right here last month, and
+#      look at her now -- she's flying through these.") -- not a named
+#      exceptional historical figure (`_COMPARATIVE_PATTERNS`) and not an
+#      abstract cohort (teach-8xw.32's "everyone/students who..." gap). No
+#      pattern anywhere in this module types an anecdote structure at all.
+#
+# teach-8xw.50's fix, and the reason it's split into two different
+# outcomes: shape 1 is a bounded, principled widening of the SAME
+# grammatical family `_TRAIT_PATTERNS` already covers (bare possession of an
+# `_INNATE_QUALITY_NOUN`, the version with neither "natural" nor a "like
+# yours" comparator) -- see the two new patterns appended to
+# `_TRAIT_PATTERNS` above. Shape 2 is a narrative anecdote structure (an
+# arbitrary struggle description, an arbitrary success description, and an
+# arbitrary way of introducing a named third party, in unbounded
+# combination) -- structurally the same kind of unbounded-vocabulary problem
+# that plateaued at 0/18 in teach-9k5 and that teach-9k5's own closing
+# decision says not to re-attempt with another regex list. No pattern for
+# shape 2 is added here.
+#
+# Per this bead's own explicit instruction, closing on the original two
+# reproduction sentences alone (or worse, two regexes fitted only to them)
+# would repeat exactly the failure this repo's teach-yn8 -> ... ->
+# teach-8xw.32 lineage exists to document. So shape 1's fix was designed
+# from the reproduction sentence plus the module's EXISTING noun list (not
+# from reading the round below), then measured -- once, without further
+# tuning -- against a genuinely independent, blind round: one `Agent` call,
+# `subagent_type: general-purpose`, zero tool use (confirmed in the spawn
+# result), given no access to this repo, asked to write 30 tutor lines
+# split into the two shapes above (15 aiming for bare-aptitude praise, 15
+# aiming for named-peer anecdotes) with instructions to vary wording heavily
+# and not reuse "natural". The agent's own mix drifted from an even 15/15
+# (it produced a few generic pep-talk lines that are neither shape, and a
+# few borderline ease-framing lines with no explicit aptitude noun) -- kept
+# honestly as delivered, not re-sorted or trimmed to a cleaner split.
+#
+# MEASURED RESULT, shape 1 (11 sentences unambiguously bare-aptitude-noun
+# praise, no comparator, no named peer): 4/11 classified, of which only 2
+# are attributable to THIS bead's new patterns ("you have good instincts
+# here", "you just have a mind for this kind of thing") -- the other 2
+# ("wired for this stuff", "built for this kind of thinking") were already
+# caught by teach-8xw.23's pre-existing "built/made/wired for" pattern, not
+# by anything added here. The remaining 7/11 stay unclassified: bare nouns
+# outside this module's list ("a feel for this," "a knack for," "a real
+# head for"), a bare noun with no "have/got" verb at all ("There's a real
+# gift in how you see..."), and two with the noun fronted in a relative
+# clause before "you've got" instead of after it ("That instinct you just
+# showed...", "That's a sharp instinct you've got for..."). This is real,
+# non-zero generalization -- unlike teach-9k5's 0/18 plateau -- but it is
+# reported as the partial, measured result it is, not oversold as "fixed."
+#
+# MEASURED RESULT, shape 2 (13 sentences unambiguously a named-peer
+# struggle-then-success anecdote): 0/13 classified. Confirms, on genuinely
+# new data, that the anecdote structure does not generalize under any
+# pattern in this module -- consistent with teach-9k5's finding that
+# unbounded narrative/vocabulary shapes don't converge under regex widening,
+# and with that bead's own decision not to attempt a fifth list for a shape
+# family with this much surface variety. Unlike teach-8xw.32's cohort/
+# authority shape, most of these DO contain "you" (e.g. "...right where
+# you're sitting..."), so unlike that gap they mostly still surface in
+# `second_person_seen`/`second_person_unclassified` for a reviewer working
+# from the short list -- a real, if partial, mitigation this fixture also
+# locks in.
+#
+# DECISION (teach-8xw.50): shape 1 fixed and the fix's generalization
+# measured (not just asserted) against held-out blind data -- a strictly
+# stronger evidence bar than teach-kmm's own held-out set, which was
+# self-authored rather than blind-agent-sourced. Shape 2 closed via option
+# (b), same as teach-9k5/teach-8xw.32: disclosed, not patched, backed by
+# this same blind round rather than the bead's original single reproduction
+# sentence. No further pattern-list widening attempted for shape 2 in this
+# pass.
+_TEACH_8XW_50_BARE_TRAIT_HELD_OUT_SENTENCES = (
+    "You've clearly got a feel for this — I could see it the moment you started working through the second example.",
+    "That instinct you just showed, spotting the shortcut before I even hinted at it — that's not something I can teach, honestly.",
+    "You have a knack for this kind of pattern-recognition. Some people just do.",
+    "There's something in the way your mind moves through these steps — unhurried, but it lands right where it needs to.",
+    "You've got a real head for this. I don't say that to just anyone who walks through my door.",
+    "You're wired for this stuff in a way I don't see often.",
+    "You have good instincts here. Trust them a little more.",
+    "You just have a mind for this kind of thing — always have, I'd guess.",
+    "That's a sharp instinct you've got for spotting your own mistakes — most people your age haven't developed that yet.",
+    "Watching you work, I'd say you were built for this kind of thinking.",
+    "There's a real gift in how you see these relationships between numbers.",
+)
+
+# All 4 sentences the held-out round above actually classifies. Only the
+# first two are attributable to THIS bead's new patterns; "wired for this
+# stuff" and "built for this kind of thinking" were already caught by
+# teach-8xw.23's pre-existing "built/made/wired for" pattern.
+_TEACH_8XW_50_BARE_TRAIT_ALL_CLASSIFIED_SENTENCES = (
+    "You're wired for this stuff in a way I don't see often.",
+    "You have good instincts here. Trust them a little more.",
+    "You just have a mind for this kind of thing — always have, I'd guess.",
+    "Watching you work, I'd say you were built for this kind of thinking.",
+)
+_TEACH_8XW_50_BARE_TRAIT_NEWLY_CAUGHT_SENTENCES = (
+    "You have good instincts here. Trust them a little more.",
+    "You just have a mind for this kind of thing — always have, I'd guess.",
+)
+
+_TEACH_8XW_50_PEER_ANECDOTE_HELD_OUT_SENTENCES = (
+    "Let me tell you about a boy named Marcus I had two years back — he mixed up every single one of these at first, and by spring he was tutoring his little brother on it.",
+    "I had a student, Priya, who used to get so flustered by word problems she'd shut the notebook and cross her arms. Give her six weeks and she was the first one done on test day.",
+    "Don't worry about today's mess of a page — I had a kid named Devon who bombed his first three quizzes on exactly this and ended up acing the final.",
+    "I remember a girl, Anaya, who came to me convinced she was \"bad at math\" — turned out she just needed someone to slow down with her.",
+    "A student of mine, Tomas, struggled with fractions for a whole semester — genuinely struggled, tears and all — and then something shifted and he never looked back.",
+    "I want you to remember this feeling of being stuck, because I had a boy named Kwame who felt exactly this stuck on the same unit, and now he helps other students with it.",
+    "Believe it or not, I had a student named Fatima who once cried over long division. She's in an engineering program now.",
+    "It won't always feel like this. I had a young man, Ricardo, who hated this subject with his whole chest in ninth grade and ended up choosing it as his major.",
+    "Let's not panic. A student named Grace sat right where you're sitting, missed every problem on this worksheet, and by the end of the month was breezing through them.",
+    "Slow and steady. I once had a boy, Leo, who needed the whole summer to get comfortable with this, and now it's practically automatic for him.",
+    "This is hard for everybody at first, truly. I had a student, Nadia, who nearly gave up on this exact topic and ended up loving it more than any other unit.",
+    "You're not behind — you're right on schedule. I had a student named Oscar who took twice as long as his classmates on this and still finished the year top of the class.",
+    "Hang in there. A girl I tutored, Hana, felt just as lost as you do right now on this exact chapter, and a month later she was explaining it to her classmates.",
+)
+
+# teach-8xw.44's own original reproduction sentences (kept verbatim, not
+# re-authored) -- the fix must hold on the exact sentences the bead was
+# filed against, not just on the new held-out round.
+_TEACH_8XW_50_BARE_TRAIT_REGRESSION_TEXT = (
+    "I mean it — you've got real instincts for this. Whether you end up "
+    "loving math or not, the instincts are there."
+)
+_TEACH_8XW_50_PEER_ANECDOTE_DISCLOSED_CEILING_SENTENCE = (
+    "You and Jamie both got stuck right here last month, and look at her "
+    "now — she's flying through these."
+)
+
 
 if __name__ == "__main__":
     honest_flags = check_lesson_text(HONEST_EXAMPLE_TEXT)
@@ -1057,6 +1365,62 @@ if __name__ == "__main__":
             "so they can't be flagged either"
         )
 
+    # teach-8xw.50, shape 1 fix: the original reproduction sentence must now
+    # actually classify TRAIT and flag INFLATED -- this is the regression
+    # bar the bead was filed against.
+    _bare_trait_flags = check_lesson_text(_TEACH_8XW_50_BARE_TRAIT_REGRESSION_TEXT)
+    assert any(
+        f.claim.claim_type is ClaimType.TRAIT and f.verdict is Verdict.INFLATED
+        for f in _bare_trait_flags
+    ), (
+        "teach-8xw.50: the original bare-instinct reproduction sentence must now classify "
+        f"TRAIT and flag INFLATED, got {_bare_trait_flags}"
+    )
+
+    # teach-8xw.50, shape 1 measured generalization: run once against the
+    # blind held-out round, assert the EXACT measured outcome (4/11
+    # classified, only 2 of which are attributable to this bead's new
+    # patterns) -- not a hoped-for full match. See the fixture's own comment
+    # block for why 7/11 staying unclassified is an honest, disclosed
+    # partial result, not a regression.
+    _bare_trait_classified = tuple(
+        s for s in _TEACH_8XW_50_BARE_TRAIT_HELD_OUT_SENTENCES if check_lesson_text(s)
+    )
+    assert _bare_trait_classified == _TEACH_8XW_50_BARE_TRAIT_ALL_CLASSIFIED_SENTENCES, (
+        f"teach-8xw.50: expected exactly {_TEACH_8XW_50_BARE_TRAIT_ALL_CLASSIFIED_SENTENCES!r} classified "
+        f"on the held-out bare-trait round, got {_bare_trait_classified!r}"
+    )
+    assert set(_TEACH_8XW_50_BARE_TRAIT_NEWLY_CAUGHT_SENTENCES) <= set(
+        _TEACH_8XW_50_BARE_TRAIT_ALL_CLASSIFIED_SENTENCES
+    ), "teach-8xw.50: the newly-caught subset must be a subset of everything classified"
+
+    # teach-8xw.50, shape 2: the original reproduction sentence, and the new
+    # held-out round of 13 independently-authored named-peer anecdotes, must
+    # all stay seen-but-unclassified -- confirming, on genuinely new data,
+    # that this narrative shape does not generalize under any pattern this
+    # module has (decision (b): disclosed, not patched, same as teach-9k5).
+    # Several of these fixture entries are more than one sentence (the
+    # anecdote's setup and payoff land in separate sentences), so the check
+    # is "nothing in this entry classifies," not "this entry is exactly one
+    # sentence" -- unlike the single-sentence teach-9k5/teach-8xw.32 sets.
+    for sentence in (
+        _TEACH_8XW_50_PEER_ANECDOTE_DISCLOSED_CEILING_SENTENCE,
+        *_TEACH_8XW_50_PEER_ANECDOTE_HELD_OUT_SENTENCES,
+    ):
+        _cov50 = check_coverage(sentence)
+        assert len(_cov50.seen) >= 1, f"teach-8xw.50: {sentence!r} produced no seen sentences at all"
+        assert _cov50.classified == (), (
+            f"teach-8xw.50: {sentence!r} must have nothing classified, got classified={_cov50.classified}"
+        )
+        assert _cov50.unclassified == _cov50.seen, (
+            f"teach-8xw.50: {sentence!r} must be entirely unclassified, got "
+            f"seen={_cov50.seen} unclassified={_cov50.unclassified}"
+        )
+        assert check_lesson_text(sentence) == (), (
+            f"teach-8xw.50: {sentence!r} must not be flagged -- unclassified sentences produce no claim, "
+            "so they can't be flagged either"
+        )
+
     print(
         "OK: honest example passes clean "
         f"(0 flags), inflated example flagged ({len(inflated_flags)} flag(s)), "
@@ -1080,5 +1444,15 @@ if __name__ == "__main__":
         "falsely flagged clean, "
         f"teach-8xw.32: all {len(_TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES)} group-generalization/"
         "cited-authority sentences confirmed seen+unclassified AND absent from second_person_seen "
-        "(a distinct, worse-disclosed shape family than teach-9k5's, per the bead's own decision (b))"
+        "(a distinct, worse-disclosed shape family than teach-9k5's, per the bead's own decision (b)), "
+        "teach-8xw.50: bare-instinct-with-no-comparator TRAIT shape fixed (original reproduction now "
+        f"classifies and flags INFLATED) and measured on a NEW blind held-out round "
+        f"({len(_TEACH_8XW_50_BARE_TRAIT_ALL_CLASSIFIED_SENTENCES)}/"
+        f"{len(_TEACH_8XW_50_BARE_TRAIT_HELD_OUT_SENTENCES)} classified, "
+        f"{len(_TEACH_8XW_50_BARE_TRAIT_NEWLY_CAUGHT_SENTENCES)} newly caught by this bead's patterns "
+        "and the rest already caught by teach-8xw.23's pre-existing pattern, a real if partial "
+        "generalization, not oversold as complete); named-peer-anecdote shape measured 0/"
+        f"{len(_TEACH_8XW_50_PEER_ANECDOTE_HELD_OUT_SENTENCES)} on the same blind round and closed "
+        "via disclosure (option (b), same as teach-9k5/teach-8xw.32) rather than a regex fitted only "
+        "to the bead's original single reproduction sentence"
     )

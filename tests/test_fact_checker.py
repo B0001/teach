@@ -7,6 +7,8 @@ confirmed / contradicted / cannot-verify, proven with a hand-written true
 claim, a hand-written false claim, and an ambiguous claim that should
 abstain.
 """
+import pytest
+
 from teach.fact_checker import (
     Verdict,
     check_lesson_text,
@@ -184,6 +186,108 @@ def test_lagrange_round_3_recognized_topic_still_abstains_not_confirms():
         "with nothing left over — that's the rule."
     )
     assert verify_claim(claim, MATH_SOURCE) is Verdict.CANNOT_VERIFY
+
+
+# --- round 4: fresh held-out measurement, all 12 preserved as data --------
+#
+# teach-8xw.47: round-3's held-out measurement above was real, but only 3 of
+# its 12 sentences were ever committed as runnable data -- the other 9
+# survived only as prose in a handoff and a comment in teach/math_facts.py,
+# and the session that held the full 12 no longer exists, so the 1/12
+# figure could never be re-checked against a future change to
+# _LAGRANGE_ORDER_DIVIDES. This round repeats round-3's method (an Agent
+# call given zero tool access -- no file reads, no repo, no code, no
+# history -- asked to invent 12 independently-authored English paraphrases
+# of the reversed/false Lagrange claim) but this time commits every
+# sentence up front, verdict and all, as a parametrized test over a
+# module-level tuple instead of prose. Measured against the current,
+# unwidened-by-this-bead _LAGRANGE_ORDER_DIVIDES patterns:
+# 2/12 CONTRADICTED, 10/12 CANNOT_VERIFY, 0/12 CONFIRMED. The safety
+# property (no dangerous false-CONFIRMED) held on all 12. Per this bead's
+# explicit instruction the patterns are NOT widened in response to this
+# measurement -- doing so would make round-4 tuning data too, the same
+# regress round-3's handoff already declined. A future widening attempt
+# should measure against a round-5, not this one.
+LAGRANGE_ROUND_4_HELD_OUT = (
+    (
+        "In this (incorrect) framing, the number of elements in the whole "
+        "group is said to be a factor of the number of elements sitting in "
+        "the subgroup.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "Notice that the subgroup's cardinality ends up being a multiple of "
+        "the parent group's cardinality — or so the flawed reasoning goes.",
+        Verdict.CONTRADICTED,
+    ),
+    (
+        "Remember how big G is? Well, that count is supposed to go into the "
+        "size of H evenly, according to this backwards claim.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "The outer structure's order evenly divides the order of the inner "
+        "structure it sits inside.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "Think of it like tiling: the ambient group's size tiles evenly "
+        "into the size of the subset contained within it.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "Is the number of elements in the child structure always a "
+        "multiple of how many elements are in the parent? This mistaken "
+        "account says yes.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "However many elements the whole group has, that number is claimed "
+        "to fit neatly inside the count of elements belonging to the "
+        "piece.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "The bigger structure's element-count is a divisor of the smaller "
+        "structure's element-count — at least according to this reversed "
+        "statement.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "Here's the (wrong) rule: take how many elements are in G, and "
+        "that quantity splits evenly into however many elements are in H.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "Compare the two: the containing group's order is treated as a "
+        "factor that packs neatly into the contained subgroup's order.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "Every subgroup, under this false description, has an element "
+        "count that is some whole-number multiple of the outer group's "
+        "element count.",
+        Verdict.CANNOT_VERIFY,
+    ),
+    (
+        "So the story goes, the size of the whole never exceeds being a "
+        "clean divisor of the size of its own piece — the group's order "
+        "goes into the subgroup's order without remainder.",
+        Verdict.CONTRADICTED,
+    ),
+)
+
+
+@pytest.mark.parametrize("claim,expected", LAGRANGE_ROUND_4_HELD_OUT)
+def test_lagrange_round_4_held_out_paraphrase(claim, expected):
+    """teach-8xw.47: every one of the 12 round-4 held-out sentences,
+    preserved verbatim with its measured verdict, so this 2/12 CONTRADICTED
+    / 10/12 CANNOT_VERIFY / 0/12 CONFIRMED figure -- unlike round-3's -- can
+    be re-run with one command against any future change to
+    _LAGRANGE_ORDER_DIVIDES. None of the 12 land CONFIRMED, i.e. the safety
+    property held on this round too; a future assert flipping to CONFIRMED
+    here would mean a widening introduced a dangerous regression."""
+    assert verify_claim(claim, MATH_SOURCE) is expected
 
 
 def test_lagrange_true_claim_confirmed():

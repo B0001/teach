@@ -52,8 +52,10 @@ correctly and intentionally moved past for that one sentence.
    independently-authored natural-language paraphrases of the same
    reversed/false claim, deliberately not shown the existing code, the
    vocabulary already covered, or the bead's own history. (Transcript is in
-   this session; the 12 sentences are reproduced in the test file docstrings
-   and the `_LAGRANGE_ORDER_DIVIDES` comment block.)
+   this session.)
+   **[Corrected by teach-8xw.40: this was wrong. Only 3 of the 12 sentences
+   were ever committed as runnable data — see the correction section at the
+   end of this file.]**
 3. Measured them against the widened code:
    **1/12 CONTRADICTED, 11/12 CANNOT_VERIFY, 0/12 CONFIRMED.**
    Also split the 11 misses: 7 never trip `topic_patterns` at all (no
@@ -105,3 +107,29 @@ genuinely new held-out round (not the 12 already spent, not self-authored
 in a way that overlaps with the fix), the result (1/12, 0/12 dangerous) is
 documented in code and locked into tests rather than asserted from memory,
 and the full suite passes.
+
+## Correction (teach-8xw.40, appended, original text above left unchanged)
+
+Step 2's claim that "the 12 sentences are reproduced in the test file
+docstrings and the `_LAGRANGE_ORDER_DIVIDES` comment block" was false. Only
+3 of the 12 were ever committed as runnable data: the three
+`test_lagrange_round_3_*` cases in `tests/test_fact_checker.py` (the one
+catch, and two of the misses). The other nine survive only as aggregate
+prose in this file and in the `math_facts.py` comment block — quoted
+fragments like "has to split evenly into" / "slot into" / "swallows ...
+evenly" / "absorbs ... cleanly" are descriptions of the sentences, not the
+sentences themselves — and the worker session transcript that held the full
+12 no longer exists anywhere in this repo or its `.claude/projects` session
+history (checked: `git log -S` across all commits, and a search of every
+surviving session transcript, found no trace of the missing nine).
+
+So the **1/12 CONTRADICTED / 11/12 CANNOT_VERIFY / 0/12 CONFIRMED** figure
+in step 3 is an honest report of what was once measured, but it is not
+reproducible from this repo — nobody can re-run it against a future change
+to `_LAGRANGE_ORDER_DIVIDES` to check whether it improved, held, or
+regressed. Only the 3-sentence subset locked into
+`tests/test_fact_checker.py` can be re-measured going forward. This does not
+change the bead's substantive finding (safe direction, real recall gap,
+correctly declined to chase further) — it changes what can be verified
+about that finding after the fact. See `teach-8xw.40` and the matching
+comment added in `teach/math_facts.py` above `_SIZE_SYNONYMS`.

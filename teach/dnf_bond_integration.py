@@ -38,10 +38,16 @@ WHAT THIS RUN HONESTLY DOES NOT COVER (report this, never paper over it):
   - `teach.potential_checker`'s `evidenced_ceiling` check can only compare a
     claim's promised ceiling against what this SAME lesson's text
     evidences -- there is no independent producer-side ground truth on the
-    wire for it to check against instead (flagged already in
+    wire for it to check against instead (flagged in
     sandbox-handoffs/teach-8xw.8.md as a standing limitation of the
-    checker's design, not something this run's lesson text can route
-    around).
+    checker's design). teach-8xw.45 narrowed, but did not close, that gap:
+    a "you just did X" claim with no learner turn anywhere adjacent to it in
+    THIS transcript is caught (teach-8xw.51 confirmed the signal fires by
+    finding, and then fixing, exactly that fabrication in this lesson's own
+    closing line -- see this module's own history), but a learner turn
+    merely being present, or performance disguised as the learner's own
+    work inside a tutor turn, both still read as evidenced here. That
+    residual is fundamental to the blind-checker boundary, not a to-do.
   - `concept_recovery` runs against the real, teach-25o-extended D&F graph
     (11 nodes), not the VA Math SOL graph -- undergraduate abstract algebra
     is out of the K-12 SOL graph's scope entirely, per teach-8xw.15's own
@@ -188,16 +194,28 @@ def _self_check() -> None:
     )
     assert report.out_of_scope_facts == ("kernel-normal-subgroup",)
 
-    # potential_checker: the closing encouragement line must not be flagged,
-    # AND (teach-yn8) that must be reported alongside how much of the
-    # lesson's tutor-spoken text was actually classifiable, not as an
-    # unqualified "no overpromises." teach-8xw.19 removed the vocabulary-
-    # gated "is this about the learner" pre-filter (three widenings of it --
-    # teach-yn8, teach-kmm, teach-5gf -- each found a next round of
-    # independently-phrased praise it still missed entirely, invisible
-    # rather than unclassified), so `seen` is now every tutor-spoken
-    # sentence in this lesson: the domain content and Bond narration as well
-    # as the encouragement.
+    # potential_checker: teach-8xw.45 gave evidenced_ceiling a real
+    # turn-adjacency cross-reference (does a "you just did X" claim have an
+    # actual learner turn immediately before it in THIS transcript?), and
+    # run against this real lesson it correctly caught a real fabrication --
+    # the closing line's "You just carried that coset argument through to
+    # Lagrange's Theorem on your own" used to follow eight consecutive
+    # tutor-only turns with no learner contribution about cosets or
+    # Lagrange anywhere in them. teach-8xw.51 fixed the lesson itself
+    # (`teach/dnf_bond_lesson.py` now gives the learner a real turn to
+    # carry the coset-counting argument through, immediately before that
+    # line credits them for it), so this asserts the corrected, honest
+    # "clean" result, not the false "clean" the pre-teach-8xw.45 checker
+    # gave the old (broken) lesson text.
+    #
+    # This must also be reported alongside how much of the lesson's
+    # tutor-spoken text was actually classifiable, not as an unqualified
+    # pass/fail. teach-8xw.19 removed the vocabulary-gated "is this about the
+    # learner" pre-filter (three widenings of it -- teach-yn8, teach-kmm,
+    # teach-5gf -- each found a next round of independently-phrased praise it
+    # still missed entirely, invisible rather than unclassified), so `seen`
+    # is now every tutor-spoken sentence in this lesson: the domain content
+    # and Bond narration as well as the encouragement.
     #
     # teach-8xw.21: `seen`'s exact length is the lesson's prose length, not
     # an honesty signal -- it moves every time the lesson text is edited for
@@ -207,7 +225,9 @@ def _self_check() -> None:
     # nothing seen vanishes between the two buckets, and (b) that coverage
     # isn't vacuously empty (the teach-yn8 failure mode) -- both of which
     # are independent of how long this lesson happens to be.
-    assert report.potential_flags == (), f"expected a clean honesty check, got {report.potential_flags}"
+    assert report.potential_flags == (), (
+        f"expected a clean honesty check, got {report.potential_flags}"
+    )
     cov = report.potential_coverage
     assert len(cov.seen) > 0, "expected the potential_checker to see at least one sentence"
     assert len(cov.seen) == len(cov.classified) + len(cov.unclassified), (
@@ -218,13 +238,17 @@ def _self_check() -> None:
     # second genuine, effort-conditioned potential claim --
     # render_commitment_consistency's "if you keep working that way, you'll
     # be ready to tackle the group axioms next" -- alongside the
-    # pre-existing closing encouragement line. Both are classified GROWTH,
-    # effort-conditioned, and evidenced (the template's own "you just
-    # handled a moment ago" / "next" wording), so both land HONEST, not
-    # flagged. Pinned at exactly 2, same rationale as the pre-.35 pin at 1:
-    # this is a real, meaningful signal count (how many sentences this
-    # lesson actually asserts something checkable about the learner's
-    # potential), not lesson-length noise like `seen`/`unclassified` above.
+    # pre-existing closing encouragement line. Pinned at exactly 2, same
+    # rationale as the pre-.35 pin at 1: this is a real, meaningful signal
+    # count (how many sentences this lesson actually asserts something
+    # checkable about the learner's potential), not lesson-length noise like
+    # `seen`/`unclassified` above. teach-8xw.45 gave both of these an actual
+    # turn-adjacency cross-reference to be checked against; teach-8xw.51
+    # then fixed the lesson so both are genuinely, not just textually,
+    # evidenced: the commitment_consistency claim was already preceded by
+    # the learner's own turn, and the closing line now is too (the learner
+    # carries the coset-counting argument through immediately before the
+    # tutor credits them for it). Both land HONEST.
     assert len(cov.classified) == 2
     # teach-8xw.20: the secondary second-person breakdown must stay
     # internally consistent (same subset invariant as above, restricted to

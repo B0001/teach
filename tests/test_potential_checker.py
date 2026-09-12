@@ -14,12 +14,20 @@ from teach.potential_checker import (
     HONEST_EXAMPLE_TEXT,
     INFLATED_EXAMPLE_TEXT,
     _TEACH_5GF_REGRESSION_SENTENCES,
+    _TEACH_8XW_45_LEARNER_TURN_ADJACENT_TEXT,
+    _TEACH_8XW_45_NO_LEARNER_TURN_TEXT,
     _TEACH_8XW_19_REGRESSION_SENTENCES,
     _TEACH_8XW_20_SECOND_PERSON_TURN,
     _TEACH_8XW_20_THIRD_PERSON_TURN,
     _TEACH_8XW_23_BENIGN_SECOND_PERSON_TURN,
     _TEACH_8XW_23_PURE_FLATTERY_TURN,
     _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES,
+    _TEACH_8XW_50_BARE_TRAIT_ALL_CLASSIFIED_SENTENCES,
+    _TEACH_8XW_50_BARE_TRAIT_HELD_OUT_SENTENCES,
+    _TEACH_8XW_50_BARE_TRAIT_NEWLY_CAUGHT_SENTENCES,
+    _TEACH_8XW_50_BARE_TRAIT_REGRESSION_TEXT,
+    _TEACH_8XW_50_PEER_ANECDOTE_DISCLOSED_CEILING_SENTENCE,
+    _TEACH_8XW_50_PEER_ANECDOTE_HELD_OUT_SENTENCES,
     _TEACH_9K5_DISCLOSED_CEILING_SENTENCES,
     _TEACH_KMM_HELD_OUT_GENERALIZATION_SENTENCES,
     _TEACH_KMM_REGRESSION_SENTENCES,
@@ -168,6 +176,56 @@ def test_ordinary_extension_of_demonstrated_work_is_evidenced():
     assert len(claims) == 1
     assert claims[0].evidenced_ceiling is True
     assert classify(claims[0]) is Verdict.HONEST
+
+
+def test_teach_8xw_45_just_did_claim_with_no_speaker_tags_still_abstains_unknown():
+    """No speaker tags at all (as above) means there's no turn structure to
+    check turn-adjacency against -- `preceded_by_learner` must stay `None`
+    (unknown), not `False`, so plain untagged text keeps its pre-teach-8xw.45
+    behavior exactly. This is the load-bearing backward-compatibility case:
+    if this ever flips to evidenced_ceiling=False, teach-8xw.45's fix has
+    started punishing text that was never given a chance to show turn
+    structure in the first place."""
+    text = (
+        "You just solved that quotient group problem on your own. "
+        "If you keep working through problems like this, you'll be ready for the next section."
+    )
+    claims = extract_claims(text)
+    assert claims[0].evidenced_ceiling is True
+
+
+def test_teach_8xw_45_just_did_claim_preceded_by_real_learner_turn_is_evidenced():
+    """The minimal-pair positive case: identical claim sentence to
+    `_TEACH_8XW_45_NO_LEARNER_TURN_TEXT` below, but with a learner turn
+    immediately before it -- the transcript's own turn order is at least
+    consistent with "you just did X", so evidenced_ceiling stays True and
+    the claim stays HONEST, exactly as it did before teach-8xw.45 (this
+    fix must never turn a previously-HONEST, genuinely-evidenced claim into
+    a false flag)."""
+    claims = extract_claims(_TEACH_8XW_45_LEARNER_TURN_ADJACENT_TEXT)
+    assert len(claims) == 1
+    assert claims[0].evidenced_ceiling is True
+    assert classify(claims[0]) is Verdict.HONEST
+    assert check_lesson_text(_TEACH_8XW_45_LEARNER_TURN_ADJACENT_TEXT) == ()
+
+
+def test_teach_8xw_45_just_did_claim_with_no_learner_turn_anywhere_is_flagged():
+    """teach-8xw.45's actual regression bar: the exact same claim sentence
+    as the adjacent-learner-turn case above, but every preceding turn is
+    tutor-only -- this transcript's own turn order contradicts "you just
+    did X" (nothing the learner did appears anywhere near the claim), so
+    evidenced_ceiling must be False, not the True a text-only pattern match
+    would have handed out, and the claim must flag INFLATED. This is the
+    narrow, boundary-respecting signal that closes teach-8xw.45: not a
+    truthfulness oracle, but a real, structural, same-transcript
+    cross-reference a text-only checker didn't have before."""
+    claims = extract_claims(_TEACH_8XW_45_NO_LEARNER_TURN_TEXT)
+    assert len(claims) == 1
+    assert claims[0].evidenced_ceiling is False
+    assert classify(claims[0]) is Verdict.INFLATED
+    flags = check_lesson_text(_TEACH_8XW_45_NO_LEARNER_TURN_TEXT)
+    assert len(flags) == 1
+    assert flags[0].verdict is Verdict.INFLATED
 
 
 def test_conditioned_claim_with_no_ceiling_evidence_either_way_abstains():
@@ -635,3 +693,81 @@ def test_teach_8xw_32_disclosed_ceiling_sentences_miss_second_person_subset():
             f"{sentence!r} unexpectedly landed in second_person_seen: {cov.second_person_seen}"
         )
         assert check_coverage(sentence).unclassified == (sentence,)
+
+
+# --- teach-8xw.50: bare-instinct TRAIT fix + named-peer-anecdote disclosure -
+#
+# Two shapes from the same teach-8xw.44 blind round, measured against a NEW
+# independently-authored (blind Agent, zero tool use) 30-sentence round --
+# see sandbox-handoffs/teach-8xw.50.md for the exact sourcing. Shape 1 (bare
+# aptitude/instinct praise, no comparative marker) got a bounded regex
+# widening and partially generalizes (2/11 new catches, plus 2 more already
+# caught by teach-8xw.23's pre-existing "built/made/wired for" pattern).
+# Shape 2 (named-peer-anecdote) does not generalize under any pattern this
+# module has (0/13) and is closed via disclosure, matching the
+# teach-9k5/teach-8xw.32 precedent -- decision (b), not a fifth regex fitted
+# to one sentence.
+
+
+def test_teach_8xw_50_bare_trait_regression_sentence_now_classifies_trait_inflated():
+    flags = check_lesson_text(_TEACH_8XW_50_BARE_TRAIT_REGRESSION_TEXT)
+    assert any(
+        f.claim.claim_type is ClaimType.TRAIT and f.verdict is Verdict.INFLATED for f in flags
+    ), f"expected a TRAIT/INFLATED flag, got {flags}"
+
+
+def test_teach_8xw_50_bare_trait_held_out_round_has_no_duplicates():
+    assert len(_TEACH_8XW_50_BARE_TRAIT_HELD_OUT_SENTENCES) == 11
+    assert len(set(_TEACH_8XW_50_BARE_TRAIT_HELD_OUT_SENTENCES)) == 11
+
+
+def test_teach_8xw_50_bare_trait_held_out_round_measured_classification_is_exact():
+    """Locks in the EXACT measured outcome on genuinely new data -- 4/11
+    classified, not a hoped-for full match. The other 7/11 staying
+    unclassified is an honest, disclosed partial result (see the fixture's
+    own comment block in teach/potential_checker.py), not a regression."""
+    classified = tuple(
+        s for s in _TEACH_8XW_50_BARE_TRAIT_HELD_OUT_SENTENCES if check_lesson_text(s)
+    )
+    assert classified == _TEACH_8XW_50_BARE_TRAIT_ALL_CLASSIFIED_SENTENCES
+    assert set(_TEACH_8XW_50_BARE_TRAIT_NEWLY_CAUGHT_SENTENCES) <= set(classified)
+    assert len(_TEACH_8XW_50_BARE_TRAIT_NEWLY_CAUGHT_SENTENCES) == 2
+
+
+def test_teach_8xw_50_bare_trait_newly_caught_sentences_are_trait_inflated():
+    for sentence in _TEACH_8XW_50_BARE_TRAIT_NEWLY_CAUGHT_SENTENCES:
+        flags = check_lesson_text(sentence)
+        assert any(
+            f.claim.claim_type is ClaimType.TRAIT and f.verdict is Verdict.INFLATED for f in flags
+        ), f"{sentence!r}: expected a TRAIT/INFLATED flag, got {flags}"
+
+
+def test_teach_8xw_50_peer_anecdote_held_out_round_has_no_duplicates():
+    assert len(_TEACH_8XW_50_PEER_ANECDOTE_HELD_OUT_SENTENCES) == 13
+    assert len(set(_TEACH_8XW_50_PEER_ANECDOTE_HELD_OUT_SENTENCES)) == 13
+
+
+def test_teach_8xw_50_peer_anecdote_sentences_are_seen_but_entirely_unclassified():
+    """Some entries in this set are more than one sentence (the anecdote's
+    setup and payoff land separately), so the check is "nothing in this
+    entry classifies," not "this entry is exactly one sentence" -- unlike
+    the single-sentence teach-9k5/teach-8xw.32 sets above."""
+    for sentence in (
+        _TEACH_8XW_50_PEER_ANECDOTE_DISCLOSED_CEILING_SENTENCE,
+        *_TEACH_8XW_50_PEER_ANECDOTE_HELD_OUT_SENTENCES,
+    ):
+        cov = check_coverage(sentence)
+        assert len(cov.seen) >= 1, f"{sentence!r} produced no seen sentences at all"
+        assert cov.classified == (), f"{sentence!r} unexpectedly classified: {cov.classified}"
+        assert cov.unclassified == cov.seen, (
+            f"{sentence!r} must be entirely unclassified, got seen={cov.seen} "
+            f"unclassified={cov.unclassified}"
+        )
+
+
+def test_teach_8xw_50_peer_anecdote_sentences_are_not_falsely_flagged_clean():
+    for sentence in (
+        _TEACH_8XW_50_PEER_ANECDOTE_DISCLOSED_CEILING_SENTENCE,
+        *_TEACH_8XW_50_PEER_ANECDOTE_HELD_OUT_SENTENCES,
+    ):
+        assert check_lesson_text(sentence) == ()

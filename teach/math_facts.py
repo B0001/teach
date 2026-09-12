@@ -156,6 +156,38 @@ _KERNEL_NORMAL_SUBGROUP = SourceFact(
 # comment exists to avoid. One round-3 catch and two round-3 misses are
 # locked into tests/test_fact_checker.py as regression evidence for both
 # halves of this measurement.
+#
+# teach-8xw.40's correction: only those 3 of the 12 round-3 sentences were
+# ever committed as runnable data (the catch and two misses above). The
+# other 9 survive only as the aggregate description in this comment and in
+# sandbox-handoffs/teach-8xw.33.md -- fragments like "has to split evenly
+# into" / "slot into" / "swallows ... evenly" / "absorbs ... cleanly" are
+# not the sentences themselves, and the worker session that held the full
+# 12 no longer exists (checked: no later commit, no earlier commit, no
+# surviving agent transcript contains them). So the 1/12 CONTRADICTED /
+# 11/12 CANNOT_VERIFY / 0/12 CONFIRMED figure above is accurate as a report
+# of what was once measured, but it is NOT reproducible from this repo --
+# nobody can re-run it against a future change to this file's patterns.
+# Only the 3-sentence subset locked into tests/test_fact_checker.py can be
+# re-measured. A future widening should not claim to have "held" or
+# "improved on" the full round-3 number; it can only claim to hold or
+# improve on those 3 sentences, or measure a new, differently-numbered
+# round of its own.
+#
+# teach-8xw.47: that "differently-numbered round of its own" is round 4 --
+# same method (a zero-tool-access Agent call, no repo/code/history shown),
+# a fresh set of 12 independently-authored reversed-direction paraphrases,
+# measured against these same (still-unwidened-by-this-bead) patterns:
+#
+#   2/12 CONTRADICTED, 10/12 CANNOT_VERIFY, 0/12 CONFIRMED.
+#
+# Unlike round 3, all 12 -- not 3 -- are committed verbatim, each with its
+# measured verdict, as tests/test_fact_checker.py's
+# LAGRANGE_ROUND_4_HELD_OUT parametrized test, so this figure can be
+# re-run with one command against any future change here. The safe-
+# direction property held again (0/12 dangerous). Per this bead's scope,
+# not widened in response -- that is round 5's job, measured against a
+# round of its own.
 _SIZE_SYNONYMS = r"(?:order|cardinality|size|count)"
 
 # A bare determiner list ("the"/"a"/"any") missed quantifiers like "every"

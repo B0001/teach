@@ -427,6 +427,23 @@ def build_planner_state() -> PlannerState:
             "into blocks with no agent left uncovered."
         ),
         _tutor(BOND_BACKEND(BOND_HANDLER, by_id[TARGET_NODE_ID].node_id)),
+        # teach-8xw.51: the closing line below credits the learner with
+        # carrying the coset-to-Lagrange argument through "on your own" --
+        # so give them an actual turn to do it first, immediately before
+        # that claim, instead of narrating the whole chain solo and crediting
+        # them for it after the fact.
+        _tutor(
+            "So: every left coset is the same size as Q Branch itself, and "
+            "between them they cover headquarters' whole roster with no "
+            "agent counted twice. What does that force about how Q "
+            "Branch's roster size relates to headquarters' full count?"
+        ),
+        _learner(
+            "If the blocks are all the same size and together they cover "
+            "everyone with no overlap, then headquarters' count has to be "
+            "some whole number of those blocks -- so Q Branch's size has "
+            "to divide headquarters' size."
+        ),
         _tutor(
             "You just carried that coset argument through to Lagrange's "
             "Theorem on your own. If you keep working through subgroup "

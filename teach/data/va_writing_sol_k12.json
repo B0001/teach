@@ -1,0 +1,532 @@
+{
+  "schema": "va-writing-sol-k12-strand-groupings-v1",
+  "source": {
+    "provider": "Learning Commons (learningcommons.org), Knowledge Graph v1.13.0",
+    "retrieved_via": "https://cdn.learningcommons.org/knowledge-graph/v1.13.0/exports/{nodes,relationships}.jsonl",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "author": "Virginia Department of Education",
+    "attribution": "Knowledge Graph is provided by Learning Commons under the CC BY-4.0 license. Virginia English Language Arts standards provided by the Virginia Department of Education available at https://www.doe.virginia.gov/home/showpublisheddocument/53643/638499760936600000."
+  },
+  "grade_order": [
+    "K",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12"
+  ],
+  "strands": {
+    "W": "Writing"
+  },
+  "groupings": [
+    {
+      "id": "va-writing-sol:K.W",
+      "statement_code": "K.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "K",
+      "case_identifier_uuid": "e53b6690-ba0b-4160-8c5b-4e7623680c07",
+      "leaf_standards": [
+        {
+          "statement_code": "K.W.1.A",
+          "description": "Use a combination of drawing, dictating, and writing to compose narrative stories in sequential order (beginning, middle, end)."
+        },
+        {
+          "statement_code": "K.W.1.B",
+          "description": "Use a combination of drawing, dictating, and writing to compose descriptive writing that identifies a topic and provides one or more relevant details."
+        },
+        {
+          "statement_code": "K.W.1.C",
+          "description": "Use a combination of drawing, dictating, and writing to write in response to texts heard."
+        },
+        {
+          "statement_code": "K.W.2.A",
+          "description": "With guidance and support, use prewriting activities, including drawing and suggestions from peers to generate ideas and plan writing or dictation. This includes:"
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:1.W",
+      "statement_code": "1.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "1",
+      "case_identifier_uuid": "b597b9b6-cb8f-46f0-886b-e1825ae66c5f",
+      "leaf_standards": [
+        {
+          "statement_code": "1.W.1.A",
+          "description": "Use a combination of drawing, dictating, and writing to recount two or more sequenced events or experiences and include details about the events and characters."
+        },
+        {
+          "statement_code": "1.W.1.B",
+          "description": "Use a combination of drawing, dictating, and writing to compose informative/expository texts that name a topic and supply some facts about the topic."
+        },
+        {
+          "statement_code": "1.W.1.C",
+          "description": "Use a combination of drawing, dictating, and writing to compose opinion pieces that state an opinion and supply a reason for the opinion."
+        },
+        {
+          "statement_code": "1.W.1.D",
+          "description": "Use a combination of drawing, dictating, and writing about text(s) read or heard in which students share their thinking with a couple of supporting details from the text."
+        },
+        {
+          "statement_code": "1.W.2.A",
+          "description": "With guidance and support, use a variety of prewriting activities, such as brainstorming, drawing and graphic organizers, to generate ideas and draft writing or dictation. This includes:"
+        },
+        {
+          "statement_code": "1.W.3.A",
+          "description": "With guidance and support from adults, edit writing for conventions e.g., spelling, capitalization, usage, punctuation). (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:2.W",
+      "statement_code": "2.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "2",
+      "case_identifier_uuid": "6ac89d41-c5f0-4a40-8bbe-ef040bc55bc2",
+      "leaf_standards": [
+        {
+          "statement_code": "2.W.1.A",
+          "description": "Write narratives that recount a well-elaborated event or short sequence of events and include details about the events and characters and use of time-related words to signal the event sequence."
+        },
+        {
+          "statement_code": "2.W.1.B",
+          "description": "Write informative/explanatory texts that introduce a topic and develop the ideas with facts and examples."
+        },
+        {
+          "statement_code": "2.W.1.C",
+          "description": "Write opinion pieces on topics or texts that support a point of view with reasons."
+        },
+        {
+          "statement_code": "2.W.1.D",
+          "description": "Write in response to text(s) read or heard to share thinking with a couple supporting details from the text."
+        },
+        {
+          "statement_code": "2.W.2.A",
+          "description": "Engage in writing as a process to plan writing based on purpose and genre. This includes:"
+        },
+        {
+          "statement_code": "2.W.3.A",
+          "description": "With guidance and support from adults, develop and strengthen writing as needed by revising for quality of ideas, organization, sentence fluency, and word choice."
+        },
+        {
+          "statement_code": "2.W.3.B",
+          "description": "With guidance and support from adults, edit writing for conventions (e.g., spelling, capitalization, usage, punctuation). (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:3.W",
+      "statement_code": "3.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "3",
+      "case_identifier_uuid": "dba543c7-81b8-4181-9954-e70a34a4c791",
+      "leaf_standards": [
+        {
+          "statement_code": "3.W.1.A",
+          "description": "Recognize different forms of writing (narrative, expository, and opinion) have distinctive patterns of organization to support their purpose."
+        },
+        {
+          "statement_code": "3.W.1.B",
+          "description": "Write personal or fictional narratives that organize event sequences that unfold naturally."
+        },
+        {
+          "statement_code": "3.W.1.C",
+          "description": "Write informative/explanatory texts to examine a topic that develops the topic with facts and details."
+        },
+        {
+          "statement_code": "3.W.1.D",
+          "description": "Write opinion pieces on topics or texts, supporting a point of view with facts and reasons."
+        },
+        {
+          "statement_code": "3.W.1.E",
+          "description": "Write in response to text(s) read or heard to share thinking using supporting details from the text."
+        },
+        {
+          "statement_code": "3.W.2.A",
+          "description": "Engage in writing as a process to compose a well-developed paragraph. This includes:"
+        },
+        {
+          "statement_code": "3.W.3.A",
+          "description": "With guidance and support from peers and adults, develop and strengthen writing as needed by revising for quality of ideas, organization, sentence fluency, and word choice."
+        },
+        {
+          "statement_code": "3.W.3.B",
+          "description": "With guidance and support from peers and adults, edit writing for format and conventions such as capitalization, usage, punctuation, and spelling. (See Language Usage for gradelevel expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:4.W",
+      "statement_code": "4.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "4",
+      "case_identifier_uuid": "033f18eb-f2b7-494b-8083-ec003297f0d2",
+      "leaf_standards": [
+        {
+          "statement_code": "4.W.1.A",
+          "description": "Recognize different forms of writing (narrative, expository, and persuasive) have distinctive patterns of organization to support their purpose."
+        },
+        {
+          "statement_code": "4.W.1.B",
+          "description": "Write personal or fictional narratives that are logically organized around a central problem or experience."
+        },
+        {
+          "statement_code": "4.W.1.C",
+          "description": "Write expository texts to examine a topic that develops the focus with facts, details, or other information and uses linking words to connect ideas."
+        },
+        {
+          "statement_code": "4.W.1.D",
+          "description": "Write persuasive pieces on topics or texts that express a clear opinion supported by facts, details, and reasons."
+        },
+        {
+          "statement_code": "4.W.1.E",
+          "description": "Write in response to text(s) read (including summaries, reflections and descriptions) to demonstrate thinking with details, examples, and other evidence from the text, using linking words to connect ideas."
+        },
+        {
+          "statement_code": "4.W.2.A",
+          "description": "Engage in writing as a process to compose well-developed paragraphs. This includes:"
+        },
+        {
+          "statement_code": "4.W.3.A",
+          "description": "With guidance and support from peers and adults, develop and strengthen writing as needed by revising for quality of ideas, organization, sentence fluency, and word choice."
+        },
+        {
+          "statement_code": "4.W.3.B",
+          "description": "Self-and peer-edit the writing for capitalization, spelling, punctuation, sentence structure, paragraphing, and Standard English (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:5.W",
+      "statement_code": "5.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "5",
+      "case_identifier_uuid": "288f6fe3-e145-4849-a046-d5fa6c6c5485",
+      "leaf_standards": [
+        {
+          "statement_code": "5.W.1.A",
+          "description": "Write personal or fictional narratives in prose or poetic form that organize the writing around a central problem, conflict, or experience using descriptions or dialogue to develop the experience(s)."
+        },
+        {
+          "statement_code": "5.W.1.B",
+          "description": "Write expository texts to examine a topic and convey ideas that develop the focus with relevant facts, concrete details, and examples from multiple sources and are grouped logically."
+        },
+        {
+          "statement_code": "5.W.1.C",
+          "description": "Write persuasive pieces on topics or texts, including media messages, supporting a clear perspective with adequate facts, reasons, and logically grouped information."
+        },
+        {
+          "statement_code": "5.W.1.D",
+          "description": "Write in response to texts read (including summaries, reflections, and descriptions) in which students demonstrate their thinking with details, examples, and other evidence from the text that are logically grouped."
+        },
+        {
+          "statement_code": "5.W.2.A",
+          "description": "Engage in writing as a process to compose well-developed paragraphs. This includes:"
+        },
+        {
+          "statement_code": "5.W.3.A",
+          "description": "With guidance and support from peers and adults, develop and strengthen writing as needed by revising for quality of ideas, organization, sentence fluency, and precise word choice."
+        },
+        {
+          "statement_code": "5.W.3.B",
+          "description": "Self-and peer-edit the writing for capitalization, spelling, punctuation, sentence structures, paragraphing, and Standard English (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:6.W",
+      "statement_code": "6.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "6",
+      "case_identifier_uuid": "22213417-9594-4ef3-8dff-4a02a90b4f25",
+      "leaf_standards": [
+        {
+          "statement_code": "6.W.1.A",
+          "description": "Write narratives to entertain, to share a personal experience, or to alter an existing story that uses narrative techniques to develop the characters, event(s), and experience(s)."
+        },
+        {
+          "statement_code": "6.W.1.B",
+          "description": "Write expository texts to examine a topic or concept, logically conveying ideas and information using text structures such as description, comparison, or cause-effect to create cohesion."
+        },
+        {
+          "statement_code": "6.W.1.C",
+          "description": "Write persuasively about topics or texts, including media messages, supporting welldefined claims with clear reasons and evidence that are logically grouped."
+        },
+        {
+          "statement_code": "6.W.1.D",
+          "description": "Write reflectively in response to text(s) read to demonstrate thinking with details, examples, and other evidence from the text(s)."
+        },
+        {
+          "statement_code": "6.W.2.A",
+          "description": "Generate and organize ideas using the writing process (planning, drafting, revising, editing) to develop multi-paragraph texts. This includes:"
+        },
+        {
+          "statement_code": "6.W.3.A",
+          "description": "Revise writing for clarity of content, word choice, sentence variety, and transition among paragraphs."
+        },
+        {
+          "statement_code": "6.W.3.B",
+          "description": "Self-and peer-edit for capitalization, spelling, punctuation, sentence structure, paragraphing, and Standard English (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:7.W",
+      "statement_code": "7.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "7",
+      "case_identifier_uuid": "907169eb-1f4a-4e3b-9348-e5fa0f5006c9",
+      "leaf_standards": [
+        {
+          "statement_code": "7.W.1.A",
+          "description": "Write narratives to develop real or imagined experiences or to alter an existing text, using a variety of precise words and phrases and transitional words to develop the characters, convey sequence, and signal shifts from one timeframe or setting to another."
+        },
+        {
+          "statement_code": "7.W.1.B",
+          "description": "Write expository texts to examine a topic or concept that develops the focus with relevant facts, definitions, concrete details, or other information from multiple credible sources, using structures and patterns (e.g., description, enumeration, classification, comparison, problem-solution, or cause-effect) to clarify relationships among ideas."
+        },
+        {
+          "statement_code": "7.W.1.C",
+          "description": "Write persuasively supporting a well-defined point of view with appropriate claims, relevant evidence, and clear reasoning that are logically grouped."
+        },
+        {
+          "statement_code": "7.W.1.D",
+          "description": "Write reflectively in response to reading to demonstrate thinking with details, examples, and other evidence from the text(s)."
+        },
+        {
+          "statement_code": "7.W.2.A",
+          "description": "Generate and organize ideas using the writing process (planning, drafting, revising, editing) to develop multi-paragraph texts. This includes:"
+        },
+        {
+          "statement_code": "7.W.3.A",
+          "description": "Revise writing for clarity of content, word choice, sentence variety, and transition among paragraphs."
+        },
+        {
+          "statement_code": "7.W.3.B",
+          "description": "Self-and peer-edit writing for capitalization, spelling, punctuation, sentence structure, paragraphing, and Standard English (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:8.W",
+      "statement_code": "8.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "8",
+      "case_identifier_uuid": "eb3ed84e-b690-4abb-b85c-72e9be8e5a0d",
+      "leaf_standards": [
+        {
+          "statement_code": "8.W.1.A",
+          "description": "Write narratives to develop real or imagined experiences or to alter an existing text, using well-structured event sequences, precise words and phrases, and transitional words to develop the characters, convey sequence, and capture the action."
+        },
+        {
+          "statement_code": "8.W.1.B",
+          "description": "Write expository texts to examine a topic or concept that conveys ideas and information by maintaining a clear focus with relevant, well-chosen facts, definitions, concrete details, quotations, and examples from multiple credible sources, using structures and patterns (e.g., description, enumeration, classification, comparison, problem-solution, or causeeffect) to clarify relationships among ideas and concepts."
+        },
+        {
+          "statement_code": "8.W.1.C",
+          "description": "Write persuasively, supporting well-defined points of view effectively with relevant evidence and clear reasoning in ways that logically advance the claim(s) made."
+        },
+        {
+          "statement_code": "8.W.1.D",
+          "description": "Write reflectively in response to reading to demonstrate thinking with details, examples, and other evidence from the text(s)."
+        },
+        {
+          "statement_code": "8.W.2.A",
+          "description": "Generate and organize ideas using the writing process (planning, drafting, revising, editing) to develop multi-paragraph texts. This includes:"
+        },
+        {
+          "statement_code": "8.W.3.A",
+          "description": "Revise writing for clarity of content, word choice, sentence variety, and transition among paragraphs."
+        },
+        {
+          "statement_code": "8.W.3.B",
+          "description": "Self-and peer-edit writing for capitalization, spelling, punctuation, sentence structure, paragraphing, and Standard English (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:9.W",
+      "statement_code": "9.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "9",
+      "case_identifier_uuid": "309b4b56-2737-4840-8d7c-d010dd7e7d3e",
+      "leaf_standards": [
+        {
+          "statement_code": "9.W.1.A",
+          "description": "Write extended pieces that:"
+        },
+        {
+          "statement_code": "9.W.1.B",
+          "description": "Write reflectively in response to readings in which students compare two or more texts with details, examples, and other textual evidence to support an idea or position."
+        },
+        {
+          "statement_code": "9.W.1.C",
+          "description": "Develop flexibility in writing by routinely producing shorter and longer pieces for a range of tasks, purposes, and audiences (e.g., summaries, reflections, descriptions, critiques, letters, poetry, narratives, etc.)."
+        },
+        {
+          "statement_code": "9.W.2.A",
+          "description": "Plan and organize writing to address a specific audience and purpose using the writing process (planning, drafting, revising, editing). This includes:"
+        },
+        {
+          "statement_code": "9.W.3.A",
+          "description": "Revise writing for clarity of content, accuracy, and adequate elaboration."
+        },
+        {
+          "statement_code": "9.W.3.B",
+          "description": "Use peer- and self-evaluation to edit writing for clarity and quality of information, addressing strengths and making suggestions regarding how writing might be improved."
+        },
+        {
+          "statement_code": "9.W.3.C",
+          "description": "Edit writing for appropriate conventions, style, and language (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:10.W",
+      "statement_code": "10.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "10",
+      "case_identifier_uuid": "70257797-f044-4a18-955e-d1a5917d9b74",
+      "leaf_standards": [
+        {
+          "statement_code": "10.W.1.A",
+          "description": "Write extended pieces that:"
+        },
+        {
+          "statement_code": "10.W.1.B",
+          "description": "Write arguments that:"
+        },
+        {
+          "statement_code": "10.W.1.C",
+          "description": "Write reflectively in response to readings in which students compare two or more texts with details, examples, and other textual evidence to support an idea or position."
+        },
+        {
+          "statement_code": "10.W.1.D",
+          "description": "Develop flexibility in writing by routinely producing shorter and longer pieces that adapt writing content, technique, and voice for a range of tasks, purposes, and audiences, (e.g., summaries, reflections, descriptions, critiques, letters, poetry, narratives, etc.)."
+        },
+        {
+          "statement_code": "10.W.2.A",
+          "description": "Plan and organize writing to address a specific audience and purpose using the writing process (planning, drafting, revising, editing). This includes:"
+        },
+        {
+          "statement_code": "10.W.3.A",
+          "description": "Revise writing for clarity of content, accuracy, and adequate elaboration."
+        },
+        {
+          "statement_code": "10.W.3.B",
+          "description": "Use peer- and self-evaluation to edit writing for clarity and quality of information, addressing strengths and making suggestions regarding how writing might be improved."
+        },
+        {
+          "statement_code": "10.W.3.C",
+          "description": "Edit writing for appropriate conventions, style, and language (See Language Usage for grade level expectations)."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:11.W",
+      "statement_code": "11.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "11",
+      "case_identifier_uuid": "cab0ee25-2d98-45d9-bcb6-70c296a2fc50",
+      "leaf_standards": [
+        {
+          "statement_code": "11.W.1.A",
+          "description": "Write extended pieces that:"
+        },
+        {
+          "statement_code": "11.W.1.B",
+          "description": "Write analyses that:"
+        },
+        {
+          "statement_code": "11.W.1.C",
+          "description": "Write to describe personal qualifications for potential occupational or educational opportunities, producing clear and coherent writing in which the development, organization, and style match the intended audience and purpose of the workplace and/or post-secondary education and language in informal and formal contexts."
+        },
+        {
+          "statement_code": "11.W.1.D",
+          "description": "Choose appropriate modes and blend multiple forms of writing by routinely engaging in the production of shorter and longer pieces that adapt writing content, technique, and voice for a range of audiences, purposes, and tasks (e.g. summaries, reflections, descriptions, critiques, letters, poetry, narratives, etc.)."
+        },
+        {
+          "statement_code": "11.W.2.A",
+          "description": "Plan and organize writing to address a specific audience and purpose using the writing process (planning, drafting, revising, editing). This includes:"
+        },
+        {
+          "statement_code": "11.W.3.A",
+          "description": "Revise writing for clarity of content, accuracy, and depth of information."
+        },
+        {
+          "statement_code": "11.W.3.B",
+          "description": "Use peer- and self-evaluation to edit writing for clarity and quality of information, addressing strengths and making suggestions regarding how writing might be improved."
+        },
+        {
+          "statement_code": "11.W.3.C",
+          "description": "Edit writing for appropriate conventions, style, and language (See Language Usage for grade level expectations)."
+        },
+        {
+          "statement_code": "11.W.3.D",
+          "description": "Write and revise to a standard acceptable both in the workplace and in post-secondary education."
+        }
+      ]
+    },
+    {
+      "id": "va-writing-sol:12.W",
+      "statement_code": "12.W",
+      "strand_code": "W",
+      "strand_name": "Writing",
+      "grade": "12",
+      "case_identifier_uuid": "3c62359e-19ec-4a7e-8e06-23872c88f8ef",
+      "leaf_standards": [
+        {
+          "statement_code": "12.W.1.A",
+          "description": "Write extended pieces that:"
+        },
+        {
+          "statement_code": "12.W.1.B",
+          "description": "Write technical pieces that:"
+        },
+        {
+          "statement_code": "12.W.2.C",
+          "description": "Blend multiple modes of writing, by routinely engaging in the production of shorter and longer pieces that adapt vocabulary, voice, and tone for a range of audiences, purposes, and tasks (e.g., summaries, reflections, descriptions, critiques, letters, poetry, narratives, etc.)."
+        },
+        {
+          "statement_code": "12.W.3.A",
+          "description": "Plan and organize writing to address a specific audience and purpose using the writing process (planning, drafting, revising, editing). This includes:"
+        },
+        {
+          "statement_code": "12.W.3.A",
+          "description": "Revise writing for clarity of content, accuracy, and depth of information."
+        },
+        {
+          "statement_code": "12.W.3.B",
+          "description": "Use peer- and self-evaluation to edit writing for clarity and quality of information, addressing strengths and making suggestions regarding how writing might be improved."
+        },
+        {
+          "statement_code": "12.W.3.C",
+          "description": "Edit writing for appropriate conventions, style, and language in informal and formal contexts. (See Language Usage for grade level expectations)"
+        },
+        {
+          "statement_code": "12.W.3.D",
+          "description": "Write and revise to a standard acceptable both in the workplace and in postsecondary education."
+        }
+      ]
+    }
+  ]
+}

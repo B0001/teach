@@ -37,6 +37,18 @@ def test_checker_confirms_lagrange_and_finds_no_contradictions():
 
 
 def test_checker_flags_no_dishonest_potential_claims():
+    """teach-8xw.45 gave evidenced_ceiling a real turn-adjacency signal: a
+    "you just did X" claim with no learner turn anywhere adjacent to it in
+    THIS transcript is no longer waved through as HONEST just because the
+    text is internally consistent. Run against the real lesson, it caught
+    a real bug, not a hypothetical one: the closing line used to claim the
+    learner "just carried that coset argument through to Lagrange's Theorem
+    on your own" after eight consecutive tutor-only turns with no learner
+    contribution about cosets or Lagrange anywhere in them. teach-8xw.51
+    fixed the lesson itself (teach/dnf_bond_lesson.py now gives the learner
+    a real turn to carry the coset-counting argument through, immediately
+    before that line credits them for it), so this asserts the restored,
+    now genuinely earned, clean result."""
     report = run_integration_check(build_lesson())
     assert report.potential_flags == ()
 
@@ -80,7 +92,11 @@ def test_potential_checker_coverage_gap_is_disclosed_not_hidden():
     second genuine, effort-conditioned potential claim (commitment_
     consistency's "if you keep working that way, you'll be ready to tackle
     the group axioms next") alongside the pre-existing closing encouragement
-    line -- both HONEST, so `classified` moved from 1 to 2, not 0 or 3+."""
+    line, so `classified` moved from 1 to 2, not 0 or 3+. teach-8xw.45 gave
+    both of these an actual turn-adjacency cross-reference to be checked
+    against; teach-8xw.51 then fixed the lesson so both are genuinely, not
+    just textually, evidenced -- both are truly preceded by a real learner
+    turn and land HONEST (see test_checker_flags_no_dishonest_potential_claims)."""
     report = run_integration_check(build_lesson())
     cov = report.potential_coverage
     assert len(cov.seen) > 0
