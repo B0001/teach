@@ -77,11 +77,28 @@ def _association_record(edge) -> dict:
 # did not recognize. The source's own license string is published verbatim in
 # the "## Source" block below regardless, so nothing is lost by being vague in
 # the front matter.
+# Keys are stored WITHOUT a trailing slash and matched that way (see
+# `_hf_license_id`). The earlier version appended one to any http URL, which
+# happened to suit canonical Creative Commons URLs and silently broke every
+# license whose URL ends in a filename -- GFDL's does (fdl-1.3.html), so
+# Judson's book would have degraded to "other" despite having an exact HF
+# identifier (teach-8xw.57).
 _HF_LICENSE_IDS = {
-    "https://creativecommons.org/licenses/by/4.0/": "cc-by-4.0",
-    "https://creativecommons.org/licenses/by-sa/4.0/": "cc-by-sa-4.0",
-    "https://creativecommons.org/licenses/by-nc/4.0/": "cc-by-nc-4.0",
-    "https://creativecommons.org/publicdomain/zero/1.0/": "cc0-1.0",
+    "https://creativecommons.org/licenses/by/4.0": "cc-by-4.0",
+    "https://creativecommons.org/licenses/by-sa/4.0": "cc-by-sa-4.0",
+    "https://creativecommons.org/licenses/by-nc/4.0": "cc-by-nc-4.0",
+    "https://creativecommons.org/publicdomain/zero/1.0": "cc0-1.0",
+    # GNU FDL, the license of Judson's Abstract Algebra: Theory and
+    # Applications. HF's accepted vocabulary has no version-specific GFDL
+    # identifier -- just "gfdl" -- so 1.3 and the unversioned copyleft URL
+    # both map to it, and the *version* stays where it is stated exactly: in
+    # the source block's own license text, which ships verbatim in the card.
+    "https://www.gnu.org/licenses/fdl-1.3.html": "gfdl",
+    "https://www.gnu.org/licenses/fdl.html": "gfdl",
+    "http://www.gnu.org/copyleft/fdl.html": "gfdl",
+    "gnu fdl 1.3": "gfdl",
+    "gfdl-1.3": "gfdl",
+    "gfdl": "gfdl",
 }
 
 
@@ -94,9 +111,7 @@ def _hf_license_id(raw: object) -> str:
     """
     if raw is None:
         return "unknown"
-    key = str(raw).strip().lower()
-    if not key.endswith("/") and key.startswith("http"):
-        key += "/"
+    key = str(raw).strip().lower().rstrip("/")
     return _HF_LICENSE_IDS.get(key, "other")
 
 
@@ -350,6 +365,12 @@ def _selfcheck() -> None:
 
     assert _hf_license_id("https://creativecommons.org/licenses/by/4.0/") == "cc-by-4.0"
     assert _hf_license_id("https://creativecommons.org/licenses/by/4.0") == "cc-by-4.0"
+    # teach-8xw.57: GFDL's URL ends in a filename, which the old trailing-slash
+    # normalization mangled. Both spellings and the bare identifier must land
+    # on HF's exact id rather than degrading to "other".
+    assert _hf_license_id("https://www.gnu.org/licenses/fdl-1.3.html") == "gfdl"
+    assert _hf_license_id("http://www.gnu.org/copyleft/fdl.html") == "gfdl"
+    assert _hf_license_id("GNU FDL 1.3") == "gfdl"
     assert _hf_license_id("Some Bespoke Institutional License") == "other", (
         "an unrecognized license must degrade to 'other', never to a guessed identifier"
     )

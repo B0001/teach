@@ -4,24 +4,47 @@ Per-domain plugin data, per the boundary teach-8xw.4 decided and
 teach.fact_checker reserved: nothing here is imported by fact_checker.py,
 and nothing in fact_checker.py branches on `domain == "math"`. This module
 is what makes the generic engine concrete for the repo's stated test case
-(Dummit & Foote abstract algebra).
+(Judson, *Abstract Algebra: Theory and Applications*).
 
-Each `SourceFact` is one theorem/definition from Dummit & Foote, 3rd
-edition, verified against the actual textbook statement (not recalled from
-memory of "what group theory generally says") -- per sandbox-prompt.md's
-rule that a lookup deciding a factual question must be checked against the
-raw source, this citation is the specific theorem number a real learner
-could turn to and check by hand:
+SOURCE CHANGED FROM DUMMIT & FOOTE TO JUDSON
 
-  - kernel-normal-subgroup: Dummit & Foote §3.2, Proposition 7 -- the
+Dummit & Foote is a copyrighted commercial textbook, which made two things
+impossible: a learner could not open the cited page without buying it, and a
+graph derived from its structure could not be published. Judson's *Abstract
+Algebra: Theory and Applications* (Thomas W. Judson and Robert A. Beezer,
+1997-2015) covers the same group theory and is licensed GNU FDL 1.3+ with no
+Invariant Sections and no Cover Texts -- verified by reading `COPYING` in the
+book's own source repository, github.com/twjudson/aata, not from recollection.
+So the citations below are now checkable by anyone, for free.
+
+The FACTS did not change -- only where they are cited from. Both statements
+below were re-verified against Judson's PreTeXt source (`src/cosets.xml` and
+`src/homomorph.xml` at that repository), and both say what D&F said.
+
+Citations name a chapter and section rather than a theorem number, and that
+is deliberate: PreTeXt assigns theorem numbers at build time, so a number is
+an artifact of one rendering, while the chapter/section titles and the
+`xml:id` anchors below are in the source itself. Chapter numbers come from the
+include order in `src/aata.xml` -- reliable, but inferred from that ordering
+rather than read off a published rendering, which this environment could not
+reach (the book's own domain does not resolve from here).
+
+  - kernel-normal-subgroup: Judson, ch. "Homomorphisms", sec. "Group
+    Homomorphisms" -- stated verbatim there as "Let phi : G -> H be a group
+    homomorphism. Then the kernel of phi is a normal subgroup of G." NOTE: unlike Lagrange below, this theorem carries NO `xml:id` in the
+    source, so it has no stable anchor and cannot be cited more precisely
+    than its section without inventing a build-time number. The
     kernel of a group homomorphism is a normal subgroup of the domain.
     (NOT of the codomain -- the kernel is a subset of the domain by
     definition, so "normal subgroup of the codomain" is not merely
     unproven, it's a category error. NOT the same claim as "the image is
     normal in the codomain," which is false in general -- e.g. the
     inclusion Z/2 -> S_3 has image {e, (12)}, not normal in S_3.)
-  - lagrange-order-divides: Dummit & Foote §3.2, Theorem 8 (Lagrange's
-    Theorem) -- if G is a finite group and H <= G, then |H| divides |G|.
+  - lagrange-order-divides: Judson, ch. "Cosets and Lagrange's Theorem",
+    sec. "Lagrange's Theorem" (`xml:id="cosets-theorem-lagrange"`, a stable
+    anchor in the source) -- stated there as "the number of elements in H
+    must divide the number of elements in G", i.e. if G is a finite group
+    and H <= G, then |H| divides |G|.
     The converse is famously false (A_4 has order 12 with no subgroup of
     order 6), but this fact only covers the forward direction stated by
     the actual theorem; a converse-shaped claim is a different topic this
@@ -43,7 +66,8 @@ import re
 from teach.fact_checker import SourceFact
 
 
-# "codomain" is the Dummit & Foote term, but a lesson (or a learner echoing
+# "codomain" is the standard term (Judson writes the homomorphism as
+# phi : G -> H without naming H the codomain), but a lesson (or a learner echoing
 # one back) is not obliged to use it -- "target group"/"target" and "range
 # of the {map,homomorphism,function}"/"range" are the ordinary synonyms for
 # the same wrong group, and teach-8xw.25's reproduction is exactly this: the
@@ -62,7 +86,11 @@ _CODOMAIN_SYNONYMS = (
 
 _KERNEL_NORMAL_SUBGROUP = SourceFact(
     topic="kernel-normal-subgroup",
-    citation="Dummit & Foote, Abstract Algebra, 3rd ed., section 3.2, Proposition 7",
+    citation=(
+        "Judson, Abstract Algebra: Theory and Applications (GNU FDL 1.3+), "
+        'ch. "Homomorphisms", sec. "Group Homomorphisms" -- unnumbered theorem, '
+        "no xml:id anchor in source"
+    ),
     topic_patterns=(
         # kernels? -- \bkernel\b alone never matches inside "kernels" because
         # no word boundary sits between "l" and "s"; a true claim phrased in
@@ -276,7 +304,11 @@ _SMALL_SIZE = _size_phrase(_SMALL_STRUCTURE_SYNONYMS)
 
 _LAGRANGE_ORDER_DIVIDES = SourceFact(
     topic="lagrange-order-divides",
-    citation="Dummit & Foote, Abstract Algebra, 3rd ed., section 3.2, Theorem 8 (Lagrange's Theorem)",
+    citation=(
+        "Judson, Abstract Algebra: Theory and Applications (GNU FDL 1.3+), "
+        'ch. "Cosets and Lagrange\'s Theorem", sec. "Lagrange\'s Theorem" '
+        "(xml:id=cosets-theorem-lagrange)"
+    ),
     topic_patterns=(
         re.compile(r"\blagrange\b", re.IGNORECASE),
         re.compile(
