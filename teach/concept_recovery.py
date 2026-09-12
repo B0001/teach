@@ -209,6 +209,30 @@ _MIN_COVERAGE_FRACTION = 0.85
 # so two candidates that are each partially and similarly covered (a real
 # ambiguous match) still abstain.
 _MIN_COVERAGE_MARGIN = 0.15
+# An absolute floor, unlike every gate above it (teach-l7u). _MIN_MATCH_WORDS
+# is a raw count and _MIN_MARGIN is relative to the runner-up, so neither asks
+# whether the winning node's own vocabulary is meaningfully exercised. A node
+# with a long vocabulary accumulates incidental hits from ordinary English --
+# "audience", "purpose", "evidence", "clarity" are writing-curriculum words
+# AND everyday words -- and wins on count while covering almost none of what
+# makes it that node. That is how a lesson entirely about literary theme
+# analysis (a reading skill, not a writing one) confidently recovered
+# va-writing-sol:8.W: 7 of 8.W's 56 words matched, 12% coverage, and it won
+# only because the runner-up happened to score 2 lower.
+#
+# Calibrated on teach-l7u's three held-out failures (coverage 0.107, 0.107,
+# 0.125) against every true recovery in the suite at the time (0.297, 0.333,
+# 0.46, 0.467, 0.9). The gap between those groups is wide and empty; 0.20 sits
+# in the middle of it rather than hugging either edge. THAT IS CALIBRATION, NOT
+# VALIDATION: the numbers came from the cases that motivated the fix, so this
+# threshold is not evidence the fix generalizes -- see teach-l7u's held-out
+# round for what was measured afterward.
+#
+# Erring low costs a real recovery an abstention; erring high lets a confident
+# wrong answer through. Those are not symmetric, and this repo prefers the
+# first, so a genuine recovery that only exercises a fifth of its node's
+# vocabulary abstains here by design.
+_MIN_WINNING_COVERAGE = 0.20
 # A word that appears in the vocabulary of more than this many nodes is
 # curriculum boilerplate, not a discriminating signal -- excluded from
 # scoring entirely. See module docstring.
@@ -430,11 +454,44 @@ def score_candidates_semantic(text: str, index: VocabularyIndex) -> tuple[Concep
     reaches for only after raw exact-word scoring has already abstained.
     """
     text_words = _words(text)
+
+    # teach-l7u: apply the document-frequency discipline under the relation
+    # this tier actually scores with. `build_vocabulary_index` computes
+    # document frequency over EXACT words and drops the ones appearing in more
+    # than _MAX_DOCUMENT_FREQ nodes, because curriculum boilerplate shared
+    # across most nodes carries no signal about which node a lesson teaches.
+    # Synonym matching then walks straight around that filter: a text word
+    # whose WordNet neighborhood is broad reaches retained vocabulary in many
+    # nodes at once, re-admitting the very cross-node boilerplate the filter
+    # existed to remove. In a graph whose nodes are near-paraphrases of each
+    # other -- adjacent grade levels of one VA SOL strand, where 4.W through
+    # 12.W all discuss audience, purpose, evidence and revision -- that is
+    # enough to make any English text about writing look like half of every
+    # grade at once. It is how a lesson entirely about literary theme analysis
+    # scored 24 semantic matches against va-writing-sol:8.W.
+    #
+    # So a text word that semantically reaches more than _MAX_DOCUMENT_FREQ
+    # nodes is boilerplate under THIS tier's matching relation and earns no
+    # credit here, exactly as its exact-word counterpart earns none in the raw
+    # tier. Same threshold, same reasoning, applied to the relation in use
+    # rather than to a stricter one the scorer does not employ.
+    reach = {
+        tw: frozenset(
+            node.id
+            for node in index.graph.nodes
+            if any(_semantic_match(tw, nw) for nw in index.node_words(node.id))
+        )
+        for tw in text_words
+    }
+    discriminating = frozenset(
+        tw for tw, touched in reach.items() if len(touched) <= _MAX_DOCUMENT_FREQ
+    )
+
     matches = []
     for node in index.graph.nodes:
         node_words = index.node_words(node.id)
         overlap = frozenset(
-            nw for nw in node_words if any(_semantic_match(tw, nw) for tw in text_words)
+            nw for nw in node_words if any(_semantic_match(tw, nw) for tw in discriminating)
         )
         if overlap:
             matches.append(ConceptMatch(node_id=node.id, score=len(overlap), matched_words=overlap))
@@ -504,6 +561,20 @@ def _resolve_candidates(
         )
     close = [c for c in candidates if top.score - c.score < min_margin]
     if len(close) == 1:
+        # The margin gate is satisfied -- but a margin of exactly `min_margin`
+        # is the weakest win this module accepts, and on its own it is not
+        # enough (teach-l7u). Ask for a second, independent kind of evidence
+        # there: that the winner's own vocabulary is actually exercised.
+        runner_up = candidates[1].score if len(candidates) > 1 else 0
+        margin = top.score - runner_up
+        top_coverage = _coverage_fraction(top, index)
+        if margin <= min_margin and top_coverage < _MIN_WINNING_COVERAGE:
+            return None, (
+                f"best candidate {top.node_id!r} wins by only {margin} word(s) AND covers "
+                f"just {top_coverage:.0%} of that node's own distinctive vocabulary "
+                f"(need >= {_MIN_WINNING_COVERAGE:.0%} at this margin) -- incidental word "
+                f"overlap, not a lesson about that concept"
+            )
         return top.node_id, None
 
     # Raw-score margin alone doesn't clear the bar -- try the coverage

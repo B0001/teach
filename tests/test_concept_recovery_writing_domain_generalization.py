@@ -404,17 +404,24 @@ def test_grade7_signposted_recovers_correctly():
     assert result.unsignposted_prerequisite_ids == ()
 
 
-def test_grade10_unsignposted_is_a_dangerous_miss_not_a_safe_abstention():
-    """MISS (dangerous, see teach-25t): this lesson was written to teach
-    10.W content while assuming 9.W content without announcing it. The
-    checker does not abstain -- it confidently, wrongly recovers 8.W. This
-    test locks in the actual wrong answer as a regression floor: if a future
-    change to concept_recovery.py makes this newly correct or newly
-    abstaining, that is progress and this assertion should be updated: it
-    must never silently start asserting a DIFFERENT wrong answer instead."""
+def test_grade10_unsignposted_now_abstains_instead_of_answering_wrongly():
+    """Was the dangerous miss teach-l7u was filed for: this lesson teaches
+    10.W content while assuming 9.W without announcing it, and the checker
+    confidently recovered 8.W. teach-l7u fixed the cause -- the semantic
+    fallback tier was scoring WordNet synonym reach that the raw tier's
+    document-frequency filter had already excluded as cross-grade
+    boilerplate, so any English text about writing looked like half of every
+    grade at once.
+
+    Now a safe abstention, ambiguous between 10.W/9.W/12.W. Still a miss --
+    10.W is the intended answer and is not recovered -- but the safe kind.
+    The bar this test enforces is the one sandbox-prompt.md sets: never a
+    confident wrong answer where an abstention was available."""
     result = recover_from_lesson_text(GRADE10_UNSIGNPOSTED, WRITING_GRAPH)
-    assert result.taught_node_id == "va-writing-sol:8.W"
-    assert result.abstain_reason is None
+    assert result.taught_node_id is None, (
+        f"regressed to a confident answer: {result.taught_node_id!r}"
+    )
+    assert result.abstain_reason is not None
 
 
 def test_grade12_standalone_abstains_safely_despite_being_top_scorer():
@@ -434,29 +441,48 @@ def test_watercycle_correctly_abstains():
     assert result.abstain_reason is not None
 
 
-def test_reading_theme_is_a_dangerous_cross_domain_false_positive():
-    """FALSE POSITIVE (dangerous, see teach-25t): a lesson entirely about
-    analyzing a short story's theme -- a reading-comprehension skill, not
-    writing composition -- is confidently matched to 8.W with an
-    unsignposted-prerequisite claim on 7.W, instead of abstaining. This is
-    the more concerning of the two dangerous misses in this file: it crosses
-    a domain boundary a human checker would never confuse. Locked in as a
-    regression floor for the same reason as the grade-10 case above."""
+def test_reading_theme_cross_domain_text_now_abstains():
+    """The worst case teach-l7u was filed for, and the one that crosses a
+    domain boundary a human checker would never confuse: a lesson entirely
+    about analyzing a short story's theme (a reading skill, not writing
+    composition) was confidently matched to 8.W, with an unsignposted-
+    prerequisite claim on 7.W on top.
+
+    Unlike the grade-10 case, this one did NOT come from synonym reach -- it
+    won in the raw tier, on seven ordinary-English words that are genuinely
+    rare in this graph ("action", "claim", "chosen" each appear in 1 of 13
+    nodes). Document frequency cannot catch that; the words really are
+    distinctive here. What is missing is that the text covers almost none of
+    what 8.W is about: 7 of its 56 words, 12%, winning only because the
+    runner-up happened to score 2 lower. So the fix requires a bare-minimum
+    margin to be corroborated by coverage of the winner's own vocabulary.
+    A decisive margin still stands alone -- see
+    test_two_sentence_announcement_recovered_against_the_real_graph in
+    tests/test_concept_recovery.py, a correct recovery at 16% coverage that
+    wins by 3 and must keep working."""
     result = recover_from_lesson_text(READING_THEME_ABSTAIN, WRITING_GRAPH)
-    assert result.taught_node_id == "va-writing-sol:8.W"
-    assert result.unsignposted_prerequisite_ids == ("va-writing-sol:7.W",)
+    assert result.taught_node_id is None, (
+        f"regressed to a confident cross-domain answer: {result.taught_node_id!r}"
+    )
+    # The prerequisite claim has to go too: it was asserted off the same
+    # non-existent match, and an abstention that still names a prerequisite
+    # is a confident wrong answer wearing a different hat.
+    assert result.unsignposted_prerequisite_ids == ()
+    assert result.assumed_prerequisite_ids == ()
 
 
-def test_generic_revising_content_does_not_abstain_either():
-    """Not filed as its own bug (this case had no single correct answer to
-    measure against -- it was deliberately written as generic, non-grade-
-    specific revise/edit content), but recorded as further evidence for the
-    same pattern as the two dangerous misses above: this module confidently
-    answers (8.W) on text a human reader would not confidently assign to
-    any one grade either."""
+def test_generic_revising_content_now_abstains():
+    """Deliberately written as generic, non-grade-specific revise/edit
+    content, so there is no single correct answer to recover -- which makes
+    abstention the only defensible outcome. It previously answered 8.W
+    confidently on text a human reader would not assign to any one grade
+    either. Now ambiguous between 7.W and 8.W, which is the honest report."""
     result = recover_from_lesson_text(REVISING_AMBIGUOUS, WRITING_GRAPH)
-    assert result.taught_node_id == "va-writing-sol:8.W"
-    assert result.abstain_reason is None
+    assert result.taught_node_id is None, (
+        f"regressed to a confident answer on deliberately generic text: "
+        f"{result.taught_node_id!r}"
+    )
+    assert result.abstain_reason is not None
 
 
 def test_kindergarten_standalone_abstains_safely_despite_being_top_scorer():
