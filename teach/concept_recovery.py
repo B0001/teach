@@ -29,7 +29,7 @@ GENERICITY: MEASURED, NOT JUST DESIGNED-FOR (teach-8xw.29)
 
 The paragraph above is a design intent, not by itself evidence: until
 teach-8xw.29, every graph this module had actually been exercised against
-was math (VA Math SOL, Dummit & Foote). It is now also exercised against a
+was math (VA Math SOL, Judson's Abstract Algebra). It is now also exercised against a
 real, curriculum-scale non-math graph: `teach/va_reading_sol_graph.py`, the
 Virginia English SOL reading strands (RI/RL) grades K-8, sourced the same
 way teach-8xw.5 sourced VA Math SOL -- real VDOE standard text, not
@@ -68,7 +68,7 @@ confident answer":
     words in common) -> abstain. This is the case a lesson entirely outside
     the graph's vocabulary hits -- e.g. group-theory content checked
     against a K-8 VA Math SOL graph, which is the actual, disclosed gap
-    teach-8xw.15 flags for the Dummit & Foote test case (that graph does
+    teach-8xw.15 flags for the Judson abstract-algebra test case (that graph does
     not cover undergraduate abstract algebra at all; see
     teach/va_math_sol_graph.py's docstring). A checker that guessed "K.NS"
     for a lesson about cosets because *something* had the highest score
@@ -92,17 +92,40 @@ human reader.
 
 So when the raw-score margin does not clear `_MIN_MARGIN`, a second signal
 gets a chance before abstaining: coverage, i.e. what fraction of a
-candidate's OWN distinctive vocabulary shows up in the text at all
-(`score / len(node's distinctive vocabulary)`). A node whose vocabulary is
-*almost entirely* present (`_MIN_COVERAGE_FRACTION`) and clearly more fully
-covered than every other close rival (`_MIN_COVERAGE_MARGIN`) is the one the
-lesson gave its fullest treatment to -- that is a legitimate, independent
-piece of textual evidence, not a threshold softened to make abstention
-happen less often. It still requires BOTH near-total coverage of the
-winner's own vocabulary AND a decisive gap over every rival close on raw
-score; two candidates that are both partially, similarly covered (the
-synthetic exact-tie fixture in tests/test_concept_recovery.py) still
-abstain, because neither condition is met.
+candidate's OWN distinctive vocabulary shows up LITERALLY in the text
+(`len(node_words & exact_text_words) / len(node's distinctive vocabulary)`).
+A node whose vocabulary is *almost entirely* present (`_MIN_COVERAGE_FRACTION`)
+and clearly more fully covered than every other close rival
+(`_MIN_COVERAGE_MARGIN`) is the one the lesson gave its fullest treatment to
+-- that is a legitimate, independent piece of textual evidence, not a
+threshold softened to make abstention happen less often. It still requires
+BOTH near-total coverage of the winner's own vocabulary AND a decisive gap
+over every rival close on raw score; two candidates that are both partially,
+similarly covered (the synthetic exact-tie fixture in
+tests/test_concept_recovery.py) still abstain, because neither condition is
+met.
+
+COVERAGE IS MEASURED ON EXACT WORDS ONLY, EVEN IN THE SEMANTIC TIER (teach-t7j)
+
+Coverage is deliberately NOT `match.score / len(node vocabulary)` -- that
+would make coverage inherit whatever matching relation produced `match.score`.
+On the raw tier the two are the same number (raw overlap already is exact-word
+overlap), but on the semantic fallback tier below, `match.score` counts a node
+word as present if the text contains it, its WordNet lemma, OR a WordNet
+synonym of it. WordNet's synonym neighborhoods are uneven in size, so that
+inflation lands unevenly across candidates -- including whichever candidate
+is the semantic tier's own winner, not just its rivals. A winner whose
+apparent coverage is mostly synonym credit can look near-total on `score`
+while barely any of its own literal vocabulary is actually in the text (see
+teach-t7j's GRADE6_UNSIGNPOSTED_GARDENING diagnostic: the wrong winner's
+semantic coverage was 54%, but only 40% of that was literal overlap, while
+the true rival's *literal* coverage, 56%, exceeded the winner's on either
+measure). Recomputing coverage from literal overlap against the text,
+independent of which tier's score is being checked, keeps the tiebreak
+answering its actual question -- "how much of this specific node's own
+vocabulary is really in this text" -- rather than "how generously did this
+tier's matching relation credit this node." This applies uniformly to both
+tiers since `_resolve_candidates` is shared between them by design.
 
 A FAITHFUL PARAPHRASE CAN STILL LOOK LIKE NOTHING MATCHED (teach-8xw.26)
 
@@ -135,7 +158,7 @@ with synonym credit still abstains, per this module's whole design.
 WordNet coverage is real but partial: it links close everyday synonyms
 ("cross"/"intersect", "rule"/"formula") but not every paraphrase a persona
 might produce ("area" and "space" share no synset), and it has essentially
-nothing for graduate-level technical vocabulary (Dummit & Foote's "coset",
+nothing for graduate-level technical vocabulary (Judson's "coset",
 "homomorphism"). This tier narrows the gap; it does not close it, and
 nothing in this module claims it does -- see the generalization measurement
 recorded against teach-8xw.26 for the actually-measured hit rate.
@@ -530,17 +553,26 @@ class RecoveryResult:
     unsignposted_prerequisite_ids: tuple[str, ...]
 
 
-def _coverage_fraction(match: ConceptMatch, index: VocabularyIndex) -> float:
+def _coverage_fraction(match: ConceptMatch, index: VocabularyIndex, text_words: frozenset[str]) -> float:
     """What fraction of `match.node_id`'s own distinctive vocabulary shows
-    up in the text at all -- see module docstring's COVERAGE TIEBREAK
-    section. `match.score` is always a subset of that node's vocabulary and
-    nonzero (only nonzero-overlap nodes reach `score_candidates`'s output),
-    so the vocabulary is never empty here."""
-    return match.score / len(index.node_words(match.node_id))
+    up LITERALLY in the text -- see module docstring's "COVERAGE IS MEASURED
+    ON EXACT WORDS ONLY" section (teach-t7j). Deliberately NOT
+    `match.score / len(node vocabulary)`: `match.score` can come from the
+    semantic tier's synonym-expanded matching relation, which inflates
+    coverage unevenly across candidates including the tier's own winner, not
+    just its rivals. Recomputing from `text_words` (always the exact,
+    unexpanded words in the lesson text, regardless of which tier scored the
+    candidates) keeps this signal meaning the same thing -- real literal
+    overlap -- for every candidate in every tier."""
+    node_words = index.node_words(match.node_id)
+    return len(node_words & text_words) / len(node_words)
 
 
 def _resolve_candidates(
-    candidates: tuple[ConceptMatch, ...], index: VocabularyIndex, min_margin: int = _MIN_MARGIN
+    candidates: tuple[ConceptMatch, ...],
+    index: VocabularyIndex,
+    text_words: frozenset[str],
+    min_margin: int = _MIN_MARGIN,
 ) -> tuple[str | None, str | None]:
     """Apply this module's abstention thresholds (min-match, margin, then
     the coverage tiebreak) to an already-scored candidate list. Shared by
@@ -549,8 +581,12 @@ def _resolve_candidates(
     tier is a broader notion of "the same word", never a looser bar for
     calling a match. `min_margin` lets a caller require more daylight than
     `_MIN_MARGIN` before calling a winner (the semantic tier passes
-    `_SEMANTIC_MIN_MARGIN` -- see that constant's comment). Returns
-    (taught_node_id or None, abstain_reason or None)."""
+    `_SEMANTIC_MIN_MARGIN` -- see that constant's comment). `text_words` is
+    the lesson text's own exact, unexpanded vocabulary -- passed through to
+    `_coverage_fraction` so coverage always means literal overlap, even when
+    `candidates` came from the semantic tier's synonym-expanded scoring
+    (teach-t7j; see module docstring's "COVERAGE IS MEASURED ON EXACT WORDS
+    ONLY" section). Returns (taught_node_id or None, abstain_reason or None)."""
     if not candidates:
         return None, "no graph node's vocabulary overlaps this text at all"
     top = candidates[0]
@@ -565,24 +601,77 @@ def _resolve_candidates(
         # is the weakest win this module accepts, and on its own it is not
         # enough (teach-l7u). Ask for a second, independent kind of evidence
         # there: that the winner's own vocabulary is actually exercised.
-        runner_up = candidates[1].score if len(candidates) > 1 else 0
+        runner_up_match = candidates[1] if len(candidates) > 1 else None
+        runner_up = runner_up_match.score if runner_up_match is not None else 0
         margin = top.score - runner_up
-        top_coverage = _coverage_fraction(top, index)
-        if margin <= min_margin and top_coverage < _MIN_WINNING_COVERAGE:
-            return None, (
-                f"best candidate {top.node_id!r} wins by only {margin} word(s) AND covers "
-                f"just {top_coverage:.0%} of that node's own distinctive vocabulary "
-                f"(need >= {_MIN_WINNING_COVERAGE:.0%} at this margin) -- incidental word "
-                f"overlap, not a lesson about that concept"
-            )
+        top_coverage = _coverage_fraction(top, index, text_words)
+        if margin <= min_margin:
+            if top_coverage < _MIN_WINNING_COVERAGE:
+                return None, (
+                    f"best candidate {top.node_id!r} wins by only {margin} word(s) AND covers "
+                    f"just {top_coverage:.0%} of that node's own distinctive vocabulary "
+                    f"(need >= {_MIN_WINNING_COVERAGE:.0%} at this margin) -- incidental word "
+                    f"overlap, not a lesson about that concept"
+                )
+            # teach-cpg: the floor above only asks whether the winner's OWN
+            # coverage clears a fixed bar -- it never asks whether some
+            # rival is actually the more tightly-matched candidate. A node
+            # with a larger vocabulary racks up more raw matches on
+            # vocabulary genuinely shared with a curriculum-adjacent
+            # neighbor (e.g. two consecutive grade levels of one strand) and
+            # can clear both the margin and the floor while covering LESS of
+            # its own distinctive vocabulary than that neighbor covers of
+            # its own -- exactly the proportional signal the coverage
+            # tiebreak below already uses, just never reached here because a
+            # bare-minimum-margin win short-circuits before it. So, at this
+            # same bare-minimum-margin scope (and no further -- a decisively
+            # separated win, margin > min_margin, is not second-guessed
+            # against a rival's own coverage; see judson_algebra_graph.py's
+            # SIGNPOSTED_LESSON, a real case where a smaller-vocabulary
+            # prerequisite is proportionally better covered than the
+            # correctly-recovered, decisively-ahead target), require the
+            # winner to be at least as proportionally covered as the best-
+            # covered rival.
+            #
+            # teach-i35: an earlier version of this check only ever looked
+            # at candidates[1] -- the single next-highest RAW-SCORING
+            # candidate -- as "the rival". That is right when the true
+            # confusable rival happens to be the second-highest scorer, but
+            # it isn't always: WordNet expansion (semantic tier) or a large
+            # shared curriculum vocabulary (raw tier) can inflate OTHER
+            # candidates' raw scores above the true rival's, displacing it
+            # out of the [1] slot while its coverage fraction stays the best
+            # of anyone's (measured: GRADE6_UNSIGNPOSTED_GARDENING, where
+            # the true rival landed at candidates[3] by raw score but was
+            # still the most proportionally-covered node in the list).
+            # Coverage is exactly the signal meant to be robust to raw-score
+            # inflation, so the rival search must not itself be scoped by
+            # raw-score proximity -- it has to look at every candidate that
+            # clears the same minimum evidence bar a winner would need
+            # (_MIN_MATCH_WORDS) and take whichever one of them is
+            # proportionally best covered, regardless of where it falls in
+            # the raw-score ranking.
+            rival_matches = [c for c in candidates if c is not top and c.score >= _MIN_MATCH_WORDS]
+            if rival_matches:
+                best_rival = max(rival_matches, key=lambda c: _coverage_fraction(c, index, text_words))
+                best_rival_coverage = _coverage_fraction(best_rival, index, text_words)
+                if best_rival_coverage > top_coverage:
+                    return None, (
+                        f"best candidate {top.node_id!r} leads on raw overlap ({top.score}) but "
+                        f"{best_rival.node_id!r} (raw overlap {best_rival.score}) covers more of "
+                        f"its own distinctive vocabulary ({best_rival_coverage:.0%} vs "
+                        f"{top_coverage:.0%}) -- a larger vocabulary, or semantic-tier synonym "
+                        f"inflation, accumulating more raw matches is not evidence this is the "
+                        f"concept the lesson actually gave its fullest treatment to"
+                    )
         return top.node_id, None
 
     # Raw-score margin alone doesn't clear the bar -- try the coverage
     # tiebreak (module docstring) before abstaining. Requires BOTH the
     # winner covering almost all of its own vocabulary AND a decisive gap
     # over every other close rival's own coverage, not just a higher count.
-    top_fraction = _coverage_fraction(top, index)
-    rival_fractions = [_coverage_fraction(c, index) for c in close if c is not top]
+    top_fraction = _coverage_fraction(top, index, text_words)
+    rival_fractions = [_coverage_fraction(c, index, text_words) for c in close if c is not top]
     if top_fraction >= _MIN_COVERAGE_FRACTION and all(
         top_fraction - f >= _MIN_COVERAGE_MARGIN for f in rival_fractions
     ):
@@ -602,14 +691,15 @@ def recover_taught_concept(text: str, index: VocabularyIndex) -> tuple[str | Non
     identical thresholds before giving up. A text the raw tier already
     resolves never reaches the semantic tier, so this cannot change the
     outcome for any lesson that already worked."""
+    text_words = _words(text)
     candidates = score_candidates(text, index)
-    taught_node_id, abstain_reason = _resolve_candidates(candidates, index)
+    taught_node_id, abstain_reason = _resolve_candidates(candidates, index, text_words)
     if taught_node_id is not None:
         return taught_node_id, candidates, None
 
     semantic_candidates = score_candidates_semantic(text, index)
     semantic_taught_node_id, semantic_abstain_reason = _resolve_candidates(
-        semantic_candidates, index, min_margin=_SEMANTIC_MIN_MARGIN
+        semantic_candidates, index, text_words, min_margin=_SEMANTIC_MIN_MARGIN
     )
     if semantic_taught_node_id is not None:
         return semantic_taught_node_id, semantic_candidates, None

@@ -8,7 +8,7 @@ flag/pass results reported, since that is the real test the epic describes
 as the point of building the checker in the first place." This module is
 that run.
 
-Mirrors the existing `dnf_bond_lesson.py` / `dnf_bond_integration.py` split:
+Mirrors the existing `judson_bond_lesson.py` / `judson_bond_integration.py` split:
 `teach.cialdini` is the pure generation module (no checker imports, same as
 `teach.cbt_primitives`); this module is the one that crosses the boundary,
 building a real lesson transcript out of `teach.cialdini`'s moves and
@@ -74,11 +74,11 @@ from teach.potential_checker import (
 from teach.potential_checker import _TEACH_8XW_32_DISCLOSED_CEILING_SENTENCES  # noqa: F401 -- see module docstring
 
 
-# A single demonstration lesson moment: the shared D&F/Bond content this
-# session's `teach.dnf_bond_lesson` already teaches (cosets and normal
-# subgroups, on the way to Lagrange's Theorem), reused here as the concrete
-# substance each Cialdini move renders from -- not a fresh, unrelated
-# example invented just for this check.
+# A single demonstration lesson moment: the shared Judson/Bond content
+# `teach.judson_bond_lesson` already teaches (cosets and normal subgroups, on
+# the way to Lagrange's Theorem), reused here as the concrete substance each
+# Cialdini move renders from -- not a fresh, unrelated example invented just
+# for this check.
 _DEMO_MOMENT = MotivationMoment(
     concept_name="normal subgroups",
     given_first="a fully worked check that a specific subgroup of a small finite group is normal",
@@ -86,7 +86,7 @@ _DEMO_MOMENT = MotivationMoment(
     prior_commitment="I want to actually understand why cosets have to be the same size, not just accept it",
     consistent_next_step="working through why every left coset of H has exactly |H| elements, instead of skipping to the statement of Lagrange's Theorem",
     shared_frame="the Bond briefing",
-    cited_source="Dummit and Foote's Abstract Algebra, section 3.1",
+    cited_source="Judson's Abstract Algebra: Theory and Applications, ch. \"Normal Subgroups and Factor Groups\"",
     authority_fact="a subgroup is normal exactly when its left and right cosets coincide for every element",
     scarce_detail="the condition has to hold for every element of the group, not just the ones already checked",
     shared_identity="the two of us working this problem set",
@@ -116,7 +116,7 @@ def build_demo_lesson() -> LessonArtifact:
             # a moment ago" -- true only when a learner turn actually
             # precedes it. Give it one, quoting back the exact
             # `prior_commitment` text the move itself references, the same
-            # way `teach.dnf_bond_lesson.build_lesson` does for its own
+            # way `teach.judson_bond_lesson.build_lesson` does for its own
             # commitment_consistency turn.
             turns.append(Turn(speaker="learner", text=_DEMO_MOMENT.prior_commitment))
         turns.append(Turn(speaker="tutor", text=move.render(_DEMO_MOMENT, 0)))
@@ -338,7 +338,7 @@ def _self_check() -> None:
     # moment ago" had no learner turn anywhere near it in that transcript.
     # teach-8xw.51 fixed the demo lesson itself -- it now gives the learner
     # a real turn (quoting `_DEMO_MOMENT.prior_commitment` back, the same
-    # way `teach.dnf_bond_lesson.build_lesson` does) immediately before the
+    # way `teach.judson_bond_lesson.build_lesson` does) immediately before the
     # commitment_consistency move -- so this asserts the corrected, honest
     # "clean" result, not a blindness the checker used to have.
     assert report.lesson_flags == (), (

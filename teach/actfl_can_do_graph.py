@@ -8,7 +8,7 @@ and no dataset or repo search turned up an existing prerequisite-DAG-shaped
 source (see sandbox-handoffs/teach-8xw.39.md). What does exist, unstructured,
 is ACTFL/NCSSFL's jointly published "Can-Do Statements" -- so this module
 hand-transcribes a small real seed from that source, the same category of
-effort dummit_foote_graph.py used for Dummit & Foote (embedded, quoted data,
+effort judson_algebra_graph.py used for Judson's Abstract Algebra (embedded, quoted data,
 not a fetched JSON feed), rather than the Learning-Commons-pipeline pattern
 va_reading_sol_graph.py/va_writing_sol_graph.py used.
 
@@ -99,7 +99,7 @@ prior sublevels." That sentence is exactly PrerequisiteEdge's "src must be
 established before dst" semantics, applied by the source to its own eleven
 sublevels in the order it defines them. So the chain here is a straight line,
 Novice Low -> ... -> Distinguished, one edge per consecutive pair -- no
-skip-edges, no NON_EDGES list the way dummit_foote_graph.py needs one,
+skip-edges, no NON_EDGES list the way judson_algebra_graph.py needs one,
 because there is no branching structure or plausible-but-wrong shortcut edge
 to guard against in a strictly ordinal, source-asserted sequence.
 

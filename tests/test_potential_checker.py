@@ -563,12 +563,14 @@ def test_second_person_subset_is_structurally_decoupled_from_lesson_length():
     assert second.second_person_seen == second.seen
 
 
-def test_dnf_bond_lesson_second_person_subset_is_smaller_than_full_unclassified():
-    """Mechanism check against the real lesson this bead was filed against:
-    the secondary line must be a strictly smaller, more targeted list than
-    the raw 31-of-32 unclassified total -- otherwise it's not buying a
-    reviewer anything."""
-    from teach.dnf_bond_lesson import build_lesson
+def test_judson_bond_lesson_second_person_subset_is_smaller_than_full_unclassified():
+    """Mechanism check against the real lesson this bead was filed against
+    (teach-8xw.56 rewrote it from Dummit & Foote framing to Judson framing,
+    but the check itself is unaffected -- it never looks at node ids): the
+    secondary line must be a strictly smaller, more targeted list than the
+    raw unclassified total -- otherwise it's not buying a reviewer
+    anything."""
+    from teach.judson_bond_lesson import build_lesson
 
     cov = check_coverage(build_lesson().text)
     assert 0 < len(cov.second_person_unclassified) < len(cov.unclassified)

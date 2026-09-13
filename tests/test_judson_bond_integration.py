@@ -1,17 +1,17 @@
 """teach-8xw.15: the epic's actual acceptance test, run for real.
 
-A real producer (teach.dnf_bond_lesson) builds a Bond-framed Dummit & Foote
-lesson ending at Lagrange's Theorem; a real blind checker
-(teach.dnf_bond_integration) consumes only the resulting LessonArtifact and
+A real producer (teach.judson_bond_lesson) builds a Bond-framed Judson lesson
+ending at Lagrange's Theorem; a real blind checker
+(teach.judson_bond_integration) consumes only the resulting LessonArtifact and
 must independently recover the taught concept, confirm the mathematics, and
 confirm the encouragement is honest -- with the coverage gaps this
 particular run does not exercise disclosed, not hidden.
 """
 from teach.boundary import check_no_forbidden_fields
-from teach.dnf_bond_integration import run_integration_check
-from teach.dnf_bond_lesson import build_lesson
-from teach.dummit_foote_graph import TARGET_NODE_ID
 from teach.fact_checker import Verdict as FactVerdict
+from teach.judson_algebra_graph import TARGET_NODE_ID
+from teach.judson_bond_integration import run_integration_check
+from teach.judson_bond_lesson import build_lesson
 
 
 def test_lesson_crosses_the_boundary_clean():
@@ -25,7 +25,7 @@ def test_lesson_crosses_the_boundary_clean():
 def test_checker_recovers_the_taught_concept_and_its_prerequisite():
     report = run_integration_check(build_lesson())
     assert report.recovery.taught_node_id == TARGET_NODE_ID
-    assert report.recovery.assumed_prerequisite_ids == ("dummit-foote:3.1-cosets",)
+    assert report.recovery.assumed_prerequisite_ids == ("judson:6.1-cosets",)
     assert report.recovery.unsignposted_prerequisite_ids == ()
 
 
@@ -45,7 +45,7 @@ def test_checker_flags_no_dishonest_potential_claims():
     learner "just carried that coset argument through to Lagrange's Theorem
     on your own" after eight consecutive tutor-only turns with no learner
     contribution about cosets or Lagrange anywhere in them. teach-8xw.51
-    fixed the lesson itself (teach/dnf_bond_lesson.py now gives the learner
+    fixed the lesson itself (the Bond lesson module now gives the learner
     a real turn to carry the coset-counting argument through, immediately
     before that line credits them for it), so this asserts the restored,
     now genuinely earned, clean result."""
@@ -119,9 +119,9 @@ def test_potential_checker_coverage_gap_is_disclosed_not_hidden():
 
 
 def test_out_of_scope_coverage_is_disclosed_not_hidden():
-    """teach-25o's kernel-normal-subgroup fact lives on 3.3, off this
-    lesson's traversal to Lagrange -- the report must say so explicitly
-    rather than silently reporting a clean pass that implies full coverage
-    of teach.math_facts.MATH_SOURCE."""
+    """teach-8xw.56's kernel-normal-subgroup fact lives on the Homomorphisms
+    node, off this lesson's traversal to Lagrange -- the report must say so
+    explicitly rather than silently reporting a clean pass that implies full
+    coverage of teach.math_facts.MATH_SOURCE."""
     report = run_integration_check(build_lesson())
     assert report.out_of_scope_facts == ("kernel-normal-subgroup",)
