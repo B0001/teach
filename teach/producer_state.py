@@ -49,7 +49,7 @@ if __name__ == "__main__":
     from teach.boundary import check_no_forbidden_fields
 
     state = PlannerState(
-        target_node_id="dummit-foote-3.1-normal-subgroups",
+        target_node_id="judson:10.1-factor-groups-and-normal-subgroups",
         traversal=("groups", "subgroups", "normal-subgroups"),
         answer_key={"q1": "the kernel of a homomorphism is normal"},
         turns=(Turn(speaker="tutor", text="example turn"),),

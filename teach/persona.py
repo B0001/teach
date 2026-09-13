@@ -261,16 +261,16 @@ if __name__ == "__main__":
     graph = ConceptGraph(
         nodes=(
             ConceptNode(
-                id="dummit-foote:3.1-cosets", domain="math", label="cosets",
+                id="judson:6.1-cosets", domain="math", label="cosets",
                 facts={"statement": "a coset partitions a group into equal-size classes"},
             ),
             ConceptNode(
-                id="dummit-foote:3.1-normal-subgroups", domain="math", label="normal subgroups",
+                id="judson:10.1-factor-groups-and-normal-subgroups", domain="math", label="normal subgroups",
                 facts={"statement": "a subgroup is normal when its left and right cosets coincide"},
             ),
             ConceptNode(
-                id="dummit-foote:3.3-quotient-groups", domain="math", label="quotient groups",
-                facts={"statement": "the cosets of a normal subgroup form a group under coset multiplication"},
+                id="judson:11.1-group-homomorphisms", domain="math", label="homomorphisms",
+                facts={"statement": "the kernel of a homomorphism is a normal subgroup"},
             ),
         ),
         edges=(),

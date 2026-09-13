@@ -32,7 +32,7 @@ def test_repro_authority_fact_is_unclassified_by_the_general_checker():
 def test_render_authority_rejects_the_teach_8xw_38_repro_fact():
     moment = MotivationMoment(
         concept_name="Lagrange theorem",
-        cited_source="Dummit and Foote",
+        cited_source="Judson",
         authority_fact=_TEACH_8XW_38_REPRO_FACT,
     )
     with pytest.raises(ValueError, match="checkable domain fact"):
@@ -55,7 +55,7 @@ def test_render_authority_rejects_the_teach_8xw_38_repro_fact():
 def test_render_authority_rejects_overpromise_shapes(overpromise_fact):
     moment = MotivationMoment(
         concept_name="Lagrange theorem",
-        cited_source="Dummit and Foote",
+        cited_source="Judson",
         authority_fact=overpromise_fact,
     )
     with pytest.raises(ValueError):
@@ -76,7 +76,7 @@ def test_render_authority_still_accepts_ordinary_domain_facts(domain_fact):
     this module's own fixtures and the pre-existing test suite."""
     moment = MotivationMoment(
         concept_name="cosets",
-        cited_source="Dummit and Foote's Abstract Algebra",
+        cited_source="Judson's Abstract Algebra: Theory and Applications",
         authority_fact=domain_fact,
     )
     output = render_authority(moment, 0)
