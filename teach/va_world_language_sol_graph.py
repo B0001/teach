@@ -97,6 +97,31 @@ independent axes of the same learner, the same "independent modes" framing
 documents for ACTFL's parallel Interpretive/Interpersonal/Presentational
 modes).
 
+LICENSE -- teach-8xw.58 found this SOURCE dict had no license field at all,
+and flagged that "VDOE's SOL documents are plausibly CC BY 4.0 like the
+[math/reading/writing] others" was an unverified guess: those three graphs'
+CC BY 4.0 comes from the Learning Commons Knowledge Graph's own compilation
+license (see `va_writing_sol_graph.py`'s `SOURCE["license"]`), not from VDOE
+directly -- and this graph never went through that feed (teach-8xw.39 found
+zero Learning Commons foreign-language content), so there is no Learning-
+Commons license to inherit here. Checked instead, live this session: the PDF
+itself (all 28 pages, not just the page-1 grid this module transcribes) has
+no copyright/license text anywhere in it. VDOE's own site-wide terms do,
+though -- fetched via Wayback (VDOE 403s direct fetches, same as the document
+itself) from `doe.virginia.gov/about-vdoe/web-policies`, snapshot
+`20250401090812`, retrieved 2026-09-12: "Users are welcome to download
+material displayed on this site for non-commercial purposes only... The
+contents of this site may not be used for commercial purposes, without the
+written permission of VDOE" (Disclaimer section) and "Copyright 2025 Virginia
+Department of Education, all text, photographs and images, except as noted.
+Use of the above-stated material on this site requires permission from the
+Virginia Department of Education" (Copyright section). That is not CC BY
+4.0 -- it is an all-rights-reserved, non-commercial-use notice, the same
+shape of restriction as `actfl_can_do_graph.py`'s ACTFL `usage_terms` (also
+no HF SPDX identifier applies), so it is recorded the same way: a verbatim
+`usage_terms` string, not a fabricated `license` value. `_hf_license_id`
+still correctly reports "unknown" for this source -- abstention, not a bug.
+
 DECISION -- domain and target language, same reasoning `actfl_can_do_graph.py`
 already recorded and still binding here: this grid is language-agnostic in
 the source itself (every benchmark says "using the target language", never
@@ -145,6 +170,34 @@ SOURCE = {
         "three levels are presented left-to-right in that order in every "
         "strand row of the overview grid."
     ),
+    # teach-8xw.58: no "license" key -- the document itself states none (all
+    # 28 pages checked, not just the page-1 grid transcribed below), and this
+    # graph never went through the Learning Commons feed that gives
+    # va-math-sol/va-reading-sol/va-writing-sol their CC BY 4.0, so that
+    # license cannot be assumed to apply here. What VDOE actually states,
+    # site-wide, is a non-commercial/all-rights-reserved notice -- recorded
+    # verbatim below as `usage_terms`, the same pattern
+    # `actfl_can_do_graph.py`'s SOURCE uses for ACTFL's non-CC restriction,
+    # so `_hf_license_id` continues to report "unknown" rather than guessing
+    # "cc-by-4.0".
+    "usage_terms": (
+        "Users are welcome to download material displayed on this site for "
+        "non-commercial purposes only, provided they retain all copyright "
+        "and other proprietary notices contained on the materials. The "
+        "contents of this site may not be used for commercial purposes, "
+        "without the written permission of VDOE. [Disclaimer section] "
+        "Copyright 2025 Virginia Department of Education, all text, "
+        "photographs and images, except as noted. Use of the above-stated "
+        "material on this site requires permission from the Virginia "
+        "Department of Education. [Copyright section]"
+    ),
+    "usage_terms_source_page": "https://www.doe.virginia.gov/about-vdoe/web-policies",
+    "usage_terms_wayback_url": (
+        "https://web.archive.org/web/20250401090812if_/"
+        "https://www.doe.virginia.gov/about-vdoe/web-policies"
+    ),
+    "usage_terms_wayback_snapshot": "20250401090812",
+    "usage_terms_retrieved": "2026-09-12",
 }
 
 # (strand_id_suffix, strand_name_as_printed, {level: [benchmark statements, verbatim]})

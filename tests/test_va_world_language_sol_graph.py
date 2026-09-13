@@ -150,6 +150,21 @@ def test_source_provenance_is_recorded_not_asserted_from_memory():
     assert "2021" in SOURCE["adopted"]
 
 
+def test_no_license_is_fabricated_but_real_usage_terms_are_recorded():
+    """teach-8xw.58: this graph never went through the Learning Commons feed
+    that gives va-math-sol/va-reading-sol/va-writing-sol their CC BY 4.0, so
+    that license must not be assumed here. There must be no "license" key
+    (a value there would make publish_graph.py's _hf_license_id assert a
+    specific HF identifier this source never stated), and VDOE's actual
+    site-wide terms -- non-commercial, all-rights-reserved -- must be
+    recorded verbatim instead."""
+    assert "license" not in SOURCE
+    assert "non-commercial" in SOURCE["usage_terms"]
+    assert "Virginia Department of Education" in SOURCE["usage_terms"]
+    assert "web.archive.org" in SOURCE["usage_terms_wayback_url"]
+    assert SOURCE["usage_terms_wayback_snapshot"] in SOURCE["usage_terms_wayback_url"]
+
+
 def test_a_hand_introduced_cycle_is_rejected_not_silently_ordered():
     """Not a property of the shipped data (already tested acyclic above) --
     a regression guard that this domain's loader output still goes through
