@@ -1,0 +1,2431 @@
+{
+  "schema": "semantic-bridge-candidates-v1",
+  "status": "UNVERIFIED -- producer output. Every record here is a CANDIDATE proposed by a local LLM, not an established edge. teach-b5k.3 is the independent checker; until it has run, nothing in this file may be used as a prerequisite edge.",
+  "producer": {
+    "model": "llama3:latest",
+    "endpoint": "http://localhost:11434/api/chat",
+    "temperature": 0,
+    "relations_offered": [
+      "is-prerequisite-for",
+      "generalizes",
+      "is-example-of",
+      "none"
+    ],
+    "prompt_template_sha256": "d30a1b4a574d7a94a8813f1600699d5c3efe9d95ec50acd9224a977347b135cd",
+    "generated_by": "teach/extract_semantic_bridge.py. Re-derive with: uv run python -m teach.extract_semantic_bridge (requires a local ollama server; results are not guaranteed byte-identical across runs even at temperature 0)"
+  },
+  "pair_space": {
+    "foundation_nodes": 12,
+    "algebra_nodes": 20,
+    "pairs_asked": 240,
+    "note": "Every pair was asked. No pre-filtering by plausibility -- which pairs relate at all is the question, and shortlisting first would have answered it by intuition and then had the model confirm it."
+  },
+  "relation_counts": {
+    "generalizes": 125,
+    "none": 112,
+    "ERROR": 1,
+    "is-prerequisite-for": 2
+  },
+  "candidates": [
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Sets",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines equivalence relations on sets. The definition of B relies on the concept of sets, which is defined in A. Therefore, A generalizes B, as B is a special case of sets.",
+      "status": "unverified",
+      "prompt_sha256": "42fa63d68556a7bbda8887cfd17e0ab5035e88284d79c6d711a2f4856766a4ef"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Sets",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines the division algorithm. The division algorithm is a specific way of describing the relationship between two integers, which is a special case of the more general concept of a set. A set can contain any type of object, not just integers, and can have any number of elements, not just two. Therefore, the definition of the division algorithm relies on the concept of a set, and A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "7ac34edf1e0038e263a3f4a04cb55d3d58ce5d80f81ff6e05b3108f40889d6d9"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Sets",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "reason": "A defines sets, which are unordered collections of objects. B defines groups, which are sets with a binary operation. The definition of B relies on the concept of a set, which is defined in A. Therefore, A generalizes B, as B is a special case of A.",
+      "status": "unverified",
+      "prompt_sha256": "fdf7c872e35aea1aed371b185be341acc14a6c1eb5e12b0c7824b585b63d5471"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Sets",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines subgroups as a subset of a group that is itself a group under the group's operation. This means that B is a special case of A, as it is a subset of a group, which is a set. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "304824398d88853a4ea27df612f9c15e497eeb209f2f33ec27d49d61d5ac992c"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Sets",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines cyclic subgroups. A set can be a cyclic subgroup if it is the set of all powers of an element g, as stated in B's definition. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "0b163a6e395ba658b1724850a4414cb7c925f4edac8010726847c5e5a2a3b128"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Sets",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines permutation groups. A set is an unordered collection of objects, while a permutation group is a group of all permutations of a set. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "3dc163f908da00e2c8c713ca8f0139bbdd2ac03a537db08190b128f21c22a256"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Sets",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines cosets, which are a special case of sets. Specifically, B defines cosets as subsets of a group G, which is a set. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "94af15a03af751443ef6991a08d078e266aec331c5c3604f145885297159d78b"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Sets",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "0054dd3c5fc3d8ad821c2cf47194fb0254b95d2b32cff5397ddbc71af81c4866"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Sets",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "reason": "A defines sets, which are unordered collections of objects. B defines isomorphisms between groups. The definition of B requires the vocabulary of A, specifically the concept of a set. Therefore, A generalizes B, as B is a special case of A.",
+      "status": "unverified",
+      "prompt_sha256": "9f9ce537a6995c4b0330e2ea2ea474cbf47eb6fc9360e63efa14507623ac33bc"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Sets",
+      "dst_label": "Normal Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines normal subgroups. The definition of normal subgroups uses the vocabulary of sets, specifically the concept of a subgroup being a set of elements in a group. Therefore, A generalizes B, as the definition of B relies on the concept of sets.",
+      "status": "unverified",
+      "prompt_sha256": "3f513be789e0ce48c3c3caa0b464cecf94182862ae64c1ba186121f494a2d612"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Sets",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines group homomorphisms. The definition of B uses the term 'set' which is defined in A. Therefore, A generalizes B in the sense that the concept of sets is more general than the concept of group homomorphisms.",
+      "status": "unverified",
+      "prompt_sha256": "7fb7e69a2a3217154c6f5ff52b8dba9c759280cb2973e4ff85f42a3011289ce1"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:16.1-rings",
+      "src_label": "Sets",
+      "dst_label": "Rings",
+      "relation": "none",
+      "reason": "There is no indication in the definitions that the concept of sets is used in the definition of rings. The definitions of rings and their various subcategories do not rely on the concept of sets.",
+      "status": "unverified",
+      "prompt_sha256": "786f29035e79be113e3a093cd780240037b17f0194764fc3b0652695d058ce92"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Sets",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of sets and integral domains/fields. Sets are a fundamental concept in mathematics, while integral domains and fields are specific types of rings. The definitions do not rely on each other, and there is no indication that one is a prerequisite for the other, a special case of the other, or an example of the other.",
+      "status": "unverified",
+      "prompt_sha256": "6eedb923af192be2a0056172d4e8f79980dc3ffa1267df86bd8f817ee1b45bfb"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Sets",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "none",
+      "reason": "There is no direct relationship between the definitions of A (sets) and B (ring homomorphisms and ideals). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "77d610123bfd59ecc0bf17b73f555a3df64fc6a9477420ac6510f76fcf73bc57"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Sets",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of sets and maximal/prime ideals. Sets are a fundamental concept in mathematics, while maximal and prime ideals are specific types of ideals in ring theory. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "40f9a600279f15d5f1879d9f492f0b8545a9397fc44f4aa18ee5d839c5a73554"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Sets",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no direct relationship between the definitions of sets and polynomial rings. Sets are a fundamental concept in mathematics, while polynomial rings are a specific type of algebraic structure. The definitions do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "9b26318fca9d7b88f7fc9bb75963822b7d31f7ce3bca7149f701fe522a6a3b19"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Sets",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "reason": "A defines sets, which includes the concept of a set of natural numbers, whereas B defines the field of fractions, which is a specific type of set. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "a1cd8c061f626677d6c3506a4208167b4cb0bc69bf6643c56833abdb0dca2fc3"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Sets",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of sets and factorization in integral domains. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "3b4accccbe3e60cf2dbc9c6167815a29f750637f38b248c1748d0d2bd967e1cc"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Sets",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A defines sets, and B defines extension fields. The definition of B uses the concept of sets, specifically the idea of a subfield (F is a subfield of E). This means that the definition of B relies on the concept of sets, making A a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "837afb96def81f1cc09c5799a082d7bb14c2f76f71af967877b7f4a0240c8f35"
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Sets",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no indication in the definitions that B relies on A's vocabulary or is a special case of A. The definitions appear to be unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "53d6458153aa9a39d4bd9fc608a02a99db8253975559c3fdacd9be0abaf2f6be"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Set Operations",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A defines set operations, including union and intersection, which are used in the definition of equivalence relations in B. The definition of equivalence relations in B relies on the vocabulary of set operations defined in A.",
+      "status": "unverified",
+      "prompt_sha256": "f19d1f37e3506e7124bcc59ceff1c72d0b92a4479d365c7b5802f4125ccd49cf"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Set Operations",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "reason": "A defines set operations, including union and intersection, which are used in the definition of B. The division algorithm requires the use of these set operations to describe the relationship between a and b.",
+      "status": "unverified",
+      "prompt_sha256": "aaba2c6076b214d8f34783297b233983379fb46f7758a5182d63731dc57a9a14"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Set Operations",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "reason": "A defines set operations, including union and intersection, which are used in the definition of a group. The definition of a group requires the use of these set operations, specifically the union operation, to describe the operation of the group. Therefore, A generalizes B, as B is a special case of A.",
+      "status": "unverified",
+      "prompt_sha256": "00e40fe276c0b080dd248088015d80cef034a7e600f1230c99bea22da3ff5687"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Set Operations",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines set operations, and B defines subgroups. A defines union and intersection of sets, which are used in the definition of a subgroup. A is a more general concept that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "1e3d80e8f7941682df96f587cb4dd108a1dd76fd98248f35289a87d48d81c967"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Set Operations",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines set operations, including union and intersection, which are used in the definition of cyclic subgroups. The definition of cyclic subgroups relies on the vocabulary of set operations, specifically the concept of a set of all powers of an element.",
+      "status": "unverified",
+      "prompt_sha256": "bbb86f5cf07c34e33d17bfe70a949842534789335f78f48cc57f85b4bb029eba"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Set Operations",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "reason": "A defines set operations, including union and intersection, which are used in the definition of permutation groups. The definition of permutation groups relies on the vocabulary of set operations, specifically the concept of a bijection from a set to itself.",
+      "status": "unverified",
+      "prompt_sha256": "a6ccbe0feb6d57ba9c5ddb7ef912f6ef95a927c8b3592b8bf038bc05805c52c1"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Set Operations",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "reason": "A defines set operations, including union and intersection, which are used in the definition of cosets in B. The definition of B relies on the vocabulary and concepts defined in A.",
+      "status": "unverified",
+      "prompt_sha256": "ab5044848574b2c9ec179316e705ec9321bb3733225e64b48baf61f53f4bedcb"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Set Operations",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "A defines set operations, including union and intersection, which are used in the proof of Lagrange's Theorem. The theorem states that the number of elements in a subgroup H must divide the number of elements in the group G. The proof involves partitioning G into blocks of size |H|, which is similar to taking the union of sets. Therefore, A generalizes B, as the concepts and operations defined in A are used to prove B.",
+      "status": "unverified",
+      "prompt_sha256": "359038f706e1ef5b85942ac55693e537649de357791afb91ec4ee8ec66e3a632"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Set Operations",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of Set Operations (A) and Isomorphisms (B). The definitions are unrelated, and none of the options (is-prerequisite-for, generalizes, is-example-of) apply.",
+      "status": "unverified",
+      "prompt_sha256": "703a5547a94f1f8334d040e057fae93ae7243f330e9078400131581301e1868b"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Set Operations",
+      "dst_label": "Normal Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines set operations, including union and intersection, which are used in the definition of normal subgroups. The definition of normal subgroups relies on the concepts of left and right cosets, which are sets. Therefore, the definition of normal subgroups generalizes the concept of set operations.",
+      "status": "unverified",
+      "prompt_sha256": "3295bb54834cd6137200f1e2590f452b5c1dce9972be35638f1fca231b3680d5"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Set Operations",
+      "dst_label": "Group Homomorphisms",
+      "relation": "none",
+      "reason": "There is no indication in the definitions that B relies on the vocabulary or concepts of A. The definitions of A and B are distinct and do not overlap.",
+      "status": "unverified",
+      "prompt_sha256": "ed68b199ab4066e15e89e2fe9a3225c9e9ba0a60f4bfd59fbca95896a492eb7a"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:16.1-rings",
+      "src_label": "Set Operations",
+      "dst_label": "Rings",
+      "relation": "generalizes",
+      "reason": "A defines set operations, and B defines rings. Rings are not sets, but they do involve set-like operations (addition and multiplication). The definition of rings relies on the vocabulary of set operations, specifically the concept of an abelian group under addition. Therefore, A generalizes B, as the definition of rings is a special case of the more general concept of set operations.",
+      "status": "unverified",
+      "prompt_sha256": "263abb676419d57b2dedaa5f5c42356f921621e244df8264d847bb685cc7a6ac"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Set Operations",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Set Operations and Integral Domains and Fields. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "402deb542c2e2de6d11792cb1a23e7750ea75e84d06dc79142ba2224cd207099"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Set Operations",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "A defines set operations, and B defines ring homomorphisms and ideals. The definition of B mentions the concept of a kernel, which is a set of elements that a ring homomorphism maps to 0. This is similar to the concept of the empty set in A, which is the set that contains no elements. Therefore, B generalizes A in the sense that it is a more specific concept that builds upon the idea of a set.",
+      "status": "unverified",
+      "prompt_sha256": "faba4f85ad28dfd53d5ac5bb1c90ef8904ab319b57cf389d707984768f80a836"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Set Operations",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of Set Operations and Maximal and Prime Ideals. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "50d1b30f399eff95acfd8c31f006d462ba2465f3dab346dda958068cc8b5b01b"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Set Operations",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of Set Operations and Polynomial Rings. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "18ae7aaf9d7c3c637108d7041320851b9656faca813611e39aa613a808c54962"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Set Operations",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "reason": "A defines the concept of sets and set operations, including the union and intersection of sets. B defines the field of fractions or field of quotients of an integral domain. The definition of B relies on the concept of sets and set operations, as it talks about the set of all quotients of elements in the integral domain. Therefore, A generalizes B, as B is a special case of A.",
+      "status": "unverified",
+      "prompt_sha256": "960c1d0236479fb26b0fc58e6807be063bc1d0ed20c642aaba28f369d59d28a7"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Set Operations",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "reason": "A defines set operations, which include union and intersection. B defines factorization in integral domains. Factorization can be seen as a way of combining elements in a set, similar to union and intersection. Therefore, A generalizes B, as set operations are a more general concept that includes factorization.",
+      "status": "unverified",
+      "prompt_sha256": "88fa2a467a3351fb1b657627dc9a7a7afb9bdc7d851c5d61727f8a8a1832b56b"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Set Operations",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A defines set operations, and B defines extension fields. The definition of B uses terms like 'subfield', 'base field', 'extension field', and 'algebraic extension', which are all related to set operations. For example, the definition of 'extension field' says that F is a subfield of E, which is a set operation. Similarly, the definition of 'algebraic extension' says that every element in E is algebraic over F, which is also a set operation. Therefore, A generalizes B, as B is a special case of A.",
+      "status": "unverified",
+      "prompt_sha256": "021d8984c4b48770054155d334618723eddc8c3406e6c7445b01593255b6ac0f"
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Set Operations",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Set operations (A) and splitting fields (B) are unrelated mathematical concepts.",
+      "status": "unverified",
+      "prompt_sha256": "07af45c6c3c5d79c77dcdee17f6eb0ed265f95999b0a80d477ff340fa1182e26"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A defines statements and logical connectives, which are used in the definition of B. Specifically, the definition of B mentions 'relation' and 'equivalence classes', which are types of statements that can be built using logical connectives defined in A. Therefore, A generalizes B, as B is a special case of A.",
+      "status": "unverified",
+      "prompt_sha256": "135130307c5740431109f51b8e8530d6b73012f2ab6d3c121ed1c62d1e8648cd"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "The Division Algorithm",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A is about statements and logical connectives, while B is about the division algorithm. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "5ca984ca9bfdc6bbd12222c0b8322137d3c3d5647af510dab2ad76bbe69b593c"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "reason": "A defines statements and logical connectives, which are used in the definition of B. The definition of B cannot be stated without using the terms 'true or false' and 'logical connectives' which are defined in A. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "5f6685d0f11795aced8a96427f8d69c25b9bb6416e5540e12ef73dae9f888674"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines statements and logical connectives, which are used in the definition of B. The definition of B mentions the operation of a group, which is a binary operation. This operation can be represented using logical connectives, such as and, or, if..., then..., if and only if, and not. Therefore, the definition of B generalizes the concept of A.",
+      "status": "unverified",
+      "prompt_sha256": "5344b72e322c2bc915f982e8d254cdcfbe4b911172640925d3cd1ec513882a03"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A is about statements and logical connectives, while B is about cyclic subgroups. The definitions do not share any common concepts or vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "01b79f18fe3bd04e9651e3c62dc0f69a85b15e74c6a51eb692695dd4a9eb784d"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Concept A is about statements and logical connectives, while Concept B is about permutation groups. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "ec717cc125ce5c7cd488ec8ec5b39f35e2643b4e7b80e1ed044c9e452296a5ef"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "reason": "A defines statements and logical connectives, which are used in B's definition of cosets. Specifically, B's definition of a left coset of H in G uses the logical connective 'in' (i.e., 'h in H'), which is a binary connective defined in A. Similarly, B's definition of a right coset of H in G uses the same logical connective. Therefore, A generalizes B in the sense that A provides the vocabulary and concepts used in B's definition.",
+      "status": "unverified",
+      "prompt_sha256": "97989379b45d3ce276589d31dcea1414d40872054a9306aaed00ef72f2b65fd2"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Concept A is about statements and logical connectives, while Concept B is about Lagrange's Theorem in group theory. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "78bdbcb2d3b363b21225494659f5c4ee5d075fa378c3cc65b8da3f245bb2aa33"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A is about statements and logical connectives, while B is about isomorphisms of groups. The definitions do not share any common concepts or vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "6d1bd9ee454e363230f7ffc32ed3af4f580e4e43f3966f728d1d6132955b73a1"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Normal Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A is about statements and logical connectives, while B is about normal subgroups in a group. The vocabulary and concepts are completely different.",
+      "status": "unverified",
+      "prompt_sha256": "e308a21e30e05da988ea8ab68d3bc2033fe21aaae945a9a8f7c72ab27e9862ce"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "A defines logical connectives and statements, which are used in the definition of group homomorphisms. The definition of group homomorphisms relies on the vocabulary of statements and logical connectives.",
+      "status": "unverified",
+      "prompt_sha256": "2c12323f92cb95604449cc6ef3529d202c8725e4a2df270b752091c1d11bd5bb"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:16.1-rings",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A is about statements and logical connectives, while B is about rings. The definitions do not share any common concepts or vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "b1b27d6f58bdc4215dc7859aecfe557604d9865d398f525ff4eb763430b342b0"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Concept A is about statements and logical connectives, while Concept B is about integral domains and fields. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "1101a1473cc26e9d0365cfc937ce8057fba0051acfad84b617800cc6a36c5beb"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "A defines statements and logical connectives, which are used in B's definition of ring homomorphisms and ideals. Specifically, B's definition of ring homomorphisms uses the logical connective 'and' (denoted by $\bigwedge$) to describe the preservation of operations in the ring. This shows that A's definition of logical connectives is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "9c52e4a71d803e93697ec746a7a0732159accd868e4a0b971314b88265dec38f"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Concept A is about statements and logical connectives, while Concept B is about maximal and prime ideals in a ring. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "894a58a02626dc2b1754c19375a48c769ad6d7243da79d8aaf7c7488858ddcc1"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A is about statements and logical connectives, while B is about polynomial rings. The definitions do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "b7a7607d979e587101d5f6121f98b9c6327dd639135fc988a23dd161587e6a5f"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "reason": "A defines the concept of statements and logical connectives, which includes the idea of molecular statements being built from atomic ones using logical connectives. B defines the field of fractions as the field of quotients of an integral domain. The definition of B relies on the concept of an integral domain, which is a special case of a molecular statement. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "1173fc8f68ff19e8091b06ccb986438aa5838853224cda9919a75de06432d282"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Concept A is about statements and logical connectives, while Concept B is about factorization in integral domains. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "b8b0172c4df0e2cb801c4eb8a7332092c60e2cf35c9643f9cd67c75957597957"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Extension Fields",
+      "relation": "none",
+      "reason": "There is no direct connection between the two concepts. A deals with statements and logical connectives, while B deals with extension fields. The vocabulary and concepts used in each definition are distinct and do not overlap.",
+      "status": "unverified",
+      "prompt_sha256": "5005ac1b183cb86c51ae800363ecc1a6b97919baef6c5cc88e5790f84b5de250"
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Concept A is about statements and logical connectives, while Concept B is about splitting fields in algebra. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "594800211f1559ef909694ac899d489e8fc7d48b56af52d9a34745558ea49e60"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "a6c92210a80f0a84617b425fb7dd126d61d9c83b15fb402a64083e7cdd1684ea"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "186746ff212fead09127fa87b761202336df1259462410c85dafc02f5141fc2b"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "4480a38cf6219c2257838ae19db9e931753daa29996874da2a3a69875251d2de"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "e5e067c0cbf845551f27f6f451664e6db78311d94a1f095817ca66799c8b3b55"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "292ec8d37b5dc4e5f995cc86f3608d09c3912e64d194a7737fda77dfb4da1513"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "fe01b2d0cc5ae08de876719eb1b18b7d8ce8576864713400ec64c36573836010"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "98bc028672b2b09500b063c7959b7a560b4eb97b64849c3388d6cc60b8e27023"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "2574d9041d290e9865f0cd1457241f4e070bf672abb0e54fa4c08d04ae73a0dd"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "18d684e0a5147ea513c943ffb91d1ed3927ea3d06679d6ad535b6e954c8511ce"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Normal Subgroups",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "1e7c8008a4c8ffd7352f83349eb816b012f6ed481fbb2c09584ff4fb45c02e1a"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "ef79df50bf04327e4a5da034097949c529086ea5e20d46d94566b5030c86be85"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:16.1-rings",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Rings",
+      "relation": "none",
+      "reason": "There is no indication in the definitions provided that the concept of predicates and quantifiers is related to the concept of rings. The definitions are distinct and do not show any connection between the two.",
+      "status": "unverified",
+      "prompt_sha256": "be1263fdd13709e62cb836691b7df72d338832488b8166b53e71ac7a4ef561eb"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no direct connection between the two concepts. Predicates and quantifiers are used to define mathematical sentences, whereas integral domains and fields are algebraic structures. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "8ab2d0b4a72f274b90b583caec7d5e4b30ec5e8186ac42b31308dc8cda9ab757"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "Predicates and Quantifiers",
+      "status": "unverified",
+      "prompt_sha256": "4a2d50abe8427fc3e4e340343582a624e8dd075d1fbbc79005593d9401df2b9e"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "generalizes",
+      "reason": "A defines predicates and quantifiers, which are used in the definition of B. Specifically, B uses predicates (e.g., 'a is prime') and quantifiers (e.g., 'for any ideal I') to describe the properties of maximal and prime ideals. Therefore, A generalizes B by providing the mathematical framework for describing properties and relations, which is then applied to the specific context of ideals in B.",
+      "status": "unverified",
+      "prompt_sha256": "b7ff1cd48b8344491222a6e105b5632ba39a58fbd686439404cbb34d3989c568"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Polynomial Rings",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "a16bd3266befd18d2443b3a20f48eb8618024b31c65381472dcbf55db395ca8f"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "ff4247a586763389893049e48780bb0bd381b1816fde2e5b1c3213e34c2c43d7"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "reason": "A's definition introduces predicates and quantifiers, which are used in B's definition to describe properties of elements in a ring. For example, B's definition of 'irreducible' and 'prime' elements uses predicates and quantifiers to describe the properties of these elements. Therefore, A's definition generalizes B's definition by providing the mathematical framework for describing properties of elements in a ring.",
+      "status": "unverified",
+      "prompt_sha256": "c54cfecc358fba16c5fcc077d18495baab9a39850d29705826ab3c825308eedd"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A's definition introduces predicates and quantifiers, which are used in B's definition to describe properties of elements in an extension field. For example, B's definition states that an element $\beta$ in an extension field $E$ over $F$ is algebraic over $F$ if $f(\beta) = 0$ for some nonzero polynomial $f(x) \text{ in } F[x]$. This is a specific application of the predicate logic introduced in A's definition.",
+      "status": "unverified",
+      "prompt_sha256": "091b830468f9d6c70ed6d080db6dbeb04dde5f84521d8e222bd4dfd268d3f7c8"
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no indication in the definitions that B relies on A's vocabulary or is a special case of A. The definitions appear to be unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "6ceb2837390460bd1ebe53103e853a4332c1ca874d6ca43a33b3e1b3813100bc"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Propositional Logic",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "ERROR",
+      "reason": "TimeoutError: timed out",
+      "status": "unverified",
+      "prompt_sha256": "919c2ae86951f9af93e7770bacdcd54f68f844e0546b32f682b6f5d4345365fb"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Propositional Logic",
+      "dst_label": "The Division Algorithm",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and the Division Algorithm (B). The definitions are unrelated and do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "5f22915f7e3c87eb98b66ee0357f6277788ffab9d6989a29d40238d496c1bd75"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Propositional Logic",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Definitions and Examples of Groups (B). The definitions are unrelated and do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "7c69dd427b5101cb430032acc739502f6f55a5dea80ef5b09f277208adc89a69"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Propositional Logic",
+      "dst_label": "Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Subgroups (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "18890e3a9c450e52f105f92150f1728ec1666f17dc70fa6bd4c129096252c562"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Propositional Logic",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Cyclic Subgroups (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "b3e2c5ac6c4b27f3f78c1cc5d43e176f00c86e1e5ad8f93f1db001334c047c02"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Propositional Logic",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Permutation Groups (B). The definitions are unrelated and do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "b73153db710d43e22a4305944c245b160d284dcc363e001d25b7a8ad75552bf9"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Propositional Logic",
+      "dst_label": "Cosets",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Cosets (B). The definitions are unrelated and do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "f0ba4f45146771825bd05850f37ff9ef31dee07e41bc21b0bcd44a2702590ebf"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Propositional Logic",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Lagrange's Theorem (B). Propositional Logic deals with statements and their interactions, while Lagrange's Theorem is a mathematical theorem about groups. The definitions do not share any common concepts or vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "e26039d0bee7c83f563daf9bf083578571d2dcff548b914344f791df21cdfc3c"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Propositional Logic",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Isomorphisms (B). The definitions are unrelated and do not share any common concepts or vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "50ba2c11581d966e2d50feaefcfdfa02db4f555707bdc8a7bfac90641aae5bbb"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Propositional Logic",
+      "dst_label": "Normal Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Normal Subgroups (B). The definitions are unrelated and do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "647296084fdae98fd0011a6997eb8456eea3f938f99727747db7ad97dc896a26"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Propositional Logic",
+      "dst_label": "Group Homomorphisms",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Group Homomorphisms (B). Propositional Logic deals with statements and their interactions, while Group Homomorphisms is a concept in abstract algebra that deals with group structures. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "a8b99eaefb8abedb42a7e948d688ccd1dfbfa476f73d1cb62c08ccb1897a9eca"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:16.1-rings",
+      "src_label": "Propositional Logic",
+      "dst_label": "Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Rings (B). Propositional Logic deals with statements and their interactions, while Rings are algebraic structures defined by certain properties of addition and multiplication. The definitions do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "7dbff09d386831cb31cf863f90c10d7d5b71919dd4984f99e4f88aa2d3a167e3"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Propositional Logic",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Integral Domains and Fields (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "9ea473071fe116c9abc2fd5f92d2e980f54dddd62aaceed3f288b2f0b9760c17"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Propositional Logic",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Ring Homomorphisms and Ideals (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "624eef8f8503cdfd625d973ed8ff4a32e311870438ab5d4c878c84d579db0ca8"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Propositional Logic",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Maximal and Prime Ideals (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "764a5f7b186c2a7d9c3986137c2fbc68b9b6e4463693dc2fbe698f3388176bed"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Propositional Logic",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and Polynomial Rings (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "bfa5a8d248d672d838603be9732bbb13a3be43517a084d4e9d13ad21a8126591"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Propositional Logic",
+      "dst_label": "Fields of Fractions",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Propositional Logic (A) and the Field of Fractions (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "dfe6ccd294ae1044029595c935e4feab8fe435adba2d535e1d9a53a94c6a8bee"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Propositional Logic",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Propositional logic is about studying the ways statements can interact with each other, whereas factorization in integral domains is about the properties of elements in a ring. The two concepts are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "066e6c0416a594bab854622af697c5d7c4c8a8b28bdbcd8a73650485e3a77994"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Propositional Logic",
+      "dst_label": "Extension Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Propositional logic is about studying the ways statements can interact with each other, while extension fields is about the properties of fields and their extensions. The vocabulary and concepts used in each definition are distinct and unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "7812369b813e2e401c7de1abaa3466da58fac6e1353fdbe36d1fb0b81e9ae5f6"
+    },
+    {
+      "src": "levin-dmoi:propositional-logic",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Propositional Logic",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Propositional logic is about studying the ways statements can interact with each other, whereas splitting fields is about polynomial equations and their extensions. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "8fe52664914f7a29067414dd51e9bc6d42f56d50f3cbc16591389e31a8c76a67"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A defines 'P' and 'Q' which are used in the definition of B. The definition of B talks about a function f from X to Y, and it uses the terms 'one-to-one' and 'onto' which are defined in terms of 'P' and 'Q'. This shows that B is a special case of A, and A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "7c99a4489dd17f6a075dbf58719ace62bcd4914643332a747c98b7bc7caa4b16"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Rules of Deduction",
+      "dst_label": "The Division Algorithm",
+      "relation": "none",
+      "reason": "The definitions of A and B are unrelated. A is about rules of deduction, while B is about the division algorithm. There is no connection between the two concepts.",
+      "status": "unverified",
+      "prompt_sha256": "c20323d659ed2b8100360c1dca2be1ec56a6dbadefe1d48f186b210521f27e48"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "none",
+      "reason": "There is no connection between the rules of deduction (A) and the definitions and examples of groups (B). The definitions are unrelated and do not share any common concepts or vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "ceb4dee6dc7ec6e49328f56eff92e3724c4fa2dc291effef64b4ae35351f904c"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "Rules of Deduction defines a concept that is more general than the concept of Subgroups. The definition of Subgroups does not require the concept of Rules of Deduction, but the definition of Rules of Deduction does require the concept of Subgroups. For example, the definition of Rules of Deduction uses the term 'group' which is defined in the context of Subgroups.",
+      "status": "unverified",
+      "prompt_sha256": "e704a9a6c8b46c8c0ae3e0841c9b10288c58c9020290bafe660afeefddd9b145"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the rules of deduction and cyclic subgroups. The definitions of these two concepts are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "9a7190d0159de9a3c5112f5fd2697e6ec2ee8bd525944f401cd9d4b4060e4b26"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "none",
+      "reason": "There is no connection between the rules of deduction (A) and permutation groups (B). The definitions of A and B are unrelated, and there is no mention of A's vocabulary being used in B's definition.",
+      "status": "unverified",
+      "prompt_sha256": "203ee919545ed1be1faca25a249a3172afa314aff9d7078f122819dc20fcaa9f"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Cosets",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A (Rules of Deduction) and B (Cosets). The definitions are unrelated and do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "7b6e95f0928fd23b939e25dcc7d485bca23ef0ba819bab8ab8e320cd00b1a2a6"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "Rules of Deduction defines a logical form of an argument, which is a more general notion than Lagrange's Theorem, which is a specific theorem about groups. The definitions of Rules of Deduction do not rely on the definitions of Lagrange's Theorem, but the definitions of Lagrange's Theorem do rely on the vocabulary of Rules of Deduction.",
+      "status": "unverified",
+      "prompt_sha256": "18fbbc9015d3e9c4306d813460b2cd9441708e80c9a2ac31d61eaa87951cb6b8"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "reason": "Rules of Deduction (A) is a more general notion that Isomorphisms (B) is a special case of. A defines a rule for valid arguments, whereas B defines a specific type of isomorphism between groups. The definition of B relies on the vocabulary and concepts defined in A, specifically the notion of a valid argument and the use of logical operators like 'imp'.",
+      "status": "unverified",
+      "prompt_sha256": "256d93bb1f084905e1d83da767cbd66314b0f2a0f2df5d88dc7335ed473bf6e1"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Normal Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the rules of deduction (A) and normal subgroups (B). The definitions of A and B are unrelated, and there is no mention of A's vocabulary being used in B's definition.",
+      "status": "unverified",
+      "prompt_sha256": "775740170d46cf3197e33a157f96420da9b6a7a96f89c78d21dbe00145e150f4"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "Rules of Deduction defines a valid argument form, which is a more general notion than Group Homomorphisms. Group Homomorphisms is a specific type of function that preserves the operation of a group, whereas Rules of Deduction is a general concept that applies to any valid argument form, not just those related to groups.",
+      "status": "unverified",
+      "prompt_sha256": "0ac5a7ad7d840e164b8ddcf18f4ad137759b02e6f4f955e655276cb19650b90b"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:16.1-rings",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Rules of Deduction (A) and Rings (B). The definitions are unrelated and do not share any common concepts or vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "ffadceb43003cbc9968768d8542308c10080e4c6106802c6ba7c0cadaba02bd7"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no connection between the concepts of Rules of Deduction and Integral Domains and Fields. The definitions provided do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "d6300c671c824ca73b22603bcbbc5a8278062f8290a182ba53f0218f0486ee00"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "Rules of Deduction",
+      "status": "unverified",
+      "prompt_sha256": "7d442d5af8955091bed85da5e69365c41f8acafb4d9aee2aa6a47dafa20c9756"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A is about rules of deduction, while B is about maximal and prime ideals in ring theory. The vocabulary and concepts used in the definitions are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "4b247a5f04d90cbdbeb9028049d01001fe99f1a41b92eb09872d9901217c579a"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no connection between the concepts of Rules of Deduction and Polynomial Rings. The definitions provided do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "49fd61e5268e2e73f63cf28a9dd273a5e8e7f19c0dd541ef6fa7f6e7446800af"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Fields of Fractions",
+      "relation": "none",
+      "reason": "There is no connection between the rules of deduction and the field of fractions. The definitions provided do not show any relationship between the two concepts.",
+      "status": "unverified",
+      "prompt_sha256": "626de8c4b26b88b02e57a27bce51121bc1f4e30a59149d1de80f21b32b5d4ee5"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "reason": "Rules of Deduction defines a concept that is more general than Factorization in Integral Domains. Factorization in Integral Domains is a specific application of the Rules of Deduction, as it uses the concept of modus ponens to prove the validity of certain factorizations.",
+      "status": "unverified",
+      "prompt_sha256": "ecd16331a485a64a8ea3f9e5ff2efbe69f02787c301f3ff72ca0da93c5117f30"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Extension Fields",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of A and B. A is about rules of deduction, while B is about extension fields in algebra. The vocabulary and concepts used in each definition are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "da5e3f5170dd57e1adea1f4359416d0f89815b8f47ac4e18592afe4d0bf5a404"
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no connection between the concepts of Rules of Deduction and Splitting Fields. The definitions of these two concepts are unrelated, and neither concept is a prerequisite, generalization, or example of the other.",
+      "status": "unverified",
+      "prompt_sha256": "00b890af2567165a83711acf7b38cfa5a0c9cec0f15bd9a18fb023b89078a076"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Functions",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A is a function, which is a rule that assigns each input exactly one output. B's definition of a function from X to Y assigns to each element of X exactly one element of Y. This is a special case of A's definition, as it only considers functions that are one-to-one and onto. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "aa02f28365f8ca1976f09f0f08623c7c54ef83865675a00f2341e99d6ccf2867"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Functions",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a specific rule that assigns an integer b as a multiple of an integer a (ac) plus a remainder r. This shows that B is a special case of A, where the rule is a specific type of function that assigns an integer b as a multiple of an integer a (ac) plus a remainder r.",
+      "status": "unverified",
+      "prompt_sha256": "84479ee88e35ad88dfbaa7d893393f33146932e0e071662ff4e1d6349a1fa9ec"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Functions",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a set G together with a binary operation. The definition of B does not require the concept of a rule or assignment of outputs, whereas A's definition does. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "5d202af897ede646afd5cb97a46c5cb6cecec0f67b8a34d8b249c61627a8a80c"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Functions",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a subset of a group that is itself a group under the same operation. The definition of B relies on the concept of a group, which is not defined in the text, but the definition of A does not rely on the concept of a group. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "b8f55e4250e6caa3953b82182015475d0ba90c51b40175c8461083e0be6afdf8"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Functions",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a specific type of group where every element is a power of a generator. The definition of B relies on the concept of a function (A) to describe the powers of the generator. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "7508b1c64499699caa7de8c155fa99f02a832b022ec810b94fd41b117a2ffe02"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Functions",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a bijection from S to itself. The definition of B cannot be stated without using the term 'function' which is defined in A. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "c305d4135127a225443ca419a2d050e79eb987f86c57f78cba43a52e456151d6"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Functions",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "ecbc4c8dd919e3c28df65a46b7cfd137fba5c0d4a5bcbe6f032127c232f5ba02"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Functions",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "46dc41bb6da058b673f31a2bd861ab3f5e9da196921dbe5d814307122ffd7327"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Functions",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a bijective map that preserves the group operation. A is a more general notion that B is a special case of, as B requires the additional structure of a group operation.",
+      "status": "unverified",
+      "prompt_sha256": "865281ca71a624ee449dd1f44d2bcb5e5a812d5172c5f590e6b3efe8ed1b87f3"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Functions",
+      "dst_label": "Normal Subgroups",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a specific type of subgroup that satisfies a certain condition. The definition of B relies on the vocabulary of A, specifically the concept of a set and its elements. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "b9c3a410b5474a4b70070ff3e5428f44caf14ac108c5cd5edd721220edb84c75"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Functions",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "A is a function, which is a rule that assigns each input exactly one output. B is a group homomorphism, which is a map that preserves the operation of the group. The definition of B uses the vocabulary of A, specifically the concept of a function. Therefore, A generalizes B, as B is a special case of A.",
+      "status": "unverified",
+      "prompt_sha256": "96ef98c53614e4ccd5a764d694441a4d11d84c515fd194f4bb5d8d2c35e89191"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:16.1-rings",
+      "src_label": "Functions",
+      "dst_label": "Rings",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a set with two closed binary operations. The definition of B does not require the concept of a rule or assignment, whereas the definition of A does require the concept of a set and operations. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "463c66d82a314deeb070089f776139c863fd47477177f9373cd20cefb661f26c"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Functions",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "b576e5e870c752f3a21286ff1eab028bfa3356c93d099ce4700f2fbece7d8ff6"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Functions",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "A is a function, which is a rule that assigns each input exactly one output. B is a ring homomorphism, which is a map that preserves the operations of addition and multiplication in the ring. A function is a special case of a ring homomorphism, as it assigns each input exactly one output, which is a specific type of preservation of operations. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "e432df30377b460550a6dc83cce7c83e6de60e90b1212c7844ba930527818618"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Functions",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of functions and maximal/prime ideals. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "ed7539020c2659a021242c0a1a6fad24992861300ee104330e339ede2913e297"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Functions",
+      "dst_label": "Polynomial Rings",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a polynomial expression with coefficients in a ring. A is a more general notion that B is a special case of, as B can be viewed as a specific type of function that assigns each input exactly one output, but with the added structure of polynomial expressions.",
+      "status": "unverified",
+      "prompt_sha256": "b081055bcdd782b80d42472e113342e1c305f1dbd6dbcd1990a15858565f4543"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Functions",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "reason": "A is a more general notion that B is a special case of. A defines a function as a rule that assigns each input exactly one output, whereas B defines a field of fractions as a field that is the field of quotients of an integral domain. The definition of B relies on the concept of a function, as it uses the term 'quotients' which is a type of function. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "7d04712b9f8a0de5af2cbe8104a4d54979a0c198bb8a66ad5693f9c934f4c709"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Functions",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "reason": "A defines a function as a rule that assigns each input exactly one output, whereas B defines a prime or irreducible element in an integral domain as an element that cannot be factored into the product of two non-unit elements. The definition of B is a special case of the definition of A, as it uses the concept of a rule that assigns each input exactly one output, but applies it to the context of integral domains and prime or irreducible elements.",
+      "status": "unverified",
+      "prompt_sha256": "969c22bdc1a308fee7714d8f8c6b77d369f0d0e8f5ad41315da7db6b7421351a"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Functions",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A defines a function as a rule that assigns each input exactly one output, whereas B defines an extension field as a field that contains a subfield. The definition of B relies on the concept of a function, as it uses the term 'subfield' which is a function in the sense of A. Therefore, A generalizes B, as B is a special case of A.",
+      "status": "unverified",
+      "prompt_sha256": "76fea2ddeaa27aab028a45642352254782528910f2a8cb4b485383e3dde791cc"
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Functions",
+      "dst_label": "Splitting Fields",
+      "relation": "generalizes",
+      "reason": "A is a rule that assigns each input exactly one output, whereas B is a specific type of extension field that allows a polynomial to be split into linear factors. The definition of B relies on the concept of a function (rule) and a field, which are both defined in A. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "27332c8d647e8694b309e60fa511d52fdc6d3412927314d8e785ae71c8e5a51f"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A defines injective, surjective, and bijective functions, which are used in B's definition of an equivalence relation. Specifically, B states that an equivalence relation is one-to-one when distinct inputs have distinct outputs, which is equivalent to saying that the relation is injective. This shows that B is a special case of A, as B's definition relies on the concepts defined in A.",
+      "status": "unverified",
+      "prompt_sha256": "846324de9f3adc33ac65cfd835a84e95854e27de19df9f2b7cb2edbd6abd2c6d"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "The Division Algorithm",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A is about functions and their properties, while B is about the division algorithm. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "c1deb7e7561480bf8f937b031de0d6eae63be25d380864d8728ff05c13e44675"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of A and B. A defines concepts related to functions, while B defines a group. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "8d7bd5986dca7cb24c0408e381509397f877917e4c8303df3be2ebdb459efba0"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Subgroups",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of A and B. A defines concepts related to functions, while B defines subgroups. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "10f02669d6f4fc0ba418cc3d90b4f66cc08c7fa4d2f0951fcc6efdeee1e53e6d"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines the notions of injective, surjective, and bijective functions, which are used in B's definition of a cyclic subgroup. Specifically, B's definition of a cyclic subgroup relies on the concept of a generator, which is an element that generates the group. This is equivalent to saying that the group is the set of all powers of that element, which is a bijective function. Therefore, B's definition generalizes A's definition of bijective functions.",
+      "status": "unverified",
+      "prompt_sha256": "af6f8d98e2f46a195f3e2f63835edee9f539028cdf55fa36a095d3145b5add0f"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "reason": "A defines a function as injective, surjective, or bijective, and B defines a permutation as a bijection. Since a bijection is a special case of a function that is both injective and surjective, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "17392a66e7dabc023ed5bb5052bedc29ec3889e353b2c014134e27e5bc08b26e"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "reason": "A defines the terms 'injective', 'surjective', and 'bijective', which are used in B's definition of 'left coset' and 'right coset'. B's definition cannot be stated without using these terms.",
+      "status": "unverified",
+      "prompt_sha256": "fa55cf4e97c5b63b2de193ac2beb2fa36918b721eb544923112647f8fa00130f"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of A and B. A defines concepts related to functions, while B defines Lagrange's Theorem, which is a statement about finite groups. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "1591cb74f25846c5b6da63ad87dae14ce7b816472d83a92c87bc1e882c362938"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "reason": "A defines the concepts of injective, surjective, and bijective functions, which are used in the definition of B. Specifically, B requires that the map phi be bijective, which is a combination of being both injective and surjective, as defined in A.",
+      "status": "unverified",
+      "prompt_sha256": "b9751561c3c7a2b622d773ef4b1294c45f2ff1588c72a5bef22b9d08024caa1b"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Normal Subgroups",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of A and B. A defines concepts related to functions, while B defines a concept related to groups. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "f1a04f9f13dcf257a6ab92c1037619d746dbc78bdddc859beae1c4e4d07bdef5"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "A defines injective, surjective, and bijective functions, which are used in the definition of a group homomorphism. Specifically, the definition of a homomorphism requires that phi(g1*g2) = phi(g1)*phi(g2) for all g1, g2 in G, which is a property of bijective functions. Therefore, the definition of a group homomorphism generalizes the concept of bijective functions.",
+      "status": "unverified",
+      "prompt_sha256": "13a3cb4e2184fcffe035e7f3150938621a3167afded4790668c90daaccf29856"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:16.1-rings",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A defines injective, surjective, and bijective functions, while B defines rings. The definitions do not share any common terms or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "39b3610861dc4e512e04d9a9bd36e04379b50fe2c75c70fa33ca4a98e9cc2f61"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of A and B. A defines concepts related to functions, while B defines concepts related to rings and fields. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "cc36105f661815fc2fafe42dd53e2e439efc9699ae2d89b4db9c2c47e47bdafd"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "A defines the concepts of injective, surjective, and bijective functions, which are used in the definition of ring homomorphisms and ideals in B. Specifically, B uses the terms 'one-to-one' and 'onto' which are defined in A. Therefore, A generalizes B in the sense that A provides the fundamental concepts that B builds upon.",
+      "status": "unverified",
+      "prompt_sha256": "98a118813493bc239ff3ba8aad8dfc5c1037806013b7309823c85205b9e949f0"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of A and B. A is about functions, while B is about ideals in a ring. The vocabulary used in A does not appear in B, and vice versa.",
+      "status": "unverified",
+      "prompt_sha256": "31cb77ef4220f112b604f60e561efce189ba9dc7074c9c8aed9a36f9058f1262"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of A and B. A defines concepts related to functions, while B defines concepts related to polynomial rings. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "72f4c160a2750fb42fbbda7a0591801f498ca22b63c4eb47c6177709d20da84f"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "reason": "A defines the terms 'injective', 'surjective', and 'bijective' which are used in B's definition of 'field of fractions'.",
+      "status": "unverified",
+      "prompt_sha256": "7ab8fcb035830859729df02518c76647c52cf4a4513386b833f8e415bdffd28c"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "reason": "A defines the terms 'injective', 'surjective', and 'bijective', which are used in B's definition of 'unique factorization domain' and 'principal ideal domain'. B's definitions rely on the concepts of injective and surjective functions, which are defined in A.",
+      "status": "unverified",
+      "prompt_sha256": "d19418909df763114c7f5174ed02642fe52d695bc098dafc875603dc87985ad8"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A defines the terms 'injective', 'surjective', and 'bijective', which are used in B's definition of 'extension field'. Specifically, B uses the term 'algebraic extension' which is related to the concept of a bijective function.",
+      "status": "unverified",
+      "prompt_sha256": "6d50478527c6fbce7c5ef656ada96abd087005a8195470a1d18e787f07391523"
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no indication that the definitions of A and B are related. The definitions of A and B are distinct and do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "99f12aace405ec6af54ff5c822207686c486bbfbca6b2d4a050749f9f4992154"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Direct Proof",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A defines a style of proof, and B defines a concept in mathematics. A's definition mentions 'implications' and 'universal statements', which are related to the idea of equivalence relations. In particular, the concept of 'partitioning' in B's definition is related to the idea of 'assuming P(x) is true and deducing Q(x)' in A's definition. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "cc9c05731acb8dc9b4cc10d5b1d2fb7b5f6c39a9590da99b286a15c27b933786"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Direct Proof",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "reason": "Direct Proof is a style of proof that can be used to prove implications, universal statements, and other mathematical statements. The Division Algorithm is a specific mathematical statement that can be proven using Direct Proof. Therefore, Direct Proof generalizes The Division Algorithm.",
+      "status": "unverified",
+      "prompt_sha256": "c82b86b2b84cebdb1e392bd89e110c82d2a8386b4d985c0b287831c117611277"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Direct Proof",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "reason": "Direct Proof is a style of proof that can be used to prove universal statements, such as the existence of an identity element and the existence of an inverse in a group. Therefore, Direct Proof generalizes the concept of a group.",
+      "status": "unverified",
+      "prompt_sha256": "a19c66a8cf2697b119b49db2620325273589629dac167035d83538de6326c2fe"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Direct Proof",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines a general style of proof, while B defines a specific type of subset within a group. The definition of B relies on the vocabulary and concepts defined in A, such as 'operation' and 'implication'. Therefore, A generalizes B, as B is a specific application of the general concept of direct proof.",
+      "status": "unverified",
+      "prompt_sha256": "f95033c9f844d57e6e8d16020d7c9311eef0a68ec339a19f06fcec862b120097"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Direct Proof",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Direct Proof and Cyclic Subgroups. Direct Proof is a method of proof in mathematics, while Cyclic Subgroups is a concept in group theory. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "c1fe9225f0a4aabcbd323386513f7ad2e2e1690f116fca9ff4ba9459abab3b77"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Direct Proof",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "none",
+      "reason": "There is no direct connection between the definitions of Direct Proof and Permutation Groups. Direct Proof is a method of proof, while Permutation Groups is a mathematical structure. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "c2ed54eda2b1e51dbf6c70aa23a106ef60ac7683db020280c15aa282ab82cc0d"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Direct Proof",
+      "dst_label": "Cosets",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Direct Proof and Cosets. Direct Proof is a method of proof in mathematics, while Cosets is a concept in group theory. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "61b1cf55626b7d995300e6efc6289eed7f400b83d6cf2f97c1349f7d05943f28"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Direct Proof",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "A defines a general style of proof, while B is a specific theorem that can be proved using that style. The definition of B mentions the need for a systematic explanation, which is a key aspect of A's definition.",
+      "status": "unverified",
+      "prompt_sha256": "4aab47e4636153886c74dc780c70a9622b9c11e28af27606c703864d00cbd4b8"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Direct Proof",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "none",
+      "reason": "There is no indication in the definitions that A is related to B in any of the specified ways. A is about direct proofs, while B is about isomorphisms of groups. The definitions do not suggest that A is a prerequisite for B, that B is a special case of A, or that A is an example of B.",
+      "status": "unverified",
+      "prompt_sha256": "c151dd2c6637c9a6a051589b2123e19ad788995eb24528255266c394ca75cdba"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Direct Proof",
+      "dst_label": "Normal Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Direct Proof and Normal Subgroups. Direct Proof is a method of proof in mathematics, while Normal Subgroups is a concept in group theory. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "647aef9dcfffe58136c1c4aa5dd6df052589a9f937c339f3964b7ea6d2522d7a"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Direct Proof",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "A defines a general concept of proof, while B defines a specific type of map between groups. The definition of B relies on the vocabulary of A, specifically the concept of a map and the idea of an identity element. Therefore, A generalizes B, as B is a specific application of the more general concept of proof.",
+      "status": "unverified",
+      "prompt_sha256": "22dee43756fde30d61dc04af0e834041ef58426aee66e4bf342f807481f5160e"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:16.1-rings",
+      "src_label": "Direct Proof",
+      "dst_label": "Rings",
+      "relation": "generalizes",
+      "reason": "A defines a general proof structure that can be used to prove statements about rings, which are a specific type of mathematical structure.",
+      "status": "unverified",
+      "prompt_sha256": "928ffda94fd3292cfb9496a82ecc6719ec197dde43c9b6738ef5161a429819c3"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Direct Proof",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Direct Proof and Integral Domains and Fields. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "09ab0a71a30258d32e3fb1d3c8e7f4f2188406b197d2217d3752dab6a7b295dc"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Direct Proof",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "A defines a direct proof, which is a systematic explanation of what everything means. B defines ring homomorphisms and ideals, which are specific types of mathematical structures. A's definition is more general than B's definition, as it provides a framework for proving statements, whereas B's definition describes specific mathematical objects.",
+      "status": "unverified",
+      "prompt_sha256": "abdbc399a1744610fabf2439d9a821ac9e13b0d6f08f5d703834cba0534e2372"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Direct Proof",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no indication that the definition of B relies on the vocabulary of A. The definitions of A and B are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "d08b56359878cc5f83eaf5b8ff11e20ca5d98156811e2d9340196a70ceef1710"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Direct Proof",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Direct Proof and Polynomial Rings. Direct Proof is a concept from logic and proof theory, while Polynomial Rings is a concept from abstract algebra. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "4131238d70790341a1a44be36497022f2292cc8973d6a8a91c794772eb0e2532"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Direct Proof",
+      "dst_label": "Fields of Fractions",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Direct Proof and Fields of Fractions. Direct Proof is a method of proof in mathematics, while Fields of Fractions is a mathematical structure. The definitions do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "72f808243088ec9ec3705b29cc3cfe81d282d5dfa90f966f2943db28dee1ad6d"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Direct Proof",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "none",
+      "reason": "There is no direct connection between the two concepts. Direct Proof is a method of proving mathematical statements, whereas Factorization in Integral Domains is a concept in abstract algebra. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "6fa9d66ed90ff8f577d20d15e15ff04903b4865d85c8c47fef480efb8d21addd"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Direct Proof",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A defines the concept of 'implication' ($P \rightarrow Q$), which is used in B's definition of 'extension field' ($F \rightarrow E$). B's definition also uses the concept of 'subfield' ($F \rightarrow E$), which is related to the concept of 'implication'.",
+      "status": "unverified",
+      "prompt_sha256": "db8d2902fbed6146b60ae56fed09833cd18a166bfabff88f19dcafb5e18be942"
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Direct Proof",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Direct Proof and Splitting Fields. Direct Proof is a method of proof in mathematics, while Splitting Fields is a concept in algebra. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "c5b6c6b4b04d33d8fd69068b98f2fe5a385cdec34f1e850728db71a78a739c12"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A's definition talks about implications and contrapositive, which is a more general concept than B's definition of sets and equivalence relations. B's definition does not need A's vocabulary to be stated, and A is not an example of B. Therefore, the correct answer is that A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "d5a7c1a830d475bca7a2327f2efbdf79a20d7eb8dee059a4f54872d2df7d0248"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "reason": "A's definition talks about implications and their contrapositives, while B's definition talks about division and the division algorithm. A is a more general concept that encompasses B, as it provides a method for proving implications, which includes the division algorithm as a special case.",
+      "status": "unverified",
+      "prompt_sha256": "02e6e624092b24465fef4f04aa503299082277b1a46015c1899e85e9df6249f8"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "none",
+      "reason": "There is no indication in the definitions that the concept of proof by contrapositive is related to the concept of groups. The definitions are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "7a18bc16edc241100b904341dfb6aa57e79f760308a0b72aaf2a93b4aa252c84"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A's definition talks about implications and contrapositive, while B's definition talks about subgroups. A is a more general concept that can be applied to any implication, while B is a specific type of subset within a group. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "7a42278f0d34347d0b109ffae9723ff46bbcf2d389364f000690e29cf8670f15"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Proof by Contrapositive and Cyclic Subgroups. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "7ffe817200a256784e04f7d0aaea0ae38c23faadb4a96f3938f7ffd9ae99a3cc"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "none",
+      "reason": "There is no connection between the definition of Proof by Contrapositive and Permutation Groups. The definitions are unrelated and do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "b6462dbce95cc7534b6c6038bc2dcd02527114caa2f7ddc7333aa4e14cbd8ceb"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "reason": "A's definition talks about implications and contrapositive, while B's definition talks about cosets in a group. The definition of B does not need the vocabulary of A, but A's definition does need the vocabulary of B. For example, the definition of B uses the term 'group' which is not defined in A's definition. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "25ab33e7e0143a9958aa28f8bffe0edc084a000727e2d1c55e6c5f3f5880cd9e"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "A's definition talks about implications and contrapositives, which are not specific to groups or subgroups. B's definition, on the other hand, is about groups and subgroups. Therefore, A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "c9a0458d242f52b3d9e1a98eaae149335472f407cea61c65bf23a282b8d8a069"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "reason": "A's definition talks about implications and contrapositive, while B's definition talks about groups and isomorphisms. However, A's definition does not require any knowledge of groups or isomorphisms. It only requires the understanding of implications and contrapositive. Therefore, A generalizes B, as it is a more general notion that does not rely on the specific domain of groups and isomorphisms.",
+      "status": "unverified",
+      "prompt_sha256": "e6682440eb91c33a4a3b268d917e5efd3f0df3d02a09f83a8fddf9a5b32a40d8"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Normal Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Proof by Contrapositive and Normal Subgroups. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "878cdafae709185ce41ceb62572f6d4c4387fde94472cfe025ff3bd30c95a1d9"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "A defines a proof technique, while B defines a mathematical structure. A's definition does not rely on B's definition, but B's definition relies on A's vocabulary. For instance, B's definition of a group homomorphism uses the concept of a group, which is a fundamental concept in A's definition of proof by contrapositive.",
+      "status": "unverified",
+      "prompt_sha256": "2eac272be97de418d6413b4bcf2c33d2322d81df57e7973c1f907182ff37db6d"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:16.1-rings",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definition of Proof by Contrapositive and the definition of Rings. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "ea0984ed8afff3f14d23fe400bed379a9591bb47e7e39dcd942be1fbf71c3525"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Proof by Contrapositive and Integral Domains and Fields. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "dd43928bd0b652c44d2d4cfb58acb47218f64f54f6a555251f40d61254a6858b"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "none",
+      "reason": "There is no indication in the definitions that the concept of proof by contrapositive is used or needed in the definition of ring homomorphisms and ideals. The definitions are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "b963db5c8ba7cccb4a99163f199a93bcf0a03158b4fee217e5f5f8addf398df4"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "generalizes",
+      "reason": "A's definition talks about implications and contrapositives, while B's definition talks about ideals in a ring. A is a more general concept that can be applied to various mathematical structures, while B is a specific concept that is a part of ring theory. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "f8b29371a3de06fc0cffbddb7082920ace3a1a67242d30338d33eb63735b9bbd"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no connection between the concept of proof by contrapositive and the concept of polynomial rings. The definitions of these two concepts are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "56b3aad9fbebe96e7c8342e50a77683d3fede747331731ad72fa04b3c54fef57"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Fields of Fractions",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by contrapositive is a method for proving implications, while the field of fractions is a mathematical structure. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "fe0da2a08219e5ca01945f3de23ba94c7b897741697503163920222f3dec6945"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by contrapositive is a method for proving an implication, whereas factorization in integral domains is a concept in abstract algebra. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "eda588b1ed0629821dd0b2efbc096a2a70b9f19877093ad68bb91810fffd6ec6"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A's definition talks about implications and contrapositives, while B's definition talks about fields and their extensions. A is a more general concept that deals with logical implications, while B is a specific application of A to the context of fields and their extensions.",
+      "status": "unverified",
+      "prompt_sha256": "f1c705ac7570caacd58bce5ef7784aff6a6db4a2c91e789cf68f89426673d6ad"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by Contrapositive is a method for proving implications, while Splitting Fields is a concept in algebra. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "5f5d552ca93f919f3c85049a6fd5845211dc7df098d557c33009388630f474c8"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "A's definition talks about proving a statement P, which is a general concept. B's definition talks about equivalence relations and sets, which is a specific application of A's concept. A is a more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "940a59c36e14e83701ab0940cf52a828c550cf6ac369c8f7c0fac06449e08528"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "reason": "A defines a method for proving a statement, which is a more general concept than the division algorithm, which is a specific method for dividing one integer by another.",
+      "status": "unverified",
+      "prompt_sha256": "caff8d4ba376407436caa70dee982e6a610e5e6183b635ff79ba855546ad698b"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by contradiction is a method of proof, while groups are a type of mathematical structure. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "087346087c7947194b186713ab915fcf48b447139a3b6aff39e6b7d8208e6065"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A defines a method of proof, while B defines a specific type of subset in a group. A is a more general concept that encompasses B, as it can be used to prove statements about any mathematical concept, including the existence of subgroups.",
+      "status": "unverified",
+      "prompt_sha256": "5ff8ccecf446fa44eb3490c642048f01a5a26d270fbee5add61cc9102f2178af"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by contradiction is a method of proving a statement, whereas cyclic subgroups is a concept in group theory. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "8d91328c334ebe06120f71327d143b85d76fb03443f336f813c4f67906ee3ecf"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by Contradiction is a method of proof, while Permutation Groups is a mathematical structure. They are unrelated.",
+      "status": "unverified",
+      "prompt_sha256": "9ad0d716ea2440a4555fd77887b572f24f040d68fecf53b341afcc698c9b2199"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Cosets",
+      "relation": "is-prerequisite-for",
+      "reason": "B's definition cannot be stated without using a term A defines. Not 'a student would learn A first' -- the definition of B must actually need A's vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "55b0af17c32f7b6c7edce2d8dc2f064d79bd2a0be9068aa60bd68f13febb23b4"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "A defines a general method for proving statements, which is used in the proof of B. The definition of B relies on the vocabulary and concepts defined in A.",
+      "status": "unverified",
+      "prompt_sha256": "d1124202bc9bf69f95552ede8aaafb1f1d6874f872ccdc43ff183042c0830f18"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "reason": "A's definition talks about proving a statement P, and if it is impossible for P to be false, P must be true. B's definition talks about isomorphisms between groups. The definition of isomorphism in B requires the existence of a bijective map phi that preserves the group operation. This is similar to the idea of proving a statement P by showing that its negation P leads to a contradiction. Therefore, A generalizes B, as A is a more general notion that encompasses the idea of proving a statement by contradiction, which is used in the definition of B.",
+      "status": "unverified",
+      "prompt_sha256": "5b91fc2a998710b331a1fa3fc663ef9022f85d7dcbb7e7bf37aaf1b46049c600"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Normal Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by contradiction is a method of proving a statement, while normal subgroups is a concept in group theory. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "46f36957144b4560b9aae0704b9ba8306240550d7f92d0434022d509d7cc535b"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "reason": "A defines a method of proof, while B defines a specific type of map. A is a more general concept that encompasses B, as it provides a way to prove statements about B (or any other mathematical concept) by showing that the negation of the statement leads to a contradiction.",
+      "status": "unverified",
+      "prompt_sha256": "d98986d29cac1637e2bba5c2bcbc23aeaf2069b59d89ef195babe039e72d709e"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:16.1-rings",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definition of Proof by Contradiction (A) and the definition of Rings (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "71cca3a47f52794069fad3c546633a886fc91f950271dcf6d5c764db7db75540"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by Contradiction is a method of proving a statement, whereas Integral Domains and Fields is a concept in abstract algebra. The definitions do not share any common vocabulary or ideas.",
+      "status": "unverified",
+      "prompt_sha256": "323989d78014a8d4b551ce32782f865ff7a6cd3078b0e6847ae82d23385a6e42"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "Proof by contradiction is a general method that can be used to prove statements, and ring homomorphisms and ideals are a specific application of this method. The definition of ring homomorphisms and ideals does not require the concept of proof by contradiction, but the method of proof by contradiction is a more general concept that can be used to prove statements about ring homomorphisms and ideals.",
+      "status": "unverified",
+      "prompt_sha256": "c46c477b20a29694bb86632317da44c7da557ee6a595733fb10ac89dd8b7a1c0"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "generalizes",
+      "reason": "A defines a method of proof, while B defines a type of ideal. A is a more general concept that encompasses B, as it can be used to prove statements about ideals, but B does not provide a method of proof.",
+      "status": "unverified",
+      "prompt_sha256": "94301781174ade60841f4c8b31f9c0e9c5f4aadf23d805caa53d01f3f0326e2b"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by Contradiction is a method of proving a statement, while Polynomial Rings is a mathematical structure. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "58607f8a34e25d75c450d53f6e23bd6acd6e6ed4271e754bb322a1c1e503618c"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Fields of Fractions",
+      "relation": "is-prerequisite-for",
+      "reason": "B's definition cannot be stated without using a term A defines. Not 'a student would learn A first' -- the definition of B must actually need A's vocabulary.",
+      "status": "unverified",
+      "prompt_sha256": "16eaf0add9dd4f72bc707a2c95f9d63934ea80c466513641a3f8064f17db8c61"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "reason": "Proof by contradiction is a method used to prove a statement P. Factorization in integral domains is a concept that can be proven using this method. Therefore, proof by contradiction is a more general notion that factorization in integral domains is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "295c2465a31b8a303c03f231887ee2743b62f06e8ec58606afdb5608527760c0"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A's definition talks about proving a statement P by showing that its negation \u00acP leads to a contradiction. B's definition talks about extension fields and algebraic extensions. The connection between the two is that the proof by contradiction is used to prove that a statement P is true. In the context of extension fields, this means that if we can show that an element \u03b1 in an extension field E is algebraic over a base field F, then we can prove that E is an algebraic extension of F. This is a generalization of the proof by contradiction, as it is used to prove that a statement is true by showing that its negation leads to a contradiction.",
+      "status": "unverified",
+      "prompt_sha256": "74a984a570c57d248bf24829b0c8ee2d8b143eae20e5d3973421cb701a42b431"
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Proof by Contradiction is a method of proving a statement, whereas Splitting Fields is a concept in algebra. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "0bb4a89548655400428ec102d47bdac13e7363c8f4f85ae8e92193dde073f951"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "reason": "Mathematical Induction is a proof technique that can be used to prove statements about all positive integers. Sets and Equivalence Relations do not require the use of this technique. Therefore, A generalizes B.",
+      "status": "unverified",
+      "prompt_sha256": "836b82257f1926260199ddba0dcd73654f53bebdef63bedf91cf9a70e31c0cd2"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Mathematical Induction",
+      "dst_label": "The Division Algorithm",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Mathematical Induction and the Division Algorithm. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "6cc95d4591ccd89edcc79d168b6aeafde254386c4a32f06ab07fa7fed63216c7"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "none",
+      "reason": "There is no direct connection between the two concepts. Mathematical induction is a proof technique, while groups are a type of mathematical structure. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "4a9457dd793a840fcac760c441bcbdba60277602e02db3f9b4633c3f0bad2d53"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "reason": "A is a proof technique that can be used to prove statements about sequences, whereas B is a specific type of subset within a group. A is a more general concept that encompasses B, as it can be used to prove statements about various mathematical structures, including groups.",
+      "status": "unverified",
+      "prompt_sha256": "2eff6e6e008f7c28fbfded88bc49ed995deaf2d0a8706c4bca88da00989bb39b"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "reason": "A is a proof technique that can be used to prove statements about sequences, whereas B is a specific type of group. A is a more general concept that encompasses B, as it can be used to prove statements about any sequence, not just those related to groups.",
+      "status": "unverified",
+      "prompt_sha256": "aaccf9fab6f33d1ee3f0d51ce0a041e0125fc5cd12f07ae7df8bd8b4a4a9e3b6"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "none",
+      "reason": "There is no direct connection between the two concepts. Mathematical induction is a proof technique, while permutation groups are a type of algebraic structure. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "c77db2020e950a94d66b6f7fefc7422e4ac5edebf39853c6871bdab87b0f3cdd"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "20a01ecff8d410f08cf781c85329dfeb66e66ac0ce1518fa6804b6acf0f36902"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "27a2c3c22c4513909d5087b3ce53438ff9e1f197b1837d10dbbaf10a3185ac44"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "none",
+      "reason": "There is no direct connection between the two concepts. Mathematical induction is a proof technique, while isomorphisms are a concept in group theory. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "a4607f9e0fda35d566151a10eea162ffe9eb8ebe712486ee5cacce8db55fa4e2"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Normal Subgroups",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Mathematical Induction and Normal Subgroups. The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "743aaa9f459ee986341efe1fdc151b808c753a6efb63f34384a8155f4adc0a39"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Group Homomorphisms",
+      "relation": "none",
+      "reason": "There is no direct connection between the two concepts. Mathematical induction is a proof technique, while group homomorphisms are a type of function between groups. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "3e5c271d66ba1fee840d45b00523db366155a5c2e09ad1acec0a0528199c0d82"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:16.1-rings",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Rings",
+      "relation": "generalizes",
+      "reason": "A is a proof technique that can be used to prove statements about rings, which are defined in B. The definition of B does not require the use of A's vocabulary, but the definition of A does not make sense without the concept of rings, which are defined in B.",
+      "status": "unverified",
+      "prompt_sha256": "799e164f3bbe7937c5090f8337cbf693171c467c0ab7941610f0f0476b3604c6"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "none",
+      "reason": "There is no direct connection between the two concepts. Mathematical induction is a proof technique, while integral domains and fields are algebraic structures. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "9a92474bb006733f91683daeeda56851f012018a493835a7b7373171bbd4e028"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "8df1ee7e8fad593fd43b676bc56c6ba4615ac22b42448afd27958a94d91acc0d"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Mathematical induction is a proof technique, while maximal and prime ideals are concepts in ring theory. The definitions do not share any common vocabulary or concepts.",
+      "status": "unverified",
+      "prompt_sha256": "26beb45f18c63c98314a369f9421abe894d003dd95fa1743886fd0224f737e0e"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Polynomial Rings",
+      "relation": "none",
+      "reason": "There is no connection between the definitions of Mathematical Induction (A) and Polynomial Rings (B). The definitions are unrelated and do not share any common concepts or terminology.",
+      "status": "unverified",
+      "prompt_sha256": "19ff1f0199c35de09fc6beb212753ebc1735096f21d78628f86af83bc729a4dd"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "reason": "Mathematical induction is a proof technique used to prove that a statement is true for all positive integers. The field of fractions is a specific type of field that can be constructed from an integral domain. The definition of the field of fractions does not require the concept of mathematical induction, but the definition of mathematical induction does not require the concept of the field of fractions. Therefore, mathematical induction is a more general concept that generalizes the concept of the field of fractions.",
+      "status": "unverified",
+      "prompt_sha256": "d2e4b0ec26ee47a3b23715f8f11b2da2724e773029e79cb4915a84366f05f26f"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "reason": "A is a method for proving that a statement is true for all positive integers, whereas B is a property of certain rings that can be factored into a product of irreducible elements. The definition of B relies on the concept of irreducible elements, which is a consequence of the principle of mathematical induction (A).",
+      "status": "unverified",
+      "prompt_sha256": "6be3cd9c6f5d6761b419ba85f7dc9e57583fd0c44249ec50a2854769faaaa380"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "reason": "A is a strictly more general notion that B is a special case of.",
+      "status": "unverified",
+      "prompt_sha256": "d8be61db12e325b47147946247d215ff84c565c6e8640eab3b9f35057c89b282"
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Splitting Fields",
+      "relation": "none",
+      "reason": "There is no connection between the two concepts. Mathematical induction is a proof technique, while splitting fields is a concept in algebra. The definitions do not show any relationship between the two.",
+      "status": "unverified",
+      "prompt_sha256": "0a5a535a88d905f4a23eee592737fbcb0332a988c48197a49406fbfb4b1e8c24"
+    }
+  ]
+}

@@ -1,0 +1,1912 @@
+{
+  "schema": "bridge-verdicts-v1",
+  "checker": {
+    "model": "qwen2.5-coder:14b",
+    "producer_model_was": "llama3:latest",
+    "sees": [
+      "src",
+      "dst",
+      "src_label",
+      "dst_label",
+      "relation"
+    ],
+    "does_not_see": [
+      "the producer's reason/rationale",
+      "its confidence",
+      "which model produced it",
+      "the producer's prompt"
+    ],
+    "stages": [
+      "mechanical definitional-term test against the pinned source text",
+      "adversarial refutation by a different model, defaulting to refuted when unsure"
+    ],
+    "confirm_requires": "both stages: textual evidence AND a failed refutation"
+  },
+  "counts": {
+    "refused": 127
+  },
+  "checked": 127,
+  "not_checked_because_producer_asserted_nothing": 112,
+  "producer_errors": 1,
+  "verdicts": [
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Sets",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Sets and Equivalence Relations' does not rely on any term defined by 'Sets'. It introduces its own concepts such as functions, one-to-one, onto, equivalence relations, reflexive, symmetric, and transitive, without using any specific term from the 'Sets' definition. Therefore, 'Sets' does not generalize 'Sets and Equivalence Relations'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Sets",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Sets' generalizes 'The Division Algorithm' is refuted because the definition of 'The Division Algorithm' does not rely on any concept from 'Sets'. The Division Algorithm is a statement about integers and their division, while the concept of sets is about collections of objects. There is no direct relationship or generalization between these two concepts as described in the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Sets",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'set' in the definition of 'Definitions and Examples of Groups' is used as a technical notion, not just in ordinary English. However, the definition of 'Definitions and Examples of Groups' does not genuinely require the concept of 'Sets' to be stated. It can be rephrased without using the term 'set', for example, by referring to a collection of elements with a binary operation. Therefore, the claim that 'Sets' generalizes 'Definitions and Examples of Groups' is refuted.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "set",
+            "sentence": "A group (G, .) is a set G together with a binary operation satisfying:"
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Sets",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Subgroups' does not rely on any specific term defined by 'Sets' in a technical sense. Instead, it uses the concept of a subset, which is a fundamental idea in set theory. While 'Sets' provides the foundational concept of a subset, the definition of 'Subgroups' can be understood without explicitly using the term 'set' from the 'Sets' definition. Therefore, 'Subgroups' does not generalize 'Sets' as claimed.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Sets",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'set' in the definition of 'Cyclic Subgroups' is used in a technical sense, but it is not the core concept that defines cyclic subgroups. The definition of cyclic subgroups relies on the concept of a group and the properties of elements within that group, not on the general notion of a set. Therefore, 'Sets' does not generalize 'Cyclic Subgroups'.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "set",
+            "sentence": "A group G is cyclic if there is an element g in G such that G is the set of all powers of g;"
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Sets",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'set' in the definition of 'Permutation Groups: Definitions and Notation' is used as a technical notion, but it is not the only term from the definition of 'Sets' that is needed. The definition of 'Permutation Groups' relies on the concept of a bijection, which is not defined in the given definition of 'Sets'. Therefore, 'Sets' does not generalize 'Permutation Groups: Definitions and Notation'.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "set",
+            "sentence": "A permutation of a set S is a bijection from S to itself."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Sets",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Cosets' does not rely on any specific term defined by 'Sets' in a technical sense. Instead, it uses the concept of a set in a general, everyday sense to describe collections of elements. Therefore, 'Sets' does not generalize 'Cosets' as claimed.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Sets",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Sets' generalizes 'Lagrange's Theorem' is refuted because the definition of 'Lagrange's Theorem' does not rely on any specific concept from the definition of 'Sets'. Lagrange's Theorem is a statement about the relationship between the sizes of a group and its subgroup, which is a concept from group theory, not set theory. While sets are used in the context of group theory, the theorem itself is not a generalization of set theory but rather a specific result within group theory.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Sets",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Isomorphisms: Definition and Examples' does not genuinely rely on the concept of 'Sets' as defined. While sets are implicitly used in the definition of isomorphisms (as groups are sets with additional structure), the core concept of isomorphisms can be understood and defined without explicitly referencing the definition of sets provided. The claim that 'Sets' generalizes 'Isomorphisms: Definition and Examples' is therefore incorrect.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Sets",
+      "dst_label": "Normal Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Sets' generalizes 'Normal Subgroups' is refuted because the definition of 'Normal Subgroups' does not rely on any specific term defined by 'Sets'. The concept of a set is fundamental to both definitions, but the definition of a normal subgroup is specific to group theory and does not generalize the broader concept of sets. Instead, sets provide the foundational structure upon which the concept of normal subgroups is built.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Sets",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'set' in the definition of 'Group Homomorphisms' is used incidentally and does not capture the essence of what makes a group homomorphism a special case of a more general concept. The definition of 'Group Homomorphisms' relies on the algebraic structure of groups, which is not a direct generalization of the concept of a set. Therefore, the claim that 'Sets' generalizes 'Group Homomorphisms' is refuted.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "set",
+            "sentence": "The kernel of phi is the set of elements of G mapped to the identity of H."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Sets",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Sets' generalizes 'Fields of Fractions' is refuted because the definition of 'Fields of Fractions' does not rely on any specific term defined by 'Sets'. The concept of a field of fractions is a specific construction in abstract algebra that involves an integral domain and its fractions, which can be described using the notion of sets, but sets themselves do not generalize fields of fractions. Instead, fields of fractions are a specific application or construction that can be built using the more general concept of sets.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:sets",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Sets",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Extension Fields' does not rely on any specific terms defined by 'Sets'. While both concepts deal with collections of elements, the definition of 'Extension Fields' is specific to algebraic structures and does not generalize the concept of 'Sets' in a meaningful way. The claim that 'Sets' generalizes 'Extension Fields' is therefore incorrect.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Set Operations",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Sets and Equivalence Relations' is refuted because the definition of 'Sets and Equivalence Relations' does not rely on any of the terms defined in 'Set Operations'. The definitions are distinct and do not have a clear hierarchical relationship where one generalizes the other.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Set Operations",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'The Division Algorithm' is refuted because the definition of 'The Division Algorithm' does not rely on any of the technical terms defined in 'Set Operations'. The Division Algorithm deals with integer division and the Euclidean algorithm, while Set Operations involve concepts like union, intersection, and power sets of sets. There is no direct relationship or generalization between these two concepts as described in the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Set Operations",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Definitions and Examples of Groups' is refuted because the definition of 'Definitions and Examples of Groups' does not rely on any of the terms defined in 'Set Operations'. The definition of a group involves a set and a binary operation, but it does not inherently involve the specific set operations like union, intersection, or power set, which are discussed in 'Set Operations'. Therefore, 'Set Operations' does not generalize 'Definitions and Examples of Groups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Set Operations",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Subgroups' is refuted because the definition of 'Subgroups' does not rely on any specific term defined by 'Set Operations'. The definition of 'Subgroups' involves concepts like closure under operations and inverses, which are not directly related to the operations or definitions provided in 'Set Operations'. Therefore, 'Set Operations' does not generalize 'Subgroups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Set Operations",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Cyclic Subgroups' is refuted because the definition of 'Cyclic Subgroups' does not rely on any of the technical terms defined in 'Set Operations'. The definition of 'Cyclic Subgroups' involves concepts like groups, generators, and orders, which are not directly related to the set operations such as union, intersection, or power sets. Therefore, 'Set Operations' does not generalize 'Cyclic Subgroups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Set Operations",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Permutation Groups: Definitions and Notation' is refuted. The definition of 'Permutation Groups: Definitions and Notation' does not rely on any specific term defined by 'Set Operations'. While both concepts deal with sets, 'Set Operations' focuses on basic operations like union, intersection, and power set, whereas 'Permutation Groups' is about bijections and group theory. There is no clear indication that 'Set Operations' is a generalization of 'Permutation Groups' based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Set Operations",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Cosets' does not rely on any specific term defined by 'Set Operations'. While 'Set Operations' includes concepts like union and intersection, these are not used in the definition of cosets. The definition of cosets involves the operation of multiplying elements of a group and a subgroup, which is a different concept from the set operations discussed.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Set Operations",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Lagrange's Theorem' is refuted because there is no direct relationship between the two concepts as described. 'Set Operations' primarily deals with basic operations on sets such as union, intersection, and power sets, while 'Lagrange's Theorem' is a specific theorem in group theory that relates the order of a subgroup to the order of a group. There is no indication that 'Set Operations' provides a generalization of 'Lagrange's Theorem' based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Set Operations",
+      "dst_label": "Normal Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Normal Subgroups' is refuted because the definition of 'Normal Subgroups' does not rely on any of the specific terms or operations defined under 'Set Operations'. The definition of a normal subgroup involves the concept of cosets, which is a specific algebraic structure within group theory, and does not inherently involve the operations of union, intersection, or power sets that are central to set theory. Therefore, 'Set Operations' does not generalize 'Normal Subgroups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:16.1-rings",
+      "src_label": "Set Operations",
+      "dst_label": "Rings",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Rings' is refuted because the definition of 'Rings' does not rely on any specific terms or concepts from 'Set Operations'. The definition of a ring involves algebraic structures with operations like addition and multiplication, which are not directly related to set operations such as union or intersection. While sets are used to define the elements of a ring, the operations within a ring are not set operations but rather algebraic operations with specific properties. Therefore, 'Set Operations' does not generalize 'Rings'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Set Operations",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Ring Homomorphisms and Ideals' is refuted because the definitions provided do not show a clear generalization relationship. The definitions of ring homomorphisms and ideals rely on set operations such as union and intersection, but these operations are not the primary focus or generalization of the concepts. Instead, ring homomorphisms and ideals are specific algebraic structures and properties within the context of rings, which are built upon set theory but are not directly generalized by set operations alone.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Set Operations",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Fields of Fractions' is refuted because the definition of 'Fields of Fractions' does not rely on any specific term defined by 'Set Operations'. The concept of 'Fields of Fractions' is about constructing a field from an integral domain, which involves operations on elements of the domain, not on sets themselves. 'Set Operations' deal with operations on sets, such as union, intersection, and power sets, which are not directly related to the construction of fields of fractions. Therefore, 'Set Operations' does not generalize 'Fields of Fractions'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Set Operations",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Factorization in Integral Domains' is refuted because there is no indication that the definitions of 'Factorization in Integral Domains' rely on or are a generalization of the concepts defined in 'Set Operations'. The definitions provided do not show any direct relationship or dependency between the two concepts.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:set-operations",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Set Operations",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Set Operations' generalizes 'Extension Fields' is refuted because the definition of 'Extension Fields' does not rely on any specific term defined by 'Set Operations'. The concepts of set union and intersection, which are part of 'Set Operations', do not appear in the definition of 'Extension Fields'. Additionally, 'Extension Fields' is a specific concept in abstract algebra that deals with fields and their extensions, which is not a generalization of set operations but rather a distinct mathematical structure built upon the foundation of set theory.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Statements and Logical Connectives' generalizes 'Sets and Equivalence Relations' is refuted because there is no indication that the concepts of sets and equivalence relations rely on or are a special case of statements and logical connectives. The definitions provided do not show any direct relationship or dependency between the two concepts.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Statements and Logical Connectives' generalizes 'Definitions and Examples of Groups' is refuted. The definition of a group in 'Definitions and Examples of Groups' does not rely on any specific terms or concepts from 'Statements and Logical Connectives'. The definition of a group is purely mathematical and involves set theory and binary operations, without requiring the use of logical connectives or statements as defined in the other concept. Therefore, 'Statements and Logical Connectives' does not generalize 'Definitions and Examples of Groups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Statements and Logical Connectives' generalizes 'Subgroups' is refuted because the definition of 'Subgroups' does not rely on any concepts from 'Statements and Logical Connectives'. The definition of a subgroup is purely algebraic, involving closure under the group operation and taking inverses, without any reference to logical statements or connectives. Therefore, 'Statements and Logical Connectives' does not generalize 'Subgroups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Statements and Logical Connectives' generalizes 'Cosets' is refuted because the definition of 'Cosets' does not rely on any concepts from 'Statements and Logical Connectives'. The definition of cosets involves group theory and the structure of groups and subgroups, which are entirely unrelated to logical statements and connectives. There is no indication that the concepts of statements and logical connectives are necessary or used in the definition of cosets.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Statements and Logical Connectives' generalizes 'Group Homomorphisms' is refuted because there is no clear indication that the concepts of group homomorphisms rely on or are a special case of statements and logical connectives. The definitions provided do not show any direct relationship or generalization between the two concepts. Group homomorphisms are a concept from abstract algebra dealing with the structure-preserving maps between groups, while statements and logical connectives are from logic and deal with the structure of propositions. There is no term or concept from 'Statements and Logical Connectives' that is essential to the definition of 'Group Homomorphisms'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Statements and Logical Connectives' generalizes 'Ring Homomorphisms and Ideals' is refuted. The definitions provided do not show any direct relationship where one concept is a generalization of the other. 'Statements and Logical Connectives' deals with the structure of logical arguments and the truth values of statements, while 'Ring Homomorphisms and Ideals' is a concept from abstract algebra dealing with the structure of rings and their mappings. There is no clear indication that one concept is a generalization of the other based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:statements",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Statements and Logical Connectives",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Statements and Logical Connectives' generalizes 'Fields of Fractions' is refuted because there is no clear indication that the concept of logical connectives is necessary or fundamental to the definition of fields of fractions. The definition of fields of fractions is purely mathematical and algebraic, dealing with the construction of a field from an integral domain, while logical connectives are part of formal logic and propositional calculus. There is no direct relationship or generalization between these two concepts as described in the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Sets and Equivalence Relations' is refuted because there is no indication that the concepts of predicates and quantifiers are more general than or encompass the concepts of sets and equivalence relations. The definitions provided do not show a clear hierarchical relationship where one concept is a generalization of the other. Instead, they appear to be distinct areas of mathematical logic with their own specific definitions and applications.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'The Division Algorithm' is refuted because the definition of 'The Division Algorithm' does not rely on any of the concepts defined by 'Predicates and Quantifiers'. The Division Algorithm is a specific mathematical statement about integers and their division, while Predicates and Quantifiers are concepts in logic used to make statements about variables and their properties. There is no direct relationship or generalization between these two concepts as described in the claim.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Definitions and Examples of Groups' is refuted. The definition of 'Definitions and Examples of Groups' does not inherently require or utilize the concepts of predicates and quantifiers as defined in 'Predicates and Quantifiers'. The definition of a group can be stated using standard mathematical language without needing to invoke predicates or quantifiers in the technical sense. Therefore, 'Predicates and Quantifiers' is not a generalization of 'Definitions and Examples of Groups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Subgroups' is refuted because the definition of 'Subgroups' does not rely on any of the technical notions defined by 'Predicates and Quantifiers'. The definition of 'Subgroups' is stated in terms of group theory concepts such as closure under operations and inverses, without the need for predicates or quantifiers. Therefore, 'Predicates and Quantifiers' does not generalize 'Subgroups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Cyclic Subgroups' is refuted because the definition of 'Cyclic Subgroups' does not rely on any concepts from 'Predicates and Quantifiers'. The definition of 'Cyclic Subgroups' is purely about group theory and does not involve predicates or quantifiers in the logical sense. The concepts of predicates and quantifiers are used in logic to make statements about variables, which is not directly applicable to the definition of cyclic subgroups in group theory.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Permutation Groups: Definitions and Notation' is refuted. The definition of 'Permutation Groups: Definitions and Notation' does not rely on any concepts from 'Predicates and Quantifiers'. The definition of permutation groups is purely about bijections and group theory, while 'Predicates and Quantifiers' deals with logical statements and quantifiers. There is no indication that permutation groups cannot be defined without the concepts of predicates and quantifiers, and thus, 'Predicates and Quantifiers' does not generalize 'Permutation Groups: Definitions and Notation'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Cosets' is refuted because the definition of 'Cosets' does not rely on any of the concepts defined by 'Predicates and Quantifiers'. The definition of 'Cosets' is purely about group theory and does not involve predicates or quantifiers in the logical sense. The term 'Predicates and Quantifiers' does not appear in the definition of 'Cosets', and the definition of 'Cosets' can be stated without using any of the vocabulary from 'Predicates and Quantifiers'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Lagrange's Theorem' is WRONG. The definition of 'Lagrange's Theorem' does not rely on any of the concepts defined by 'Predicates and Quantifiers'. The theorem is a statement about the relationship between the sizes of a group and its subgroup, which can be expressed without the need for predicates or quantifiers in the context of group theory. The concepts of predicates and quantifiers are more fundamental to logic and are used to construct more complex mathematical statements, but they are not necessary for stating or proving Lagrange's Theorem.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Isomorphisms: Definition and Examples' is refuted. The definition of 'Isomorphisms: Definition and Examples' does not rely on any concepts from 'Predicates and Quantifiers'. The definition of isomorphisms involves a bijective map and the preservation of group operation, which are specific to group theory and do not involve predicates or quantifiers in the sense described in 'Predicates and Quantifiers'. Therefore, 'Predicates and Quantifiers' does not generalize 'Isomorphisms: Definition and Examples'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Normal Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Normal Subgroups' is refuted because the definition of 'Normal Subgroups' does not rely on any concept from 'Predicates and Quantifiers'. The definition of 'Normal Subgroups' is purely algebraic and does not involve predicates or quantifiers in the logical sense. The concepts of predicates and quantifiers are used in mathematical logic to make statements about variables, but they are not necessary for defining normal subgroups in group theory.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Group Homomorphisms' is refuted. The definition of 'Group Homomorphisms' does not rely on any concepts from 'Predicates and Quantifiers'. While both concepts are part of mathematical logic, they serve different purposes and are not in a generalization relationship. 'Group Homomorphisms' is a concept from group theory, dealing with structure-preserving maps between groups, whereas 'Predicates and Quantifiers' are fundamental to predicate logic, used to express statements about variables. There is no indication that 'Predicates and Quantifiers' generalizes 'Group Homomorphisms' based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Ring Homomorphisms and Ideals' is refuted. The definitions provided do not show any direct relationship where 'Predicates and Quantifiers' is a more general concept that encompasses 'Ring Homomorphisms and Ideals'. The concepts are distinct, with 'Predicates and Quantifiers' dealing with logical statements and quantifiers in mathematical logic, while 'Ring Homomorphisms and Ideals' are specific to algebraic structures in ring theory. There is no indication that the former is a prerequisite for or a generalization of the latter based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Maximal and Prime Ideals' is refuted. The definitions provided do not show any direct relationship where 'Predicates and Quantifiers' is a generalization of 'Maximal and Prime Ideals'. The concepts are from different areas of mathematics, with 'Predicates and Quantifiers' being a part of logic and 'Maximal and Prime Ideals' being concepts in ring theory. There is no indication that the former generalizes the latter based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Polynomial Rings",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Polynomial Rings' is refuted because the definition of 'Polynomial Rings' does not rely on any concepts from 'Predicates and Quantifiers'. The definition of 'Polynomial Rings' is purely algebraic and does not involve predicates or quantifiers in the logical sense. The text provided does not show any term from 'Predicates and Quantifiers' occurring in the definition of 'Polynomial Rings', and it is clear that the concepts are distinct and unrelated.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Fields of Fractions' is refuted because there is no indication that the concepts of predicates and quantifiers are necessary or sufficient to define or understand the concept of fields of fractions. The definitions provided do not show any direct relationship or generalization between the two concepts.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Factorization in Integral Domains' does not rely on any technical terms or concepts from 'Predicates and Quantifiers'. The definition of 'Factorization in Integral Domains' can be understood and stated without using any of the vocabulary or concepts from 'Predicates and Quantifiers'. Therefore, the claim that 'Predicates and Quantifiers' generalizes 'Factorization in Integral Domains' is refuted.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:predicates-and-quantifiers",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Predicates and Quantifiers",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Predicates and Quantifiers' generalizes 'Extension Fields' is refuted because the definition of 'Extension Fields' does not rely on any concepts from 'Predicates and Quantifiers'. The definition of 'Extension Fields' is purely mathematical and deals with the structure of fields and their extensions, while 'Predicates and Quantifiers' is a concept from logic dealing with variables and quantifiers in mathematical statements. There is no indication that 'Predicates and Quantifiers' is necessary or more general than 'Extension Fields' based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Rules of Deduction' generalizes 'Sets and Equivalence Relations' is refuted because there is no indication that the concepts of sets and equivalence relations are derived from or are a special case of rules of deduction. The definitions provided do not show any direct relationship or generalization between the two concepts. Additionally, no term defined by 'Rules of Deduction' appears in the definition of 'Sets and Equivalence Relations', further supporting the refutation of the claim.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Rules of Deduction' generalizes 'Subgroups' is refuted because there is no indication that the concept of subgroups relies on or is a special case of rules of deduction. The definitions provided do not show any direct relationship or generalization between the two concepts. The rules of deduction are about logical inference, while subgroups are about algebraic structures within groups. There is no term from 'Rules of Deduction' that is essential to the definition of 'Subgroups', and the concepts operate in different domains of mathematics.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Rules of Deduction' generalizes 'Lagrange's Theorem' is refuted because there is no indication that Lagrange's Theorem relies on or is a special case of the Rules of Deduction. The definitions provided do not show any direct relationship between the two concepts, and no term from 'Rules of Deduction' is essential to the definition of 'Lagrange's Theorem'. Therefore, 'Rules of Deduction' does not generalize 'Lagrange's Theorem'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Rules of Deduction' generalizes 'Isomorphisms: Definition and Examples' is refuted. The definition of 'Isomorphisms: Definition and Examples' does not rely on any term defined by 'Rules of Deduction'. The two concepts are distinct, with 'Rules of Deduction' dealing with logical argument forms and 'Isomorphisms' being about structure-preserving maps between algebraic structures. There is no indication that one concept is a generalization of the other based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Rules of Deduction' generalizes 'Group Homomorphisms' is refuted because there is no indication that the definition of 'Group Homomorphisms' relies on or is a special case of the 'Rules of Deduction'. The definitions provided do not show any direct relationship or generalization between the two concepts. 'Group Homomorphisms' is a concept from abstract algebra dealing with structure-preserving maps between groups, while 'Rules of Deduction' is a concept from logic dealing with valid argument forms. There is no term from 'Rules of Deduction' that appears in the definition of 'Group Homomorphisms', and the concepts themselves operate in different domains of mathematics.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Rules of Deduction' generalizes 'Ring Homomorphisms and Ideals' is refuted because there is no indication that the definition of 'Ring Homomorphisms and Ideals' relies on or is a special case of the 'Rules of Deduction'. The definitions provided do not show any direct relationship where the rules of deduction are used to define or generalize the concepts of ring homomorphisms and ideals. The claim is therefore WRONG.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:deduction-rules",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Rules of Deduction",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Rules of Deduction' generalizes 'Factorization in Integral Domains' is refuted because there is no indication that the definition of 'Factorization in Integral Domains' relies on or is a special case of 'Rules of Deduction'. The two concepts are described in entirely different contexts - one in the realm of abstract algebra and the other in the context of logical reasoning. There is no term from 'Rules of Deduction' that appears in the definition of 'Factorization in Integral Domains', and the definitions do not suggest a generalization relationship between the two.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Functions",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Functions' generalizes 'Sets and Equivalence Relations' is refuted because the definition of 'Sets and Equivalence Relations' does not rely on the technical notion of 'Functions' as defined. The term 'exactly one' appears in the definition of 'Sets and Equivalence Relations' but is used in an incidental manner, not as a technical term specific to 'Functions'. Additionally, the definition of 'Sets and Equivalence Relations' includes concepts such as reflexivity, symmetry, and transitivity, which are not part of the definition of 'Functions'. Therefore, 'Functions' does not generalize 'Sets and Equivalence Relations'.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "exactly one",
+            "sentence": "A function f from X to Y assigns to each element of X exactly one element of Y."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Functions",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The Division Algorithm and the concept of Functions are not directly related in the sense that one generalizes the other. The Division Algorithm is a specific mathematical procedure dealing with integer division, while Functions is a broader concept in mathematics that describes a relationship between a set of inputs and a set of permissible outputs with the property that each input is related to exactly one output. There is no indication in the provided definitions that the Division Algorithm cannot be stated without the concept of Functions, nor is there evidence that Functions is a generalization of the Division Algorithm.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Functions",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Definitions and Examples of Groups' does not rely on any technical terms from the definition of 'Functions'. The concepts are distinct and do not have a direct generalization relationship as claimed.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Functions",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Functions' generalizes 'Subgroups' is refuted because the definition of 'Subgroups' does not rely on any concept from 'Functions'. The definition of a subgroup is purely algebraic and does not involve the notion of a rule assigning inputs to outputs, which is central to the definition of a function. Therefore, 'Functions' does not generalize 'Subgroups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Functions",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Functions' generalizes 'Cyclic Subgroups' is refuted because the definition of 'Cyclic Subgroups' does not rely on any concept from 'Functions'. The definition of a cyclic subgroup is purely about group theory and does not involve the notion of a function as defined in mathematics. Therefore, 'Functions' does not generalize 'Cyclic Subgroups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Functions",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'bijection' in the definition of 'Permutation Groups: Definitions and Notation' is a technical term that is essential to the definition. However, the definition of 'Functions' does not inherently require or necessitate the concept of 'Permutation Groups: Definitions and Notation'. Therefore, 'Functions' does not generalize 'Permutation Groups: Definitions and Notation'.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "bijection",
+            "sentence": "A permutation of a set S is a bijection from S to itself."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Functions",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Cosets' does not rely on any term defined by 'Functions'. Cosets are defined in the context of group theory and involve the operation of multiplying elements of a group by elements of a subgroup, which is a concept distinct from the notion of a function mapping inputs to outputs. Therefore, the claim that 'Functions' generalizes 'Cosets' is incorrect.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Functions",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Functions' generalizes 'Lagrange's Theorem' is refuted because there is no direct relationship between the two concepts as described. Lagrange's Theorem is a statement about the relationship between the sizes of a group and its subgroup, while the definition of a function describes a rule assigning inputs to outputs. There is no term from the definition of 'Functions' that is essential to the statement of 'Lagrange's Theorem', and the theorem does not inherently involve the concept of functions in its definition or proof.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Functions",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Isomorphisms: Definition and Examples' does not genuinely rely on the term 'Functions' as defined. It can be stated without using the specific vocabulary of 'Functions', and the concept of isomorphisms is more specific than the general concept of functions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:10.1-factor-groups-and-normal-subgroups",
+      "src_label": "Functions",
+      "dst_label": "Normal Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Functions' generalizes 'Normal Subgroups' is refuted because the definition of 'Normal Subgroups' does not rely on any concept from 'Functions'. The definition of a normal subgroup is purely algebraic and does not involve the notion of a function as defined in mathematics. Therefore, 'Functions' does not generalize 'Normal Subgroups'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Functions",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Group Homomorphisms' does not rely on any specific term defined by 'Functions' in a technical sense. While 'Group Homomorphisms' is a type of function, the claim that 'Functions' generalizes 'Group Homomorphisms' is not accurate because 'Group Homomorphisms' is a more specific concept with additional properties (like preserving the group operation) that are not part of the general definition of a function.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:16.1-rings",
+      "src_label": "Functions",
+      "dst_label": "Rings",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'domain' in the definition of 'Rings' is used in an incidental manner, referring to the set of elements in the ring, not in the sense of a function's domain. The definition of 'Rings' does not rely on the concept of functions, and 'Functions' does not generalize 'Rings'.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "domain",
+            "sentence": "A commutative ring $R$ with identity is called an integral domain if, for every $a, b \\in R$ such that $ab = 0$, either $a = 0$ or $b = 0$."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:16.2-integral-domains-and-fields",
+      "src_label": "Functions",
+      "dst_label": "Integral Domains and Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'domain' in the definition of 'Integral Domains and Fields' is used in a technical sense related to the set of elements in the ring, not in the sense of a function's domain. The definitions of 'Integral Domains and Fields' do not rely on the concept of functions, and they can be stated without using any of the vocabulary defined by 'Functions'. Therefore, the claim that 'Functions' generalizes 'Integral Domains and Fields' is refuted.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "domain",
+            "sentence": "A commutative ring with identity is said to be an integral domain if it has no zero divisors."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Functions",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Functions' generalizes 'Ring Homomorphisms and Ideals' is refuted because the definition of 'Ring Homomorphisms and Ideals' can be stated without relying on the specific technical terms defined by 'Functions'. While terms like 'one-to-one' and 'onto' are used, they are not essential to the core definition of ring homomorphisms and ideals. The concepts of ring homomorphisms and ideals are specific to algebraic structures and do not inherently require the broader concept of functions as defined. Therefore, 'Ring Homomorphisms and Ideals' is not a special case of 'Functions', and the claim is wrong.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "one-to-one",
+            "sentence": "R \\rightarrow S$ is a one-to-one and onto homomorphism, then $\\phi$ is called an isomorphism of rings."
+          },
+          {
+            "term": "onto",
+            "sentence": "R \\rightarrow S$ is a one-to-one and onto homomorphism, then $\\phi$ is called an isomorphism of rings."
+          }
+        ],
+        "match_count": 2
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:17.1-polynomial-rings",
+      "src_label": "Functions",
+      "dst_label": "Polynomial Rings",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Polynomial Rings' does not inherently rely on the concept of 'Functions' as defined. While both concepts deal with mappings, the definition of 'Polynomial Rings' is specific to algebraic structures and does not require the general notion of a function as described. Therefore, 'Functions' does not generalize 'Polynomial Rings'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Functions",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'domain' in the definition of 'Fields of Fractions' is used in an incidental manner, referring to the integral domain $D$, not in the sense of a function's domain. The definition of 'Fields of Fractions' does not genuinely rely on the concept of 'Functions' as defined, and thus 'Functions' does not generalize 'Fields of Fractions'.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "domain",
+            "sentence": "The field $F_D$ in is called the field of fractions or field of quotients of the integral domain $D$."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Functions",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'function' in the definition of 'Factorization in Integral Domains' appears only incidentally and does not play a load-bearing role in the definition. The concept of factorization in integral domains can be understood and defined without referring to the technical notion of a function as described in the 'Functions' definition. Therefore, the claim that 'Functions' generalizes 'Factorization in Integral Domains' is refuted.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "function",
+            "sentence": "Let $D$ be an integral domain such that there is a function $\\nu :"
+          },
+          {
+            "term": "domain",
+            "sentence": "Let $D$ be an integral domain."
+          }
+        ],
+        "match_count": 2
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Functions",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Extension Fields' does not rely on any term defined by 'Functions'. The concepts of functions and extension fields are distinct and do not have a direct generalization relationship based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:functions",
+      "dst": "judson:21.2-splitting-fields",
+      "src_label": "Functions",
+      "dst_label": "Splitting Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Functions' generalizes 'Splitting Fields' is refuted because the definition of 'Splitting Fields' does not rely on any term defined by 'Functions'. The concept of a function, while fundamental in mathematics, is not necessary to define or understand the notion of a splitting field. A splitting field is a specific type of field extension where a polynomial can be factored into linear factors, and this concept can be explained without invoking the general notion of a function.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Injective, Surjective and Bijective Functions' generalizes 'Sets and Equivalence Relations' is refuted. The definitions provided do not support this claim. The definition of 'Sets and Equivalence Relations' does not rely on the terms 'injective', 'surjective', or 'bijective'. These terms are specific to the characterization of functions, while the definition of 'Sets and Equivalence Relations' includes both functions and equivalence relations, which are distinct concepts. Therefore, 'Injective, Surjective and Bijective Functions' does not generalize 'Sets and Equivalence Relations'.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "exactly one",
+            "sentence": "A function f from X to Y assigns to each element of X exactly one element of Y."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Injective, Surjective and Bijective Functions' generalizes 'Cyclic Subgroups' is refuted. The definitions provided do not show any direct relationship or generalization between the two concepts. 'Injective, Surjective and Bijective Functions' are properties of functions, while 'Cyclic Subgroups' is a property of groups. There is no term from the former that is essential to the definition of the latter, and the concepts operate in different domains of mathematics.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:5.1-definitions-and-notation",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Permutation Groups: Definitions and Notation",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The term 'bijection' in the definition of 'Permutation Groups: Definitions and Notation' is a technical term that is essential to the definition. It cannot be restated without using the term 'bijection' or its equivalent, which is defined in 'Injective, Surjective and Bijective Functions'. Therefore, 'Injective, Surjective and Bijective Functions' is a prerequisite for understanding 'Permutation Groups: Definitions and Notation', not a generalization of it.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "bijection",
+            "sentence": "A permutation of a set S is a bijection from S to itself."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definitions of 'Injective, Surjective and Bijective Functions' and 'Cosets' do not share any direct relationship that would justify the claim that one generalizes the other. The definitions provided do not contain terms from one that are essential to the other, and there is no indication that the concepts of cosets can be understood as a special case of injective, surjective, or bijective functions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim is refuted because the definition of 'Isomorphisms: Definition and Examples' does not genuinely require the terms 'injective', 'surjective', and 'bijective' as defined in 'Injective, Surjective and Bijective Functions'. The term 'bijective' is used in the context of isomorphisms, but the concepts of injectivity and surjectivity are not explicitly needed to define isomorphisms. Isomorphisms are defined by the existence of a bijective map that preserves the group operation, and this can be stated without using the specific terms 'injective' and 'surjective'. Therefore, the claim that 'Injective, Surjective and Bijective Functions' generalizes 'Isomorphisms: Definition and Examples' is incorrect.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "bijective",
+            "sentence": "Two groups (G, .) and (H, *) are isomorphic if there exists a bijective map phi:"
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Injective, Surjective and Bijective Functions' generalizes 'Group Homomorphisms' is refuted. The definition of 'Group Homomorphisms' does not inherently rely on or use the concepts of injectivity, surjectivity, or bijectivity. A group homomorphism is defined by the property that it preserves the group operation, and the concepts of injectivity, surjectivity, and bijectivity are additional properties that a function may or may not possess, independent of whether it is a homomorphism. Therefore, 'Injective, Surjective and Bijective Functions' do not generalize 'Group Homomorphisms'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Injective, Surjective and Bijective Functions' generalizes 'Ring Homomorphisms and Ideals' is refuted. While the terms 'onto' and 'one-to-one' from the definition of Injective, Surjective, and Bijective Functions do appear in the definition of Ring Homomorphisms and Ideals, their occurrence is incidental rather than load-bearing. The definition of Ring Homomorphisms and Ideals can be stated without explicitly using these terms, as it primarily focuses on the properties of preserving operations and the structure of rings. The concepts of injectivity, surjectivity, and bijectivity, while related, are not strictly more general than ring homomorphisms and ideals, nor are they literal instances of them. Therefore, the claim is wrong.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "onto",
+            "sentence": "R \\rightarrow S$ is a one-to-one and onto homomorphism, then $\\phi$ is called an isomorphism of rings."
+          },
+          {
+            "term": "one-to-one",
+            "sentence": "R \\rightarrow S$ is a one-to-one and onto homomorphism, then $\\phi$ is called an isomorphism of rings."
+          }
+        ],
+        "match_count": 2
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Injective, Surjective and Bijective Functions' generalizes 'Fields of Fractions' is refuted. The definitions provided do not indicate a generalization relationship. The term 'domain' in the definition of 'Fields of Fractions' is used in an incidental manner, referring to the integral domain $D$, and does not rely on the technical notions of injective, surjective, or bijective functions. The concepts of injective, surjective, and bijective functions are about mappings between sets, while the field of fractions is a construction in abstract algebra. There is no clear indication that one concept generalizes the other based on the given definitions.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "domain",
+            "sentence": "The field $F_D$ in is called the field of fractions or field of quotients of the integral domain $D$."
+          }
+        ],
+        "match_count": 1
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Injective, Surjective and Bijective Functions' generalizes 'Factorization in Integral Domains' is refuted. The definitions provided do not indicate a generalization relationship between the two concepts. The definitions of injective, surjective, and bijective functions pertain to the properties of mappings between sets, while the definition of factorization in integral domains pertains to the properties of elements within a ring. There is no clear indication that one concept is a generalization of the other based on the given definitions.",
+      "evidence": {
+        "matches": [
+          {
+            "term": "function",
+            "sentence": "Let $D$ be an integral domain such that there is a function $\\nu :"
+          },
+          {
+            "term": "domain",
+            "sentence": "Let $D$ be an integral domain."
+          }
+        ],
+        "match_count": 2
+      }
+    },
+    {
+      "src": "levin-dmoi:function-properties",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Injective, Surjective and Bijective Functions",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Injective, Surjective and Bijective Functions' generalizes 'Extension Fields' is refuted. The definitions provided do not show any direct relationship or generalization between the two concepts. Injective, Surjective, and Bijective Functions are properties of mappings between sets, while Extension Fields are a concept in field theory dealing with the relationship between fields. There is no indication that one concept generalizes the other based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Direct Proof",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Direct Proof' generalizes 'Sets and Equivalence Relations' is refuted because there is no indication that the concept of 'Direct Proof' is necessary or foundational to understanding 'Sets and Equivalence Relations'. The definitions provided do not show any dependency or generalization relationship between the two concepts. 'Direct Proof' is a method of proof, while 'Sets and Equivalence Relations' are mathematical concepts. There is no term from 'Direct Proof' that appears in the definition of 'Sets and Equivalence Relations', and the definitions are stated independently of each other.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Direct Proof",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Direct Proof' generalizes 'The Division Algorithm' is refuted because the definition of 'The Division Algorithm' does not inherently require or utilize the concept of 'Direct Proof'. The Division Algorithm is a specific mathematical result about the division of integers, while a Direct Proof is a method of proving mathematical statements. There is no indication that the Division Algorithm cannot be stated or understood without the concept of Direct Proof, and the Division Algorithm is not a special case or instance of a Direct Proof.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:3.2-definitions-and-examples",
+      "src_label": "Direct Proof",
+      "dst_label": "Definitions and Examples of Groups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Direct Proof' generalizes 'Definitions and Examples of Groups' is WRONG. The definition of 'Definitions and Examples of Groups' does not rely on or require the concept of 'Direct Proof'. The definition of a group is a mathematical concept that can be stated and understood without reference to the method of proof used to establish its properties. 'Direct Proof' is a method of proving mathematical statements, and while it can be used to prove that a set with a binary operation forms a group, the definition of a group itself does not generalize from or depend on the concept of direct proof.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Direct Proof",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Direct Proof' generalizes 'Subgroups' is refuted because the definition of 'Subgroups' does not rely on or use the concept of 'Direct Proof'. The definition of 'Subgroups' is purely mathematical and pertains to the algebraic structure of groups, while 'Direct Proof' is a method of logical argumentation used in mathematics. There is no indication that 'Direct Proof' is a generalization of 'Subgroups' based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Direct Proof",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Direct Proof' generalizes 'Lagrange's Theorem' is refuted because there is no indication that Lagrange's Theorem cannot be stated or proven without the concept of a direct proof. The definition of Lagrange's Theorem does not rely on the notion of a direct proof, and it can be proven using various methods, including direct proof, proof by contradiction, or other proof techniques. Therefore, 'Direct Proof' is not a generalization of 'Lagrange's Theorem'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Direct Proof",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Direct Proof' generalizes 'Group Homomorphisms' is refuted because the definition of 'Group Homomorphisms' does not rely on or use the concept of 'Direct Proof'. The definition of 'Group Homomorphisms' is purely mathematical and pertains to the properties of mappings between groups, while 'Direct Proof' is a method of proof in logic and mathematics. There is no indication that 'Direct Proof' is a generalization of 'Group Homomorphisms' based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:16.1-rings",
+      "src_label": "Direct Proof",
+      "dst_label": "Rings",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Direct Proof' generalizes 'Rings' is refuted because the definition of 'Rings' does not rely on or use the concept of 'Direct Proof'. The definition of 'Rings' is purely mathematical and describes the properties and structure of a ring, while 'Direct Proof' is a method of mathematical proof. There is no indication that the concept of 'Direct Proof' is necessary or inherent in the definition of 'Rings'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Direct Proof",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Ring Homomorphisms and Ideals' does not contain any term defined by 'Direct Proof'. The claim that 'Direct Proof' generalizes 'Ring Homomorphisms and Ideals' is therefore refuted.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:direct-proof",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Direct Proof",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Extension Fields' does not contain any term defined by 'Direct Proof'. The claim that 'Direct Proof' generalizes 'Extension Fields' is therefore refuted.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contrapositive' generalizes 'Sets and Equivalence Relations' is refuted because there is no indication that the concept of proof by contrapositive is necessary or inherent in the definitions of sets and equivalence relations. The definitions provided do not rely on or utilize the notion of proof by contrapositive, and thus, the claim does not hold.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contrapositive' generalizes 'The Division Algorithm' is refuted because the definition of 'The Division Algorithm' does not inherently rely on or utilize the concept of 'Proof by Contrapositive'. The Division Algorithm is a statement about the existence and uniqueness of quotients and remainders when dividing integers, while Proof by Contrapositive is a method of proving mathematical implications. There is no logical connection or generalization between these two concepts as described in the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contrapositive' generalizes 'Subgroups' is refuted because there is no logical connection or generalization between the two concepts as described. The definition of 'Subgroups' does not rely on or utilize the concept of 'Proof by Contrapositive'. The term 'Proof by Contrapositive' does not appear in the definition of 'Subgroups', and there is no indication that one concept is a generalization of the other. Therefore, the claim is wrong.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contrapositive' generalizes 'Cosets' is refuted because the definition of 'Cosets' does not involve or rely on the concept of 'Proof by Contrapositive'. The definition of 'Cosets' is purely about the structure of groups and subgroups, while 'Proof by Contrapositive' is a method of proof in logic. There is no logical or mathematical connection that would allow us to say that one generalizes the other.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contrapositive' generalizes 'Lagrange's Theorem' is refuted. The definition of 'Lagrange's Theorem' does not inherently rely on or utilize the concept of 'Proof by Contrapositive'. The theorem states a relationship between the sizes of a group and its subgroup, proven by partitioning the group into cosets. There is no indication that the proof or the statement of Lagrange's Theorem necessitates or is an example of a proof by contrapositive. Therefore, 'Proof by Contrapositive' does not generalize 'Lagrange's Theorem'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contrapositive' generalizes 'Isomorphisms: Definition and Examples' is refuted. The definition of isomorphisms does not inherently rely on or utilize the concept of proof by contrapositive. The definition of isomorphisms is purely about the existence of a bijective map between two groups that preserves the group operation, and it does not involve proving anything through contrapositive. Therefore, proof by contrapositive is not a prerequisite for defining isomorphisms, nor does it generalize the concept of isomorphisms.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contrapositive' generalizes 'Group Homomorphisms' is refuted because there is no indication that the concept of 'Group Homomorphisms' relies on or is a special case of 'Proof by Contrapositive'. The definition of 'Group Homomorphisms' does not mention 'Proof by Contrapositive' and can be stated independently of it. Additionally, 'Proof by Contrapositive' is a method of proof, while 'Group Homomorphisms' is a concept in group theory, and one does not generalize the other in the sense described.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contrapositive' generalizes 'Maximal and Prime Ideals' is refuted. The definition of 'Maximal and Prime Ideals' does not inherently rely on or utilize the concept of 'Proof by Contrapositive'. The definition of maximal and prime ideals is purely mathematical and pertains to the structure of rings and ideals within those rings. Proof by contrapositive is a method of proof in logic and does not define or generalize the concepts of maximal or prime ideals. There is no indication that the definition of maximal and prime ideals cannot be stated without reference to proof by contrapositive, and it is not clear how proof by contrapositive could be considered a generalization of these mathematical concepts.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contrapositive",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Proof by Contrapositive",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Extension Fields' does not contain any term or concept from 'Proof by Contrapositive'. The two concepts are unrelated in the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contradiction' generalizes 'Sets and Equivalence Relations' is refuted because the definition of 'Sets and Equivalence Relations' does not contain any term or concept that is defined by 'Proof by Contradiction'. The two concepts are unrelated in the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:2.1-the-division-algorithm",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "The Division Algorithm",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The Division Algorithm and Proof by Contradiction are two distinct mathematical concepts. The Division Algorithm is a method for dividing integers, while Proof by Contradiction is a method of mathematical proof. There is no indication that Proof by Contradiction generalizes The Division Algorithm based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contradiction' generalizes 'Subgroups' is refuted because the definition of 'Subgroups' does not rely on or involve the concept of 'Proof by Contradiction'. The definition of 'Subgroups' is purely mathematical and pertains to the algebraic structure of groups, while 'Proof by Contradiction' is a method of mathematical proof. There is no indication that one concept generalizes the other based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Cosets",
+      "relation": "is-prerequisite-for",
+      "verdict": "refused",
+      "basis": "mechanical",
+      "detail": "no term defined by src occurs in dst's definition text, so dst's definition demonstrably does not need src's vocabulary",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contradiction' generalizes 'Lagrange's Theorem' is refuted because there is no indication that Lagrange's Theorem relies on or is a special case of Proof by Contradiction. The definition of Lagrange's Theorem does not mention Proof by Contradiction, and the theorem is proven through the concept of cosets partitioning the group, not by assuming the negation of the statement and deriving a contradiction.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:9.1-definition-and-examples",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Isomorphisms: Definition and Examples",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contradiction' generalizes 'Isomorphisms: Definition and Examples' is refuted. The definition of isomorphisms does not rely on or use the concept of proof by contradiction. Isomorphisms are a specific concept in group theory, while proof by contradiction is a method of mathematical proof. There is no indication that one generalizes the other based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:11.1-group-homomorphisms",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Group Homomorphisms",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contradiction' generalizes 'Group Homomorphisms' is refuted because the definition of 'Group Homomorphisms' does not rely on or use the concept of 'Proof by Contradiction'. The definition of a group homomorphism is purely mathematical and does not involve any logical proof method such as proof by contradiction. Therefore, 'Proof by Contradiction' cannot be said to generalize 'Group Homomorphisms'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Ring Homomorphisms and Ideals' does not contain any term or concept defined by 'Proof by Contradiction'. The two concepts are not related in the sense that one generalizes the other. 'Proof by Contradiction' is a method of proof, while 'Ring Homomorphisms and Ideals' are concepts in ring theory. There is no indication that 'Proof by Contradiction' is a prerequisite for or generalizes 'Ring Homomorphisms and Ideals' based on the provided definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:16.4-maximal-and-prime-ideals",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Maximal and Prime Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Proof by Contradiction' generalizes 'Maximal and Prime Ideals' is refuted because the definition of 'Maximal and Prime Ideals' does not inherently rely on or utilize the concept of 'Proof by Contradiction'. The definitions provided are purely mathematical and do not mention or require proof by contradiction. Therefore, 'Proof by Contradiction' is not a generalization of 'Maximal and Prime Ideals'.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Fields of Fractions",
+      "relation": "is-prerequisite-for",
+      "verdict": "refused",
+      "basis": "mechanical",
+      "detail": "no term defined by src occurs in dst's definition text, so dst's definition demonstrably does not need src's vocabulary",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Factorization in Integral Domains' does not inherently rely on or utilize the concept of 'Proof by Contradiction'. The definition is purely mathematical and deals with the properties of elements in an integral domain, such as divisibility, units, associates, irreducibility, and prime elements. There is no mention or necessity of proof by contradiction in defining these concepts or proving theorems related to factorization in integral domains. Therefore, the claim that 'Proof by Contradiction' generalizes 'Factorization in Integral Domains' is refuted.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:proof-by-contradiction",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Proof by Contradiction",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The definition of 'Extension Fields' does not contain any term or concept defined by 'Proof by Contradiction'. The two concepts are unrelated in the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:1.2-sets-and-equivalence-relations",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Sets and Equivalence Relations",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Sets and Equivalence Relations' is refuted. The definitions provided do not show any direct relationship or generalization where one concept is a broader or more fundamental concept that encompasses the other. Mathematical Induction is a method of proof used to establish that a statement holds for all natural numbers, while Sets and Equivalence Relations are concepts in set theory dealing with the properties of sets and the relationships between their elements. There is no indication that one concept is a generalization of the other based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:3.3-subgroups",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Subgroups' is refuted because the definitions provided do not show any direct relationship or generalization between the two concepts. Mathematical Induction is a method of proof used to establish that a statement holds for all natural numbers, while the definition of Subgroups is specific to group theory and does not involve any inductive process. There is no indication that Mathematical Induction is a prerequisite for or a generalization of the concept of Subgroups based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:4.1-cyclic-subgroups",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Cyclic Subgroups",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Cyclic Subgroups' is refuted because there is no indication that the concept of Mathematical Induction is necessary or used in the definition of Cyclic Subgroups. The definitions provided do not show any direct relationship or generalization between the two concepts.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:6.1-cosets",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Cosets",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Cosets' is refuted because the definitions provided do not show any relationship between the two concepts. Mathematical Induction is a method of mathematical proof typically used to establish that a given statement is true for all natural numbers. On the other hand, Cosets are subsets of a group that are formed by multiplying each element of a subgroup by a fixed element of the group. There is no indication that Mathematical Induction is a generalization of Cosets based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:6.2-lagranges-theorem",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Lagrange's Theorem",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Lagrange's Theorem' is refuted. The definitions provided do not show any direct relationship where Mathematical Induction is a generalization of Lagrange's Theorem. Lagrange's Theorem is a statement about the relationship between the sizes of a group and its subgroup, while Mathematical Induction is a method of proof used to establish that a statement holds for all natural numbers. There is no indication that Mathematical Induction is used in the proof of Lagrange's Theorem or that it generalizes the theorem.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:16.1-rings",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Rings",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "Mathematical Induction and the concept of Rings are unrelated. Mathematical Induction is a method of mathematical proof used to establish that a given statement is true for all natural numbers. It does not define or generalize the algebraic structure of a Ring, which is a set equipped with two binary operations satisfying certain axioms. There is no term from Mathematical Induction that is essential to the definition of a Ring, and the definition of a Ring can be stated without any reference to Mathematical Induction.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:16.3-ring-homomorphisms-and-ideals",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Ring Homomorphisms and Ideals",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Ring Homomorphisms and Ideals' is refuted. The definitions provided do not indicate any direct relationship or generalization between the two concepts. Mathematical Induction is a method of proof used to establish that a statement holds for all natural numbers, while Ring Homomorphisms and Ideals are concepts in ring theory related to mappings between rings and special subsets of rings, respectively. There is no evidence in the given definitions that Mathematical Induction is a generalization of Ring Homomorphisms and Ideals.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:18.1-fields-of-fractions",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Fields of Fractions",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Fields of Fractions' is refuted because there is no indication that the concept of 'Fields of Fractions' relies on or is a special case of 'Mathematical Induction'. The definitions provided do not show any direct relationship between the two concepts. 'Fields of Fractions' is a concept in abstract algebra that constructs a field from an integral domain, while 'Mathematical Induction' is a proof technique used in mathematics. There is no evidence that one concept generalizes the other based on the given definitions.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:18.2-factorization-in-integral-domains",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Factorization in Integral Domains",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Factorization in Integral Domains' is refuted. The definitions provided do not indicate any direct relationship or generalization between the two concepts. Mathematical Induction is a method of proof used to establish that a statement holds for all natural numbers, while Factorization in Integral Domains is a property of certain algebraic structures related to the uniqueness of factorization of elements. There is no evidence in the given definitions that Mathematical Induction is a generalization of Factorization in Integral Domains.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    },
+    {
+      "src": "levin-dmoi:mathematical-induction",
+      "dst": "judson:21.1-extension-fields",
+      "src_label": "Mathematical Induction",
+      "dst_label": "Extension Fields",
+      "relation": "generalizes",
+      "verdict": "refused",
+      "basis": "mechanical+adversarial",
+      "detail": "The claim that 'Mathematical Induction' generalizes 'Extension Fields' is refuted because there is no indication that the concept of Mathematical Induction is used in the definition or understanding of Extension Fields. The definitions provided do not show any relationship where Mathematical Induction is a generalizing concept for Extension Fields.",
+      "evidence": {
+        "matches": [],
+        "match_count": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,669 @@
+{
+  "schema": "levin-dmoi-foundations-v1",
+  "source": {
+    "provider": "Oscar Levin, Discrete Mathematics: An Open Introduction, 3rd edition",
+    "author": "Oscar Levin",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Discrete Mathematics: An Open Introduction, 3rd edition, by Oscar Levin, licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses/by-sa/4.0/). Source: https://github.com/oscarlevin/discrete-book at tag 3rd-ed, commit a8e4949bc45daf100930c1182983778f56ab689f.",
+    "retrieved_via": "https://codeload.github.com/oscarlevin/discrete-book/tar.gz/a8e4949bc45daf100930c1182983778f56ab689f (ptx/*.ptx PreTeXt source; LICENSE for the notice above)",
+    "commit": "a8e4949bc45daf100930c1182983778f56ab689f",
+    "git_tag": "3rd-ed",
+    "license_note": "CC BY-SA 4.0 applies to the 3rd edition, which is what this commit is. The repository's master branch is the 4th edition and is CC BY-NC-SA 4.0 -- the pinned commit is what makes this publishable, not the repository.",
+    "extracted_by": "teach/extract_levin_foundations.py, via teach.pretext_parser. Re-derive with: uv run python -m teach.extract_levin_foundations"
+  },
+  "nodes": [
+    {
+      "id": "levin-dmoi:sets",
+      "label": "Sets",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Sets\"",
+      "terms": [
+        "set",
+        "natural numbers",
+        "set builder notation",
+        "cardinality"
+      ],
+      "definition": "For us, a set will simply be an unordered collection of objects. Two examples: we could consider the set of all actors who have played The Doctor on Doctor Who, or the set of natural numbers between 1 and 10 inclusive. In the first case, Tom Baker is a element (or member) of the set, while Idris Elba, among many others, is not an element of the set. Also, the two examples are of different sets. Two sets are equal exactly if they contain the exact same elements. For example, the set containing all of the vowels in the declaration of independence is precisely the same set as the set of vowels in the word questionably (namely, all of them); we do not care about order or repetitions, just whether the element is in the set or not. Let's look at this carefully. First, there are some new symbols to digest: $\\N$ is the symbol usually used to denote that natural numbers, which we will take to be the set $\\{0, 1, 2, 3, \\ldots\\}$. Next, the colon, :, is read such that; it separates the elements that are in the set from the condition that the elements in the set must satisfy. So putting this all together, we would read the set as, the set of all $x$ in the natural numbers, such that there exists some $n$ in the natural numbers for which $x$ is twice $n$. In other words, the set of all natural numbers, that are even. Here is another way to write the same set. $$A = \\{x \\in \\N \\st x\\text{ is even} \\}$$ . This notation is usually called set builder notation. It tells use how to build a set by telling us pricisely the condition elements must meet to gain access (the condition is the logical statement after the $\\st$ symbol). Reading and comprehending sets written in this way takes practice. Here are some more examples: Another way to compare sets is by their size. Notice that in the example above, $A$ has 6 elements and $B$, $C$, and $D$ all have 3 elements. The size of a set is called the set's cardinality . We would write $|A| = 6$, $|B| = 3$, and so on. For sets that have a finite number of elements, the cardinality of the set is simply the number of elements in the set. Note that the cardinality of $\\{ 1, 2, 3, 2, 1\\}$ is 3. We do not count repeats (in fact, $\\{1, 2, 3, 2, 1\\}$ is exactly the same set as $\\{1, 2, 3\\}$). There are sets with infinite cardinality, such as $\\N$, the set of rational numbers (written $\\mathbb Q$), the set of even natural numbers, and the set of real numbers ($\\mathbb R$). It is possible to distinguish between different infinite cardinalities, but that is beyond the scope of this text. For us, a set will either be infinite, or finite; if it is finite, the we can determine its cardinality by counting elements.",
+      "provenance": [
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": null,
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Notation",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Notation",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Relationships Between Sets",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:set-operations",
+      "label": "Set Operations",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Sets\"",
+      "terms": [
+        "empty set",
+        "universe set",
+        "power set",
+        "union",
+        "intersection",
+        "universe",
+        "complement",
+        "set difference",
+        "Cartesian product"
+      ],
+      "definition": "$\\emptyset$ The empty set is the set which contains no elements. $\\U$ The universe set is the set of all elements. $\\N$ The set of natural numbers. That is, $\\N = \\{0, 1, 2, 3\\ldots\\}$. $\\Z$ The set of integers. That is, $\\Z = \\{\\ldots, -2, -1, 0, 1, 2, 3, \\ldots\\}$. $\\Q$ The set of rational numbers. $\\R$ The set of real numbers. $\\pow(A)$ The power set of any set $A$ is the set of all subsets of $A$. In the example above, $B$ is a subset of $A$. You might wonder what other sets are subsets of $A$. If you collect all these subsets of $A$ into a new set, we get a set of sets. We call the set of all subsets of $A$ the power set of $A$, and write it $\\pow(A)$. Is it possible to add two sets? Not really, however there is something similar. If we want to combine two sets to get the collection of objects that are in either set, then we can take the union of the two sets. Symbolically, $$C = A \\cup B$$ , read, $C$ is the union of $A$ and $B$, means that the elements of $C$ are exactly the elements which are either an element of $A$ or an element of $B$ (or an element of both). For example, if $A = \\{1, 2, 3\\}$ and $B = \\{2, 3, 4\\}$, then $A \\cup B = \\{1, 2, 3, 4\\}$. The other common operation on sets is intersection. We write, $$C = A \\cap B$$ and say, $C$ is the intersection of $A$ and $B$, when the elements in $C$ are precisely those both in $A$ and in $B$. So if $A = \\{1, 2, 3\\}$ and $B = \\{2, 3, 4\\}$, then $A \\cap B = \\{2, 3\\}$. Often when dealing with sets, we will have some understanding as to what everything is. Perhaps we are only concerned with natural numbers. In this case we would say that our universe is $\\N$. Sometimes we denote this universe by $\\U$. Given this context, we might wish to speak of all the elements which are not in a particular set. We say $B$ is the complement of $A$, and write, $$B = \\bar A$$ when $B$ contains every element not contained in $A$. So, if our universe is $\\{1, 2,\\ldots, 9, 10\\}$, and $A = \\{2, 3, 5, 7\\}$, then $\\bar A = \\{1, 4, 6, 8, 9,10\\}$. This is the set of all elements which are both elements of $A$ and not elements of $B$. What have we done? We've started with $A$ and removed all of the elements which were in $B$. Another way to write this is the set difference: $$A \\cap \\bar B = A \\setminus B$$ . There is one more way to combine sets which will be useful for us: the Cartesian product, $A \\times B$. This sounds fancy but is nothing you haven't seen before. When you graph a function in calculus, you graph it in the Cartesian plane. This is the set of all ordered pairs of real numbers $(x,y)$. We can do this for any pair of sets, not just the real numbers with themselves.",
+      "provenance": [
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "assemblage",
+          "section_title": "Sets",
+          "subsection_title": "Notation",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Relationships Between Sets",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Operations On Sets",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Operations On Sets",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Operations On Sets",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Operations On Sets",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        },
+        {
+          "source_file": "sec_intro-sets.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Sets",
+          "subsection_title": "Operations On Sets",
+          "file_sha256": "19c439958374032bd1e7fe1424fe203f7e82374a20a330b3091ca30bdc48fcba"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:statements",
+      "label": "Statements and Logical Connectives",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Mathematical Statements\"",
+      "terms": [
+        "statement",
+        "atomic",
+        "molecular",
+        "logical connectives",
+        "binary connectives",
+        "unary connective",
+        "truth value",
+        "propositional variables",
+        "Boolean variables",
+        "inclusive or"
+      ],
+      "definition": "A statement is any declarative sentence which is either true or false. A statement is atomic if it cannot be divided into smaller statements, otherwise it is called molecular. You can build more complicated (molecular) statements out of simpler (atomic or molecular) ones using logical connectives. For example, this is a molecular statement: Note that we can break this down into two smaller statements. The two shorter statements are connected by an and. We will consider 5 connectives: and (Sam is a man and Chris is a woman), or (Sam is a man or Chris is a woman), if..., then... (if Sam is a man, then Chris is a woman), if and only if (Sam is a man if and only if Chris is a woman), and not (Sam is not a man). The first four are called binary connectives (because they connect two statements) while not is an example of a unary connective (since it applies to a single statement). These molecular statements are of course still statements, so they must be either true or false. The absolutely key observation here is that which truth value the molecular statement achieves is completely determined by the type of connective and the truth values of the parts. We do not need to know what the parts actually say, only whether those parts are true or false. So to analyze logical connectives, it is enough to consider propositional variables (sometimes called sentential variables), usually capital letters in the middle of the alphabet: $P, Q, R, S, \\ldots$. We think of these as standing in for (usually atomic) statements, but there are only two values the variables can achieve: true or false. In computer programing, we should call such variables Boolean variables. We also have symbols for the logical connectives: $\\wedge$, $\\vee$, $\\imp$, $\\iff$, $\\neg$. The truth value of a statement is determined by the truth value(s) of its part(s), depending on the connectives: Note that for us, or is the inclusive or (and not the sometimes used exclusive or) meaning that $P \\vee Q$ is in fact true when both $P$ and $Q$ are true. As for the other connectives, and behaves as you would expect, as does negation. The biconditional (if and only if) might seem a little strange, but you should think of this as saying the two parts of the statements are equivalent in that they have the same truth value. This leaves only the conditional $P \\imp Q$ which has a slightly different meaning in mathematics than it does in ordinary usage. However, implications are so common and useful in mathematics, that we must develop fluency with their use, and as such, they deserve their own subsection.",
+      "provenance": [
+        {
+          "source_file": "sec_intro-statements.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Mathematical Statements",
+          "subsection_title": "Atomic and Molecular Statements",
+          "file_sha256": "a0c74dc92ccc88152209c80588717b47bfc3c6341b1fb6a4877e78f8ed09c567"
+        },
+        {
+          "source_file": "sec_intro-statements.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Mathematical Statements",
+          "subsection_title": "Atomic and Molecular Statements",
+          "file_sha256": "a0c74dc92ccc88152209c80588717b47bfc3c6341b1fb6a4877e78f8ed09c567"
+        },
+        {
+          "source_file": "sec_intro-statements.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Mathematical Statements",
+          "subsection_title": "Atomic and Molecular Statements",
+          "file_sha256": "a0c74dc92ccc88152209c80588717b47bfc3c6341b1fb6a4877e78f8ed09c567"
+        },
+        {
+          "source_file": "sec_intro-statements.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Mathematical Statements",
+          "subsection_title": "Atomic and Molecular Statements",
+          "file_sha256": "a0c74dc92ccc88152209c80588717b47bfc3c6341b1fb6a4877e78f8ed09c567"
+        },
+        {
+          "source_file": "sec_intro-statements.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Mathematical Statements",
+          "subsection_title": "Atomic and Molecular Statements",
+          "file_sha256": "a0c74dc92ccc88152209c80588717b47bfc3c6341b1fb6a4877e78f8ed09c567"
+        },
+        {
+          "source_file": "sec_intro-statements.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Mathematical Statements",
+          "subsection_title": "Atomic and Molecular Statements",
+          "file_sha256": "a0c74dc92ccc88152209c80588717b47bfc3c6341b1fb6a4877e78f8ed09c567"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:predicates-and-quantifiers",
+      "label": "Predicates and Quantifiers",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Mathematical Statements\"",
+      "terms": [
+        "free variable",
+        "predicate",
+        "predicates",
+        "predicate logic"
+      ],
+      "definition": "It would be nice to use variables in our mathematical sentences. For example, suppose we wanted to claim that if $n$ is prime, then $n+7$ is not prime. This looks like an implication. I would like to write something like $$P(n) \\imp \\neg P(n+7)$$ where $P(n)$ means $n$ is prime. But this is not quite right. For one thing, because this sentence has a free variable (that is, a variable that we have not specified anything about), it is not a statement. A sentence that contains variables is called a predicate. To write this statement symbolically, we must use quantifiers. We can translate as follows: $$\\forall x ((P(x) \\wedge x \\gt 2) \\imp O(x))$$ . In this case, we are using $P(x)$ to denote $x$ is prime and $O(x)$ to denote $x$ is odd. These are not propositions, since their truth value depends on the input $x$. Better to think of $P$ and $O$ as denoting properties of their input. The technical term for these is predicates and when we study them in logic, we need to use predicate logic.",
+      "provenance": [
+        {
+          "source_file": "sec_intro-statements.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Mathematical Statements",
+          "subsection_title": "Predicates and Quantifiers",
+          "file_sha256": "a0c74dc92ccc88152209c80588717b47bfc3c6341b1fb6a4877e78f8ed09c567"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Beyond Propositions",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:propositional-logic",
+      "label": "Propositional Logic",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Propositional Logic\"",
+      "terms": [
+        "proposition",
+        "Propositional logic",
+        "truth tables",
+        "tautology",
+        "logically equivalent"
+      ],
+      "definition": "A proposition is simply a statement. Propositional logic studies the ways statements can interact with each other. It is important to remember that propositional logic does not really care about the content of the statements. For example, in terms of propositional logic, the claims, if the moon is made of cheese then basketballs are round, and if spiders have eight legs then Sam walks with a limp are exactly the same. They are both implications: statements of the form, $P \\imp Q$. We need to decide when the statement $(P \\imp Q) \\vee (Q \\imp R)$ is true. Using the definitions of the connectives in , we see that for this to be true, either $P \\imp Q$ must be true or $Q \\imp R$ must be true (or both). Those are true if either $P$ is false or $Q$ is true (in the first case) and $Q$ is false or $R$ is true (in the second case). So\u2014yeah, it gets kind of messy. Luckily, we can make a chart to keep track of all the possibilities. Enter truth tables. The idea is this: on each row, we list a possible combination of T's and F's (for true and false) for each of the sentential variables, and then mark down whether the statement in question is true or false in that case. We do this for every possible combination of T's and F's. Then we can clearly see in which cases the statement is true or false. For complicated statements, we will first fill in values for each part of the statement, as a way of breaking up our task into smaller, more manageable pieces. The statement about monopoly is an example of a tautology, a statement which is true on the basis of its logical form alone. Tautologies are always true but they don't tell us much about the world. No knowledge about monopoly was required to determine that the statement was true. In fact, it is equally true that If the moon is made of cheese, then Elvis is still alive, or if Elvis is still alive, then unicorns have 5 legs. This says that no matter what $P$ and $Q$ are, the statements $\\neg P \\vee Q$ and $P \\imp Q$ either both true or both false. We therefore say these statements are logically equivalent. Two (molecular) statements $P$ and $Q$ are logically equivalent provided $P$ is true precisely when $Q$ is true. That is, $P$ and $Q$ have the same truth value under any assignment of truth values to their atomic parts. To verify that two statements are logically equivalent, you can make a truth table for each and check whether the columns for the two statements are identical. $$\\neg(P \\wedge Q) \\text{ is logically equivalent to } \\neg P \\vee \\neg Q$$ . $$\\neg(P \\vee Q) \\text{ is logically equivalent to } \\neg P \\wedge \\neg Q$$ . $$P \\imp Q \\text{ is logically equivalent to } \\neg P \\vee Q$$ . Example: If a number is a multiple of 4, then it is even is equivalent to, a number is not a multiple of 4 or (else) it is even. $$\\neg \\neg P \\text{ is logically equivalent to } P$$ . Example: It is not the case that $c$ is not odd means $c$ is odd. The negation of an implication is a conjuction: $$\\neg(P \\imp Q) \\text{ is logically equivalent to } P \\wedge neg Q$$ . That is, the only way for an implication to be false is for the hypothesis to be true AND the conclusion to be false.",
+      "provenance": [
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Propositional Logic",
+          "subsection_title": null,
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Truth Tables",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Truth Tables",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Logical Equivalence",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "assemblage",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Logical Equivalence",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "assemblage",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Logical Equivalence",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": "assemblage-imp-disj",
+          "kind": "assemblage",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Logical Equivalence",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "assemblage",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Logical Equivalence",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": "assemblage-negimp-again",
+          "kind": "assemblage",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Logical Equivalence",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:deduction-rules",
+      "label": "Rules of Deduction",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Propositional Logic\"",
+      "terms": [
+        "deduction rule"
+      ],
+      "definition": "Earlier we claimed that the following was a valid argument: If Edith eats her vegetables, then she can have a cookie. Edith ate her vegetables. Therefore Edith gets a cookie. How do we know this is valid? Let's look at the form of the statements. Let $P$ denote Edith eats her vegetables and $Q$ denote Edith can have a cookie. The logical form of the argument is then: This is an example of a deduction rule, an argument form which is always valid. This one is a particularly famous rule called modus ponens. Are you convinced that it is a valid deduction rule? If not, consider the following truth table: This is just the truth table for $P \\imp Q$, but what matters here is that all the lines in the deduction rule have their own column in the truth table. Remember that an argument is valid provided the conclusion must be true given that the premises are true. The premises in this case are $P \\imp Q$ and $P$. Which rows of the truth table correspond to both of these being true? $P$ is true in the first two rows, and of those, only the first row has $P \\imp Q$ true as well. And lo-and-behold, in this one case, $Q$ is also true. So if $P\\imp Q$ and $P$ are both true, we see that $Q$ must be true as well. Here are a few more examples.",
+      "provenance": [
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Deductions",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Deductions",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Deductions",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Deductions",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Deductions",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        },
+        {
+          "source_file": "sec_logic-prop.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Propositional Logic",
+          "subsection_title": "Deductions",
+          "file_sha256": "6bd45cbcc28349e1679f15f2712c16f086f20353c349b373c0db3583679bfe12"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:functions",
+      "label": "Functions",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Functions\"",
+      "terms": [
+        "function",
+        "image",
+        "domain",
+        "codomain",
+        "range",
+        "two-line notation",
+        "image of $x$ under $f$",
+        "injective",
+        "injection",
+        "one-to-one",
+        "at most",
+        "surjective",
+        "surjection",
+        "onto",
+        "at least",
+        "bijection",
+        "exactly one",
+        "complete inverse image",
+        "inverse image"
+      ],
+      "definition": "A function is a rule that assigns each input exactly one output. We call the output the image of the input. The set of all inputs for a function is called the domain. The set of all allowable outputs is called the codomain. We would write $f:X \\to Y$ to describe a function with name $f$, domain $X$ and codomain $Y$. This does not tell us which function $f$ is though. To define the function, we must describe the rule. This is often done by giving a formula to compute the output for any input (although this is certainly not the only way to describe the rule). For example, consider the function $f:\\N \\to \\N$ defined by $f(x) = x^2 + 3$. Here the domain and codomain are the same set (the natural numbers). The rule is: take your input, multiply it by itself and add 3. This works because we can apply this rule to every natural number (every element of the domain) and the result is always a natural number (an element of the codomain). Notice though that not every natural number is actually an output (there is no way to get 0, 1, 2, 5, etc.). The set of natural numbers that are outputs is called the range of the function (in this case, the range is $\\{3, 4, 7, 12, 19, 28, \\ldots\\}$, all the natural numbers that are 3 more than a perfect square). Here is a summary of all the main concepts and definitions we use when working with functions. A function is a rule that assigns each element of a set, called the domain, to exactly one element of a second set, called the codomain. Notation: $f:X \\to Y$ is our way of saying that the function is called $f$, the domain is the set $X$, and the codomain is the set $Y$. To specify the rule for a function with small domain, use two-line notation by writing a matrix with each output directly below its corresponding input, as in: $$f = \\begin{pmatrix}1 \\amp 2 \\amp 3 \\amp 4 \\\\ 2 \\amp 1 \\amp 3 \\amp 1 \\end{pmatrix}$$ . $f(x) = y$ means the element $x$ of the domain (input) is assigned to the element $y$ of the codomain. We say $y$ is an output. Alternatively, we call $y$ the image of $x$ under $f$. The range is a subset of the codomain. It is the set of all elements which are assigned to at least one element of the domain by the function. That is, the range is the set of all outputs. A function is injective (an injection or one-to-one) if every element of the codomain is the image of at most one element from the domain. A function is surjective (a surjection or onto) if every element of the codomain is the image of at least one element from the domain. A bijection is a function which is both an injection and surjection. In other words, if every element of the codomain is the image of exactly one element from the domain. The image of an element $x$ in the domain is the element $y$ in the codomain that $x$ is mapped to. That is, the image of $x$ under $f$ is $f(x)$. The complete inverse image of an element $y$ in the codomain, written $f\\inv(y)$, is the set of all elements in the domain which are assigned to $y$ by the function. The image of a subset $A$ of the domain is the set $f(A) = \\{f(a) \\in Y \\st a \\in A\\}$. The inverse image of a a subset $B$ of the codomain is the set $f\\inv(B) = \\{x \\in X \\st f(x) \\in B\\}$.",
+      "provenance": [
+        {
+          "source_file": "sec_intro-functions.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Functions",
+          "subsection_title": null,
+          "file_sha256": "681b81ca81ece4ab6b40fa03445369f55006a6c473308ae063d95f99e3908eb7"
+        },
+        {
+          "source_file": "sec_intro-functions.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Functions",
+          "subsection_title": null,
+          "file_sha256": "681b81ca81ece4ab6b40fa03445369f55006a6c473308ae063d95f99e3908eb7"
+        },
+        {
+          "source_file": "sec_intro-functions.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Functions",
+          "subsection_title": "Image and Inverse Image",
+          "file_sha256": "681b81ca81ece4ab6b40fa03445369f55006a6c473308ae063d95f99e3908eb7"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:function-properties",
+      "label": "Injective, Surjective and Bijective Functions",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Functions\"",
+      "terms": [
+        "onto",
+        "surjection",
+        "surjective",
+        "one-to-one",
+        "injection",
+        "injective",
+        "bijection",
+        "bijective",
+        "function",
+        "domain",
+        "codomain",
+        "two-line notation",
+        "image of $x$ under $f$",
+        "range",
+        "at most",
+        "at least",
+        "exactly one",
+        "image",
+        "complete inverse image",
+        "inverse image"
+      ],
+      "definition": "In the examples above, you may have noticed that sometimes there are elements of the codomain which are not in the range. When this sort of the thing does not happen, (that is, when everything in the codomain is in the range) we say the function is onto or that the function maps the domain onto the codomain. This terminology should make sense: the function puts the domain (entirely) on top of the codomain. The fancy math term for an onto function is a surjection, and we say that an onto function is a surjective function. To be a function, a rule cannot assign a single element of the domain to two or more different elements of the codomain. However, we have seen that the reverse is permissible: a function might assign the same element of the codomain to two or more different elements of the domain. When this does not occur (that is, when each element of the codomain is the image of at most one element of the domain) then we say the function is one-to-one. Again, this terminology makes sense: we are sending at most one element from the domain to one element from the codomain. One input to one output. The fancy math term for a one-to-one function is an injection. We call one-to-one functions injective functions. Be careful: surjective and injective are NOT opposites. You can see in the two examples above that there are functions which are surjective but not injective, injective but not surjective, both, or neither. In the case when a function is both one-to-one and onto (an injection and surjection), we say the function is a bijection, or that the function is a bijective function. A function is injective provided every element of the codomain is the image of at most one element from the domain. A function is surjective provided every element of the codomain is the image of at least one element from the domain. Here is a summary of all the main concepts and definitions we use when working with functions. A function is a rule that assigns each element of a set, called the domain, to exactly one element of a second set, called the codomain. Notation: $f:X \\to Y$ is our way of saying that the function is called $f$, the domain is the set $X$, and the codomain is the set $Y$. To specify the rule for a function with small domain, use two-line notation by writing a matrix with each output directly below its corresponding input, as in: $$f = \\begin{pmatrix}1 \\amp 2 \\amp 3 \\amp 4 \\\\ 2 \\amp 1 \\amp 3 \\amp 1 \\end{pmatrix}$$ . $f(x) = y$ means the element $x$ of the domain (input) is assigned to the element $y$ of the codomain. We say $y$ is an output. Alternatively, we call $y$ the image of $x$ under $f$. The range is a subset of the codomain. It is the set of all elements which are assigned to at least one element of the domain by the function. That is, the range is the set of all outputs. A function is injective (an injection or one-to-one) if every element of the codomain is the image of at most one element from the domain. A function is surjective (a surjection or onto) if every element of the codomain is the image of at least one element from the domain. A bijection is a function which is both an injection and surjection. In other words, if every element of the codomain is the image of exactly one element from the domain. The image of an element $x$ in the domain is the element $y$ in the codomain that $x$ is mapped to. That is, the image of $x$ under $f$ is $f(x)$. The complete inverse image of an element $y$ in the codomain, written $f\\inv(y)$, is the set of all elements in the domain which are assigned to $y$ by the function. The image of a subset $A$ of the domain is the set $f(A) = \\{f(a) \\in Y \\st a \\in A\\}$. The inverse image of a a subset $B$ of the codomain is the set $f\\inv(B) = \\{x \\in X \\st f(x) \\in B\\}$.",
+      "provenance": [
+        {
+          "source_file": "sec_intro-functions.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Functions",
+          "subsection_title": "Surjections, Injections, and Bijections",
+          "file_sha256": "681b81ca81ece4ab6b40fa03445369f55006a6c473308ae063d95f99e3908eb7"
+        },
+        {
+          "source_file": "sec_intro-functions.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Functions",
+          "subsection_title": "Surjections, Injections, and Bijections",
+          "file_sha256": "681b81ca81ece4ab6b40fa03445369f55006a6c473308ae063d95f99e3908eb7"
+        },
+        {
+          "source_file": "sec_intro-functions.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Functions",
+          "subsection_title": "Surjections, Injections, and Bijections",
+          "file_sha256": "681b81ca81ece4ab6b40fa03445369f55006a6c473308ae063d95f99e3908eb7"
+        },
+        {
+          "source_file": "sec_intro-functions.ptx",
+          "xml_id": null,
+          "kind": "assemblage",
+          "section_title": "Functions",
+          "subsection_title": "Surjections, Injections, and Bijections",
+          "file_sha256": "681b81ca81ece4ab6b40fa03445369f55006a6c473308ae063d95f99e3908eb7"
+        },
+        {
+          "source_file": "sec_intro-functions.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Functions",
+          "subsection_title": "Image and Inverse Image",
+          "file_sha256": "681b81ca81ece4ab6b40fa03445369f55006a6c473308ae063d95f99e3908eb7"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:direct-proof",
+      "label": "Direct Proof",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Proofs\"",
+      "terms": [
+        "direct proof"
+      ],
+      "definition": "The simplest (from a logic perspective) style of proof is a direct proof. Often all that is required to prove something is a systematic explanation of what everything means. Direct proofs are especially useful when proving implications. The general format to prove $P \\imp Q$ is this: Assume $P$. Explain, explain, ..., explain. Therefore $Q$. Often we want to prove universal statements, perhaps of the form $\\forall x (P(x) \\imp Q(x))$. Again, we will want to assume $P(x)$ is true and deduce $Q(x)$. But what about the $x$? We want this to work for all $x$. We accomplish this by fixing $x$ to be an arbitrary element (of the sort we are interested in). Here are a few examples. First, we will set up the proof structure for a direct proof, then fill in the details.",
+      "provenance": [
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Proofs",
+          "subsection_title": "Direct Proof",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Direct Proof",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Direct Proof",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Direct Proof",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:proof-by-contrapositive",
+      "label": "Proof by Contrapositive",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Proofs\"",
+      "terms": [
+        "proof by contrapositive"
+      ],
+      "definition": "Recall that an implication $P \\imp Q$ is logically equivalent to its contrapositive $\\neg Q \\imp \\neg P$. There are plenty of examples of statements which are hard to prove directly, but whose contrapositive can easily be proved directly. This is all that proof by contrapositive does. It gives a direct proof of the contrapositive of the implication. This is enough because the contrapositive is logically equivalent to the original implication. The skeleton of the proof of $P \\imp Q$ by contrapositive will always look roughly like this: Assume $\\neg Q$. Explain, explain, ... explain. Therefore $\\neg P$. As before, if there are variables and quantifiers, we set them to be arbitrary elements of our domain. Here are a couple examples: We have seen how to prove some statements in the form of implications: either directly or by contrapositive. Some statements are not written as implications to begin with.",
+      "provenance": [
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Proofs",
+          "subsection_title": "Proof by Contrapositive",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Proof by Contrapositive",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Proof by Contrapositive",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Proof by Contrapositive",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Proof by Contrapositive",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:proof-by-contradiction",
+      "label": "Proof by Contradiction",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Proofs\"",
+      "terms": [
+        "proof by contradiction"
+      ],
+      "definition": "There might be statements which really cannot be rephrased as implications. For example, $\\sqrt 2$ is irrational. In this case, it is hard to know where to start. What can we assume? Well, say we want to prove the statement $P$. What if we could prove that $\\neg P \\imp Q$ where $Q$ was false? If this implication is true, and $Q$ is false, what can we say about $\\neg P$? It must be false as well, which makes $P$ true! This is why proof by contradiction works. If we can prove that $\\neg P$ leads to a contradiction, then the only conclusion is that $\\neg P$ is false, so $P$ is true. That's what we wanted to prove. In other words, if it is impossible for $P$ to be false, $P$ must be true. Here are a couple examples of proofs by contradiction:",
+      "provenance": [
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Proof by Contradiction",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Proofs",
+          "subsection_title": "Proof by Contradiction",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        },
+        {
+          "source_file": "sec_logic-proofs.ptx",
+          "xml_id": null,
+          "kind": "prose",
+          "section_title": "Proofs",
+          "subsection_title": "Proof by Contradiction",
+          "file_sha256": "a08703400e0ba20af06b58c1106dc62365211bbf1478ee9626d8380ab0d53b79"
+        }
+      ]
+    },
+    {
+      "id": "levin-dmoi:mathematical-induction",
+      "label": "Mathematical Induction",
+      "standard_ref": "Levin, Discrete Mathematics: An Open Introduction, 3rd ed., sec. \"Induction\"",
+      "terms": [
+        "base case",
+        "inductive case"
+      ],
+      "definition": "Suppose we have done this. Then we know that the 28th term of the sequence above is a $T$ (using step 1, the initial condition or base case), and that every term after the 28th is $T$ also (using step 2, the recursive part or inductive case). Here is what the proof would actually look like. Start by saying what the statement is that you want to prove: Let $P(n)$ be the statement... To prove that $P(n)$ is true for all $n \\ge 0$, you must prove two facts: Base case: Prove that $P(0)$ is true. You do this directly. This is often easy. Inductive case: Prove that $P(k) \\imp P(k+1)$ for all $k \\ge 0$. That is, prove that for any $k \\ge 0$ if $P(k)$ is true, then $P(k+1)$ is true as well. This is the proof of an if ... then ... statement, so you can assume $P(k)$ is true ($P(k)$ is called the inductive hypothesis). You must then explain why $P(k+1)$ is also true, given that assumption. Assuming you are successful on both parts above, you can conclude, Therefore by the principle of mathematical induction, the statement $P(n)$ is true for all $n \\ge 0$. Again, start by saying what you want to prove: Let $P(n)$ be the statement... Then establish two facts: Base case: Prove that $P(0)$ is true. Inductive case: Assume $P(k)$ is true for all $k \\lt n$. Prove that $P(n)$ is true. Conclude, therefore, by strong induction, $P(n)$ is true for all $n \\gt 0$.",
+      "provenance": [
+        {
+          "source_file": "sec_seq-induction.ptx",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Induction",
+          "subsection_title": "Stamps",
+          "file_sha256": "32fe35a791a7964b6d6eb4358d5313a76bc17ae1f952097af971d8dc2f06b1a8"
+        },
+        {
+          "source_file": "sec_seq-induction.ptx",
+          "xml_id": null,
+          "kind": "assemblage",
+          "section_title": "Induction",
+          "subsection_title": "Formalizing Proofs",
+          "file_sha256": "32fe35a791a7964b6d6eb4358d5313a76bc17ae1f952097af971d8dc2f06b1a8"
+        },
+        {
+          "source_file": "sec_seq-induction.ptx",
+          "xml_id": null,
+          "kind": "assemblage",
+          "section_title": "Induction",
+          "subsection_title": "Strong Induction",
+          "file_sha256": "32fe35a791a7964b6d6eb4358d5313a76bc17ae1f952097af971d8dc2f06b1a8"
+        }
+      ]
+    }
+  ]
+}
