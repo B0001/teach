@@ -368,12 +368,26 @@ class GraphSpec:
     directory the graph is published under. `loader`/`source` are zero-arg
     callables (not values) so `_graph_registry()` can list every known graph
     without eagerly importing and I/O-loading all of them -- only the ones a
-    given publish actually selects get loaded."""
+    given publish actually selects get loaded.
+
+    `blocked_reason` (teach-8xw.58): set when this graph's own stated terms
+    are a real usage restriction with no resolvable HF license id -- not
+    merely an unverified license, a *confirmed* one this repo cannot honor
+    by guessing. Building and dry-running a blocked graph is still allowed
+    (that is how a reviewer inspects what *would* ship); `publish_many` with
+    `dry_run=False` refuses outright. This is a worker-level engineering
+    guard, not the licensing decision itself -- clearing it requires a
+    recorded repo-owner decision (see teach-8xw.58's notes), at which point
+    a future session removes this field for that key, the same way
+    teach-8xw.57's GFDL decision was landed by editing code only after the
+    decision existed, never by a CLI override flag.
+    """
 
     key: str
     loader: Callable[[], ConceptGraph]
     source: Callable[[], dict]
     description: str
+    blocked_reason: str | None = None
 
 
 def build_multi_graph_dataset_files(
@@ -555,6 +569,22 @@ def publish_many(
     if dry_run is None:
         dry_run = token is None
 
+    # teach-8xw.58: a dry run is how a reviewer inspects what *would* ship
+    # (still permitted for a blocked graph, on purpose), but an actual push
+    # must refuse outright -- "remember not to select this key" is exactly
+    # the kind of manual discipline this repo's own standard says not to
+    # rely on.
+    if not dry_run:
+        blocked = [s for s in specs if s.blocked_reason]
+        if blocked:
+            raise ValueError(
+                "publish_many(dry_run=False) refused: the following graph(s) "
+                "are blocked pending a repo-owner licensing decision and "
+                "must not be pushed live -- " + "; ".join(
+                    f"{s.key}: {s.blocked_reason}" for s in blocked
+                )
+            )
+
     files = build_multi_graph_dataset_files(specs, repo_id=repo_id)
     total_bytes = sum(len(content) for content in files.values())
 
@@ -685,53 +715,89 @@ def _graph_registry() -> dict[str, GraphSpec]:
             ),
             description="Virginia Writing SOL, grades K-12",
         ),
-        # teach-8xw.58: this source has no "license" key (VDOE's stated terms
-        # for this specific document were never verified -- do not assume it
-        # inherits the other VA SOL graphs' CC BY 4.0), so its manifest/index
-        # entry honestly reports "unknown". Registered anyway: that is
-        # `_hf_license_id` abstaining correctly, not a bug to route around by
-        # leaving the graph out of the registry.
+        # teach-8xw.58: this source has no "license" key. UPDATE -- this was
+        # originally registered on the theory that VDOE's terms were merely
+        # *unverified*, plausibly CC BY 4.0 like the other VA SOL graphs by
+        # publisher association. That guess was checked directly against
+        # VDOE's own stated terms (the document itself, plus VDOE's
+        # web-policies page) and turned out to be wrong: VDOE's terms are an
+        # explicit all-rights-reserved, non-commercial-use, permission-
+        # required notice (see `SOURCE["usage_terms"]` in
+        # va_world_language_sol_graph.py) -- structurally the same kind of
+        # confirmed restriction as ACTFL's below, not just an open question.
+        # `blocked_reason` below makes that real now, the same as ACTFL.
         GraphSpec(
             key="va-world-language-sol",
             loader=load_va_world_language_sol_graph,
             source=lambda: _WORLD_LANG_SOURCE,
             description="Virginia World Language SOL, Novice-Advanced",
+            blocked_reason=(
+                "VDOE's own stated terms for this document (see "
+                "SOURCE['usage_terms']) are a confirmed non-commercial-use, "
+                "permission-required notice with no resolvable HF license "
+                "id -- same shape of question as ACTFL's below. Needs a "
+                "recorded repo-owner decision (teach-8xw.58) before a live "
+                "publish, not a guessed license."
+            ),
         ),
-        # teach-8xw.58: ACTFL's SOURCE has no "license" key either, but unlike
-        # the world-language gap above this one is substantive, not just
-        # unverified -- ACTFL's own stated usage_terms restrict to
-        # "educational and non-profit use only, commercial use or sale is
-        # prohibited", which does not map onto any HF license identifier
-        # `_hf_license_id` knows (correctly reports "unknown" rather than
-        # guessing "cc-by-nc" or similar). Same shape of question GFDL vs
-        # CC-BY was for Judson (teach-8xw.57) -- the repo owner's call, not a
-        # worker's, before any of the four actfl-can-do-* keys below are
-        # ever selected for a LIVE publish. Registered here (buildable,
-        # dry-run-able, tested) because excluding them from the registry
-        # entirely would be this worker making that same call unilaterally
-        # in the other direction.
+        # teach-8xw.58: ACTFL's SOURCE has no "license" key either -- its own
+        # stated usage_terms restrict to "educational and non-profit use
+        # only, commercial use or sale is prohibited", which does not map
+        # onto any HF license identifier `_hf_license_id` knows (correctly
+        # reports "unknown" rather than guessing "cc-by-nc" or similar).
+        # Same shape of question GFDL vs CC-BY was for Judson (teach-8xw.57)
+        # -- the repo owner's call, not a worker's. Registered here
+        # (buildable, dry-run-able, tested) because excluding them from the
+        # registry entirely would be this worker making that same call
+        # unilaterally in the other direction; `blocked_reason` below is
+        # what actually stops a LIVE publish, not just a comment asking
+        # nicely.
         GraphSpec(
             key="actfl-can-do-interpersonal",
             loader=load_actfl_can_do_graph,
             source=lambda: _ACTFL_SOURCE,
             description="NCSSFL-ACTFL Can-Do Statements, Interpersonal Communication (11 sublevels)",
+            blocked_reason=(
+                "ACTFL's own stated usage_terms restrict to educational/"
+                "non-profit use only, commercial use or sale prohibited -- "
+                "no resolvable HF license id. Needs a recorded repo-owner "
+                "decision (teach-8xw.58) before a live publish."
+            ),
         ),
         GraphSpec(
             key="actfl-can-do-interpretive",
             loader=load_actfl_interpretive_graph,
             source=lambda: _ACTFL_SOURCE,
             description="NCSSFL-ACTFL Can-Do Statements, Interpretive Communication (11 sublevels)",
+            blocked_reason=(
+                "ACTFL's own stated usage_terms restrict to educational/"
+                "non-profit use only, commercial use or sale prohibited -- "
+                "no resolvable HF license id. Needs a recorded repo-owner "
+                "decision (teach-8xw.58) before a live publish."
+            ),
         ),
         GraphSpec(
             key="actfl-can-do-presentational",
             loader=load_actfl_presentational_graph,
             source=lambda: _ACTFL_SOURCE,
             description="NCSSFL-ACTFL Can-Do Statements, Presentational Communication (11 sublevels)",
+            blocked_reason=(
+                "ACTFL's own stated usage_terms restrict to educational/"
+                "non-profit use only, commercial use or sale prohibited -- "
+                "no resolvable HF license id. Needs a recorded repo-owner "
+                "decision (teach-8xw.58) before a live publish."
+            ),
         ),
         GraphSpec(
             key="actfl-can-do-intercultural",
             loader=load_actfl_intercultural_graph,
             source=lambda: _ACTFL_SOURCE,
+            blocked_reason=(
+                "ACTFL's own stated usage_terms restrict to educational/"
+                "non-profit use only, commercial use or sale prohibited -- "
+                "no resolvable HF license id. Needs a recorded repo-owner "
+                "decision (teach-8xw.58) before a live publish."
+            ),
             description="NCSSFL-ACTFL Can-Do Statements, Intercultural Communication (5 major levels)",
         ),
         GraphSpec(
@@ -977,6 +1043,58 @@ def _selfcheck() -> None:
         f"{', '.join(sorted(registry))}) builds offline with independent "
         "per-graph licenses, and Judson's GFDL notice survives into the "
         "published artifact"
+    )
+
+    # teach-8xw.58: the five graphs with a confirmed, non-mappable usage
+    # restriction (ACTFL's four Can-Do graphs plus va-world-language-sol)
+    # must dry-run cleanly (a reviewer can still inspect what would ship)
+    # but refuse outright on an actual live push -- pending a repo-owner
+    # decision this self-check cannot make for them.
+    blocked_keys = {
+        "va-world-language-sol",
+        "actfl-can-do-interpersonal",
+        "actfl-can-do-interpretive",
+        "actfl-can-do-presentational",
+        "actfl-can-do-intercultural",
+    }
+    blocked_specs = [registry[k] for k in blocked_keys]
+    assert all(s.blocked_reason for s in blocked_specs), (
+        "every graph with a confirmed non-mappable usage restriction must "
+        "carry a blocked_reason -- an unblocked one here would silently "
+        "re-open the gap teach-8xw.58 closed"
+    )
+    unblocked = [k for k, s in registry.items() if k not in blocked_keys and s.blocked_reason]
+    assert not unblocked, (
+        f"unexpected blocked_reason on graph(s) not part of teach-8xw.58's "
+        f"known restricted set: {unblocked}"
+    )
+
+    dry = publish_many(blocked_specs, "example/blocked-dry-run", dry_run=True)
+    assert dry.dry_run is True  # inspection must still work
+
+    try:
+        publish_many(blocked_specs, "example/blocked-live", token="fake-token", dry_run=False)
+        raise AssertionError("a blocked graph must refuse a live publish")
+    except ValueError as exc:
+        assert "actfl-can-do-interpersonal" in str(exc)
+        assert "va-world-language-sol" in str(exc)
+
+    # A live selection that mixes one blocked graph into an otherwise-clear
+    # batch must refuse the WHOLE batch, not silently drop the blocked one --
+    # silently dropping it would publish something other than what was asked
+    # for without saying so.
+    mixed = [registry["judson-algebra"], registry["actfl-can-do-interpersonal"]]
+    try:
+        publish_many(mixed, "example/mixed-live", token="fake-token", dry_run=False)
+        raise AssertionError("a live publish must refuse if ANY selected graph is blocked")
+    except ValueError as exc:
+        assert "actfl-can-do-interpersonal" in str(exc)
+
+    print(
+        "OK: graphs with a confirmed non-mappable usage restriction "
+        "(va-world-language-sol, the four actfl-can-do-* graphs) dry-run "
+        "cleanly but refuse a live publish, individually or mixed into a "
+        "larger batch, until a repo-owner licensing decision is recorded"
     )
 
 

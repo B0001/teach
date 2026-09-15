@@ -509,3 +509,107 @@ def test_cli_requires_repo_id_when_not_listing(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["publish_graph.py"])
     with pytest.raises(SystemExit):
         _cli()
+
+
+_BLOCKED_KEYS = frozenset({
+    "va-world-language-sol",
+    "actfl-can-do-interpersonal",
+    "actfl-can-do-interpretive",
+    "actfl-can-do-presentational",
+    "actfl-can-do-intercultural",
+})
+
+
+def test_registry_flags_exactly_the_graphs_with_a_confirmed_usage_restriction():
+    """teach-8xw.58: ACTFL's four Can-Do graphs and va-world-language-sol
+    each have a confirmed, non-mappable usage restriction in their own
+    SOURCE dict (see actfl_can_do_graph.py / va_world_language_sol_graph.py)
+    -- not merely a missing/unverified license. Every one of them must carry
+    a GraphSpec.blocked_reason; nothing else in the registry should."""
+    from teach.publish_graph import _graph_registry
+
+    registry = _graph_registry()
+    flagged = {key for key, spec in registry.items() if spec.blocked_reason}
+    assert flagged == _BLOCKED_KEYS, (
+        "registry's blocked set drifted from teach-8xw.58's known restricted "
+        f"graphs -- flagged={sorted(flagged)}"
+    )
+
+
+def test_publish_many_dry_run_still_works_for_a_blocked_graph():
+    """A dry run is how a reviewer inspects what a blocked graph *would*
+    publish -- that inspection path must keep working; only an actual push
+    is refused."""
+    from teach.publish_graph import _graph_registry
+
+    registry = _graph_registry()
+    spec = registry["actfl-can-do-interpersonal"]
+    result = publish_many([spec], "example/dry-run", dry_run=True)
+    assert result.dry_run is True
+    assert result.repo_url is None
+
+
+def test_publish_many_live_refuses_a_blocked_graph_without_touching_the_network(monkeypatch):
+    """The core guard this bead adds: publish_many(dry_run=False) must raise
+    before any HfApi call when a selected graph is blocked -- and the error
+    must name the graph and the reason, not fail silently or vaguely."""
+    from teach.publish_graph import _graph_registry
+
+    def _unexpected_hfapi(*args, **kwargs):
+        raise AssertionError("HfApi must never be constructed for a refused live publish")
+
+    monkeypatch.setattr("huggingface_hub.HfApi", _unexpected_hfapi)
+
+    registry = _graph_registry()
+    spec = registry["actfl-can-do-interpersonal"]
+    with pytest.raises(ValueError, match="actfl-can-do-interpersonal"):
+        publish_many([spec], "example/live", token="fake-token", dry_run=False)
+
+
+def test_publish_many_live_refuses_whole_batch_if_any_graph_is_blocked():
+    """Mixing one blocked graph into an otherwise-clear selection must refuse
+    the WHOLE live publish, not silently drop the blocked graph and push the
+    rest -- silently dropping it would publish something other than what was
+    asked for, without saying so."""
+    from teach.publish_graph import _graph_registry
+
+    registry = _graph_registry()
+    mixed = [registry["judson-algebra"], registry["va-world-language-sol"]]
+    with pytest.raises(ValueError, match="va-world-language-sol"):
+        publish_many(mixed, "example/mixed", token="fake-token", dry_run=False)
+
+
+def test_publish_many_live_succeeds_for_an_unblocked_selection(monkeypatch):
+    """The guard must not be so broad it blocks graphs that were never
+    flagged -- a selection with no blocked graph still reaches the live
+    push path."""
+    called = {}
+
+    class _FakeRepoUrl:
+        repo_id = "example/unblocked"
+
+    class _FakeApi:
+        def __init__(self, token=None):
+            called["token"] = token
+
+        def create_repo(self, repo_id, **kwargs):
+            called["create_repo"] = repo_id
+            return _FakeRepoUrl()
+
+        def list_repo_files(self, repo_id, **kwargs):
+            return []
+
+        def create_commit(self, **kwargs):
+            called["create_commit"] = True
+
+    monkeypatch.setattr("huggingface_hub.HfApi", _FakeApi)
+    monkeypatch.setattr("huggingface_hub.CommitOperationAdd", lambda **kw: kw)
+    monkeypatch.setattr("huggingface_hub.CommitOperationDelete", lambda **kw: kw)
+
+    from teach.publish_graph import _graph_registry
+
+    registry = _graph_registry()
+    spec = registry["judson-algebra"]
+    result = publish_many([spec], "example/unblocked", token="fake-token", dry_run=False)
+    assert result.dry_run is False
+    assert called.get("create_commit") is True
