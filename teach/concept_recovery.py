@@ -163,6 +163,39 @@ nothing for graduate-level technical vocabulary (Judson's "coset",
 nothing in this module claims it does -- see the generalization measurement
 recorded against teach-8xw.26 for the actually-measured hit rate.
 
+A DECISIVE-MARGIN RIVAL MUST BE CREDIBLE IN ABSOLUTE TERMS, NOT JUST
+PROPORTIONALLY (teach-hpa)
+
+teach-9wx's decisive-margin coverage-gap check (`_DECISIVE_MARGIN_COVERAGE_GAP`,
+above) compares coverage FRACTIONS: what portion of the winner's own
+vocabulary is in the text, versus what portion of some rival's. A node with
+only a handful of distinctive words swings that fraction enormously per
+single word matched -- a 7-word node goes from 0% to 100% four words at a
+time -- so an unrelated-seeming lesson can push a tiny node's coverage
+fraction past a much larger, correctly-recovered winner's, purely because the
+tiny node's denominator is so small, without that rival having actually
+accumulated much evidence in absolute terms. Measured: a lesson genuinely
+about judson:16.3-ring-homomorphisms-and-ideals (which itself has a
+57-word vocabulary and scores 17) has judson:11.1-group-homomorphisms (7
+words, sharing "kernel"/"normal"/"homomorphism" with the correct answer)
+score only 5 -- but that 5-word showing is 71% of its own tiny vocabulary,
+comfortably clearing the gap check against the winner's 30% and vetoing a
+genuinely correct decisive win. The SAME rival node, against a lesson
+actually about group homomorphisms mis-scoring judson:16.3 as a decisive but
+WRONG winner, scores 7 -- also small in absolute terms, but this time it
+really is the right answer being drowned out, and must still be allowed to
+veto, or the original teach-9wx bug returns.
+
+So a rival is only allowed to trigger the decisive-margin veto if its raw
+score is also at least `_DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO` of the
+winner's own raw score -- credible in absolute terms, not merely
+proportionally inflated by a small denominator. This does not fully resolve
+the underlying tension (both measured cases above are, in absolute terms,
+fairly small showings against a much larger winner), and it is calibrated on
+exactly the two ratios that motivated it (0.294, must be excluded; 0.412,
+must still veto) -- see that constant's comment, and this bead's handoff, for
+what a fresh held-out round actually measured afterward.
+
 Recovered prerequisites get the same abstention discipline at the level of
 each candidate: a direct-prerequisite node in the graph is only reported as
 "assumed" if the text both (a) signals that *something* is being treated as
@@ -256,6 +289,84 @@ _MIN_COVERAGE_MARGIN = 0.15
 # first, so a genuine recovery that only exercises a fifth of its node's
 # vocabulary abstains here by design.
 _MIN_WINNING_COVERAGE = 0.20
+# teach-9wx: at a DECISIVE margin (margin > min_margin), a winner is not
+# second-guessed against a merely better-covered rival (SIGNPOSTED_LESSON:
+# rival covers 66.7% vs the correct, decisive winner's 58.8%, an 8-point gap
+# that must not veto it) -- but it is, if the gap is wide enough that the
+# "winner" looks like incidental overlap by comparison. Calibrated on three
+# gaps: two real, correctly-recovered decisive wins with the rival covering
+# somewhat MORE than the winner (7.9 points, SIGNPOSTED_LESSON; 1.9 points, a
+# faithful VA Math SOL paraphrase recovered via the semantic tier -- see
+# test_faithful_paraphrase_recovers_via_semantic_fallback_tier) versus one
+# confirmed confident wrong answer (39.6 points: judson:16.3-ring-
+# homomorphisms-and-ideals at 17.5% self-coverage against the true answer
+# judson:11.1-group-homomorphisms's 57.1%, semantic tier).
+#
+# teach-ceg: the original 0.25 was placed roughly midway between the 7.9pt
+# safe ceiling and the 39.6pt danger floor -- "well clear of both groups
+# without hugging either edge" treated the two failure directions as equally
+# costly. They are not: this module's OWN stated priority (see
+# _MIN_WINNING_COVERAGE's comment, "erring low costs a real recovery an
+# abstention; erring high lets a confident wrong answer through... this repo
+# prefers the first") already says a false abstention is cheaper than a
+# confident wrong answer. A THRESHOLD a gap must CLEAR to trigger the veto
+# (i.e. to abstain) should therefore sit closer to the safe boundary than to
+# the danger boundary, not centered between them -- that biases genuinely
+# ambiguous gaps toward triggering the veto (abstain) rather than letting
+# them through. The original midpoint calibration never applied that
+# asymmetry to this constant, even though it was already applied elsewhere in
+# this same file. Applying it here (roughly one third of the way from the
+# 7.9pt safe ceiling to the 39.6pt danger floor, leaving a real margin off
+# the safe edge rather than hugging it) gives 0.18 -- chosen from the
+# PRE-EXISTING 7.9/39.6 calibration pair alone, before ever computing what
+# value SETS_EQUIVALENCE's 24-point gap would need. That gap (teach-ceg,
+# tests/test_concept_recovery_judson_full_graph_generalization_round3.py)
+# happens to now clear 0.18 and correctly abstain instead of confidently
+# misnaming judson:18.2-factorization-in-integral-domains -- that is this
+# round's HELD-OUT CHECK of the new value, not the input used to derive it.
+# THAT IS STILL CALIBRATION, NOT VALIDATION OF GENERALIZATION -- see this
+# bead's own closing notes (and its own required fresh held-out round) for
+# what was actually measured against topics no calibration decision here
+# ever saw.
+_DECISIVE_MARGIN_COVERAGE_GAP = 0.18
+# teach-hpa: `_DECISIVE_MARGIN_COVERAGE_GAP` alone cannot tell "the rival is
+# better covered because the winner is the wrong node" (the bug teach-9wx
+# fixed) apart from "the rival is better covered because it happens to have a
+# tiny vocabulary that a winner's own, unrelated text incidentally brushes
+# against." Coverage is a FRACTION of the rival's own vocabulary -- a node
+# with only 6-8 distinctive words swings 12-17 points per single word
+# matched, so a handful of ordinary, topic-adjacent words (e.g. "kernel",
+# "normal", "homomorphism" showing up in a lesson about a *different*,
+# closely related concept) can push a tiny node's coverage fraction well past
+# a much larger, correctly-recovered winner's -- without the rival actually
+# having accumulated much ABSOLUTE textual evidence at all.
+#
+# So a rival is only credible enough to veto a decisive winner if its raw
+# overlap SCORE (not just its coverage fraction) is at least this fraction of
+# the winner's own raw score -- i.e. the rival has to have actually shown up
+# in the text a meaningful amount in absolute terms, not just proportionally
+# to its own small denominator.
+#
+# Measured (see this bead's handoff for the full trace): a lesson genuinely
+# about judson:16.3-ring-homomorphisms-and-ideals (raw score 17) has
+# judson:11.1-group-homomorphisms (a 7-word node sharing "kernel"/"normal"/
+# "homomorphism" vocabulary) score only 5 -- ratio 0.294 -- yet that rival's
+# coverage (71.4%) clears `_DECISIVE_MARGIN_COVERAGE_GAP` against the
+# winner's 29.8%, which would wrongly veto a genuinely correct decisive win
+# (teach-9wx's own round2 RING_HOMOMORPHISMS fixture). The SAME rival node,
+# against a lesson genuinely about group homomorphisms mis-scoring
+# judson:16.3 as a decisive but WRONG winner (round1's HOMOMORPHISMS,
+# semantic tier), scores 7 against the wrong winner's 17 -- ratio 0.412 --
+# and must remain credible enough to veto, or the original teach-9wx bug
+# comes back. 0.35 sits in the gap between those two ratios (0.294 excluded,
+# 0.412 and the two fabricated-test ratios of 0.40 included) without hugging
+# either edge. THAT IS CALIBRATION, NOT VALIDATION -- both of the real ratios
+# above come from fixtures this lineage has already used to tune a threshold
+# once (round1's HOMOMORPHISMS calibrated `_DECISIVE_MARGIN_COVERAGE_GAP`
+# itself; round2's RING_HOMOMORPHISMS is this bead's own named case) -- see
+# this bead's handoff for the fresh, independently-authored round run before
+# closing.
+_DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO = 0.35
 # A word that appears in the vocabulary of more than this many nodes is
 # curriculum boilerplate, not a discriminating signal -- excluded from
 # scoring entirely. See module docstring.
@@ -664,18 +775,102 @@ def _resolve_candidates(
                         f"inflation, accumulating more raw matches is not evidence this is the "
                         f"concept the lesson actually gave its fullest treatment to"
                     )
+        else:
+            # teach-9wx: a decisive margin (margin > min_margin) used to
+            # return `top` with NO coverage check of any kind -- this was
+            # deliberate (see judson_algebra_graph.py's SIGNPOSTED_LESSON,
+            # a real case where a smaller-vocabulary rival's proportionally
+            # HIGHER coverage -- 66.7% vs the decisive winner's 58.8% --
+            # must NOT veto a genuinely correct, decisively-ahead win). But
+            # a rival that is only somewhat better covered is a different
+            # situation from one that is covered almost completely while the
+            # "winner" barely touches its own vocabulary: a long,
+            # verbatim-extracted node can rack up a large raw margin from
+            # incidental overlap with ordinary prose vocabulary while
+            # covering barely any of what actually makes it that node
+            # (measured: a lesson on group homomorphisms, semantic tier,
+            # scored judson:16.3-ring-homomorphisms-and-ideals=17 -- margin 7
+            # over the runner-up, decisively above _SEMANTIC_MIN_MARGIN's 3
+            # -- while covering only 17.5% of its own vocabulary, against the
+            # true answer judson:11.1-group-homomorphisms's 57.1% coverage
+            # (score 7, third place by raw count) -- a 39.6-point gap.
+            #
+            # So a decisive margin is still not second-guessed against a
+            # rival that is somewhat better covered (SIGNPOSTED_LESSON's
+            # 8.3-point gap; a real, correctly-recovered VA Math SOL
+            # paraphrase's 1.9-point gap -- see
+            # test_faithful_paraphrase_recovers_via_semantic_fallback_tier),
+            # only against one that is covered SO MUCH better that the
+            # "winner" looks like incidental overlap by comparison.
+            # _DECISIVE_MARGIN_COVERAGE_GAP is calibrated on exactly those
+            # three numbers (7.9-point, 1.9-point, and 39.6-point gaps) --
+            # not validated against them; see this bead's own required
+            # fresh held-out round for what was actually measured afterward.
+            #
+            # teach-hpa: that gap check alone cannot tell a rival that is
+            # genuinely better covered because the winner is wrong (the case
+            # above) apart from a rival whose coverage FRACTION is inflated
+            # by having a tiny vocabulary in the first place -- both look
+            # like "a huge coverage gap" to the check. So a rival must also
+            # be CREDIBLE: its own raw score has to be a large enough
+            # fraction of the winner's raw score
+            # (`_DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO`) to count as real
+            # absolute textual evidence, not just a percentage computed over
+            # a handful of words. See that constant's comment for the
+            # measured case this fixes (RING_HOMOMORPHISMS) without
+            # reopening the one it must not reopen (HOMOMORPHISMS).
+            rival_matches = [c for c in candidates if c is not top and c.score >= _MIN_MATCH_WORDS]
+            credible_rivals = [
+                c for c in rival_matches
+                if c.score >= _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO * top.score
+            ]
+            if credible_rivals:
+                best_rival = max(credible_rivals, key=lambda c: _coverage_fraction(c, index, text_words))
+                best_rival_coverage = _coverage_fraction(best_rival, index, text_words)
+                if best_rival_coverage - top_coverage >= _DECISIVE_MARGIN_COVERAGE_GAP:
+                    return None, (
+                        f"best candidate {top.node_id!r} leads decisively on raw overlap "
+                        f"({top.score} vs runner-up {runner_up}) but covers only "
+                        f"{top_coverage:.0%} of its own distinctive vocabulary, while "
+                        f"{best_rival.node_id!r} (raw overlap {best_rival.score}) covers "
+                        f"{best_rival_coverage:.0%} of its own -- a gap too wide to be a merely "
+                        f"better-covered rival; a raw-score margin this size is not evidence "
+                        f"the lesson is really about the node with almost none of its own "
+                        f"vocabulary present in the text"
+                    )
         return top.node_id, None
 
     # Raw-score margin alone doesn't clear the bar -- try the coverage
     # tiebreak (module docstring) before abstaining. Requires BOTH the
     # winner covering almost all of its own vocabulary AND a decisive gap
     # over every other close rival's own coverage, not just a higher count.
-    top_fraction = _coverage_fraction(top, index, text_words)
-    rival_fractions = [_coverage_fraction(c, index, text_words) for c in close if c is not top]
-    if top_fraction >= _MIN_COVERAGE_FRACTION and all(
-        top_fraction - f >= _MIN_COVERAGE_MARGIN for f in rival_fractions
-    ):
-        return top.node_id, None
+    #
+    # teach-ngy: the coverage winner is not necessarily the RAW-SCORE leader
+    # (`top`). A long, verbatim-extracted node accumulates more incidental
+    # raw-count hits purely from having more words -- including ordinary
+    # narrative vocabulary a textbook's own prose uses ("recall", "write",
+    # "said", "definition") that a terse, hand-authored node's short
+    # definition never had a chance to contain -- so `top` can lead on raw
+    # count while covering only a sliver of its own vocabulary, and a
+    # shorter, denser node elsewhere in `close` can be the one the lesson
+    # actually covered almost completely. Only ever asking whether `top`
+    # dominates by coverage (as this branch used to) misses that node
+    # entirely -- the same positional assumption teach-i35 already fixed in
+    # the single-close-candidate branch above, generalized here to the
+    # multi-candidate tie. Search every candidate in `close` that clears the
+    # same evidence floor a winner needs (`_MIN_MATCH_WORDS`) for the one
+    # most fully covered by the text, regardless of its raw-score rank.
+    coverage_eligible = [c for c in close if c.score >= _MIN_MATCH_WORDS]
+    if coverage_eligible:
+        best_covered = max(coverage_eligible, key=lambda c: _coverage_fraction(c, index, text_words))
+        best_fraction = _coverage_fraction(best_covered, index, text_words)
+        rival_fractions = [
+            _coverage_fraction(c, index, text_words) for c in close if c is not best_covered
+        ]
+        if best_fraction >= _MIN_COVERAGE_FRACTION and all(
+            best_fraction - f >= _MIN_COVERAGE_MARGIN for f in rival_fractions
+        ):
+            return best_covered.node_id, None
 
     tied = [c.node_id for c in close]
     return None, f"ambiguous match -- candidates too close to call: {tied}"
