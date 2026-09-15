@@ -48,7 +48,7 @@ def test_facts_and_standard_ref_are_opaque_payload():
     it -- a math fact payload and a reading fact payload look nothing alike
     and neither should mean anything special to ConceptNode itself."""
     math_node = ConceptNode(
-        id="m", domain="math", label="Normal subgroups", standard_ref="D&F 3.1",
+        id="m", domain="math", label="Normal subgroups", standard_ref="Judson ch. 10",
         facts={"theorem": "the kernel of a homomorphism is normal"},
     )
     reading_node = ConceptNode(

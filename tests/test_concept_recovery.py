@@ -15,14 +15,18 @@ from teach.concept_recovery import (
     CORRECT_RECOVERY_ASSUMED,
     CORRECT_RECOVERY_TAUGHT,
     CORRECT_RECOVERY_TEXT,
+    ConceptMatch,
+    VocabularyIndex,
+    _coverage_fraction,
     _node_vocabulary,
+    _resolve_candidates,
     build_vocabulary_index,
     recover_assumed_prerequisites,
     recover_from_lesson_text,
     recover_unsignposted_prerequisites,
     score_candidates,
 )
-from teach.dummit_foote_graph import load_dummit_foote_graph
+from teach.judson_algebra_graph import load_judson_algebra_graph
 from teach.va_math_sol_graph import load_va_math_sol_graph
 
 VA_GRAPH = load_va_math_sol_graph()
@@ -42,7 +46,7 @@ def test_abstain_example_out_of_graph_vocabulary():
     """The bead's required abstention fixture: lesson text about content the
     graph's vocabulary has nothing on (group theory, checked against a K-8
     VA Math SOL graph -- the actual, disclosed gap teach-8xw.15 flags for
-    the Dummit & Foote test case) must abstain, not guess a K-8 node."""
+    the Judson abstract-algebra test case) must abstain, not guess a K-8 node."""
     result = recover_from_lesson_text(ABSTAIN_TEXT, VA_GRAPH)
     assert result.taught_node_id is None
     assert result.abstain_reason is not None
@@ -505,27 +509,25 @@ def test_coverage_tiebreak_does_not_rescue_similarly_partial_coverage():
     assert "ambiguous" in result.abstain_reason.lower()
 
 
-def test_dnf_bond_lesson_recovers_lagrange_without_a_single_word_margin():
-    """teach-ed3's actual trigger: teach-8xw.15's real Bond/Lagrange lesson
-    (teach/dnf_bond_lesson.py) once had a raw-score margin of exactly 1
-    (Lagrange 13 vs cosets 12) before a single word ("proof") was added to
-    push it to the _MIN_MARGIN=2 floor -- a single point of margin, not a
-    robust property. This test removes that same word from the real,
-    already-built lesson text and confirms the coverage tiebreak recovers
-    Lagrange's theorem anyway, so the correctness of this lesson's recovery
-    no longer hinges on one word."""
-    from teach.dnf_bond_lesson import build_lesson
-    from teach.dummit_foote_graph import TARGET_NODE_ID, load_dummit_foote_graph
+def test_judson_bond_lesson_recovers_lagrange_without_a_key_phrase():
+    """teach-ed3's original trigger, on the D&F-era lesson, was a raw-score
+    margin of exactly 1 (Lagrange 13 vs cosets 12) before a single word
+    ("proof") was added to push it to the _MIN_MARGIN=2 floor -- a single
+    point of margin, not a robust property. teach-8xw.56 replaced that
+    lesson with a Judson-framed rewrite (teach/judson_bond_lesson.py) with
+    different vocabulary throughout; the same word removed from the new
+    lesson now leaves a comfortable raw-score margin (9, not 1), so the
+    exact-margin reproduction no longer applies and is not pinned here.
+    What still matters, and is what this test actually checks, is the
+    general property the original test was guarding: recovery does not
+    hinge on any single word being present."""
+    from teach.judson_algebra_graph import TARGET_NODE_ID, load_judson_algebra_graph
+    from teach.judson_bond_lesson import build_lesson
 
-    graph = load_dummit_foote_graph()
+    graph = load_judson_algebra_graph()
     artifact = build_lesson()
     assert "the proof behind it is" in artifact.text  # guards the fixture itself
     text_without_proof = artifact.text.replace("the proof behind it is", "it is")
-
-    index = build_vocabulary_index(graph)
-    candidates = score_candidates(text_without_proof, index)
-    by_id = {c.node_id: c.score for c in candidates}
-    assert by_id[TARGET_NODE_ID] - by_id["dummit-foote:3.1-cosets"] == 1  # reproduces the fragile margin
 
     result = recover_from_lesson_text(text_without_proof, graph)
     assert result.taught_node_id == TARGET_NODE_ID
@@ -595,17 +597,29 @@ def test_semantic_tier_still_abstains_on_a_thin_coincidental_margin():
     assert result.abstain_reason is not None
 
 
-def test_semantic_tier_recovers_dummit_foote_paraphrase_raw_tier_missed():
-    """Same fallback mechanism, checked against the OTHER domain in this
-    repo (dummit_foote_graph.py, undergraduate abstract algebra) with an
-    independently-written paraphrase of dummit-foote:1.6-homomorphisms
-    (from teach-8xw.26's blind generalization set) that raw exact-word
-    scoring leaves ambiguous against 3.3-isomorphism-theorems, since both
-    nodes' vocabularies revolve around "isomorphic"/"isomorphism". WordNet
-    lemma/synonym matching (mapping this paraphrase's "map", "matchup", and
-    "structure" language onto the source's own vocabulary) gives
-    homomorphisms a decisive lead once the exact wording is normalized."""
-    graph = load_dummit_foote_graph()
+def test_semantic_tier_abstains_on_a_genuinely_ambiguous_math_paraphrase():
+    """Checked against the OTHER domain in this repo
+    (judson_algebra_graph.py, undergraduate abstract algebra). teach-8xw.56's
+    predecessor version of this test used an independently-written
+    paraphrase of the old D&F homomorphisms node (which bundled
+    homomorphisms and isomorphisms into one section) and found the semantic
+    tier gave that bundled node a decisive lead.
+
+    Judson splits homomorphisms (ch. 11) and isomorphisms (ch. 9) into
+    separate, independently-defined nodes (see judson_algebra_graph.py's
+    EDGE PROVENANCE), so the same style of paraphrase -- one that narrates a
+    map, then upgrades it to an isomorphism, then names its kernel and
+    image -- now genuinely spans three real, distinct neighbors in this
+    graph: judson:11.1-group-homomorphisms (kernel, structure preserving),
+    judson:9.1-definition-and-examples (isomorphic, structure preserving),
+    and judson:1.2-sets-and-equivalence-relations (map/image/onto are that
+    node's own vocabulary, since a homomorphism literally is a particular
+    kind of function). Both the raw and semantic tiers correctly abstain
+    rather than guess among them -- this is sandbox-prompt.md's preference
+    for abstention over a confident wrong answer, exercised in the math
+    domain, mirroring test_semantic_tier_still_abstains_on_a_thin_coincidental_margin
+    above for the VA SOL domain."""
+    graph = load_judson_algebra_graph()
     text = (
         "Tutor: A homomorphism is a map from one group to another that "
         "respects the way things combine -- if you combine two elements "
@@ -621,5 +635,268 @@ def test_semantic_tier_recovers_dummit_foote_paraphrase_raw_tier_missed():
         "the second group."
     )
     result = recover_from_lesson_text(text, graph)
-    assert result.taught_node_id == "dummit-foote:1.6-homomorphisms", result.candidates
-    assert result.abstain_reason is None
+    assert result.taught_node_id is None, (
+        f"expected abstention, got {result.taught_node_id!r} -- this paraphrase "
+        "genuinely spans homomorphisms, isomorphisms, and sets/functions"
+    )
+    assert result.abstain_reason is not None
+
+
+def test_resolve_candidates_checks_every_candidates_coverage_not_just_the_runner_up():
+    """teach-i35: the single-winner branch's rival-coverage check used to
+    hardcode candidates[1] (the second-highest RAW-SCORING candidate) as
+    "the rival" to compare coverage against. That is a rank-position
+    assumption, not a semantic one -- when 2+ candidates that are NOT the
+    true rival outscore it on raw overlap (e.g. because they simply have a
+    larger vocabulary, or the semantic tier's synonym expansion inflates
+    their raw score), the true rival gets pushed out of slot [1] and the
+    gate silently checks the wrong node, i.e. no protection at all.
+
+    This fabricates exactly that geometry directly against
+    _resolve_candidates, bypassing lesson-text/graph machinery entirely:
+    'top' wins on raw score (8) and clears _MIN_WINNING_COVERAGE on its own
+    (40%). 'r1' sits in the old hardcoded candidates[1] slot with a higher
+    raw score (6) than the true rival but a large vocabulary, so its own
+    coverage is thin (20%) -- the old code would compare against this and
+    find nothing wrong. 'r2' is the true rival: a lower raw score (5) but a
+    small, tightly-matched vocabulary, so it covers 71% of its own
+    distinctive words -- well above top's 40%. A fix that still only looks
+    at candidates[1] would miss r2 and wrongly return 'top'; the fixed code
+    must search every candidate that clears the evidence floor and abstain,
+    naming r2 (not r1) as the reason.
+    """
+    by_node_id = {
+        "top": frozenset(f"w{i}" for i in range(20)),
+        "r1": frozenset(f"x{i}" for i in range(30)),
+        "r2": frozenset(f"y{i}" for i in range(7)),
+    }
+    index = VocabularyIndex(graph=ConceptGraph(nodes=(), edges=()), by_node_id=by_node_id)
+    candidates = (
+        ConceptMatch(node_id="top", score=8, matched_words=frozenset(f"w{i}" for i in range(8))),
+        ConceptMatch(node_id="r1", score=6, matched_words=frozenset(f"x{i}" for i in range(6))),
+        ConceptMatch(node_id="r2", score=5, matched_words=frozenset(f"y{i}" for i in range(5))),
+    )
+    text_words = frozenset().union(*(c.matched_words for c in candidates))
+    node_id, reason = _resolve_candidates(candidates, index, text_words, min_margin=2)
+    assert node_id is None, (
+        f"expected abstention naming the true rival r2 (71% coverage of its own "
+        f"vocabulary, vs top's 40%), got a confident answer of {node_id!r} -- "
+        "the rival-coverage check is only looking at the old hardcoded "
+        "candidates[1] slot again"
+    )
+    assert reason is not None and "r2" in reason, (
+        f"abstain reason must name r2 as the higher-coverage rival, got: {reason!r}"
+    )
+    assert "r1" not in reason, (
+        f"reason names r1 (the old hardcoded candidates[1] slot, NOT the true "
+        f"rival) instead of r2: {reason!r}"
+    )
+
+
+def test_multi_candidate_tie_coverage_winner_need_not_be_the_raw_score_leader():
+    """teach-ngy: the MULTI-candidate branch of the coverage tiebreak (raw
+    margin doesn't clear _MIN_MARGIN and 2+ candidates are close) used to
+    only ever ask whether `top` -- the raw-score leader -- decisively
+    dominates the others by coverage. It never asked whether some OTHER
+    close candidate might be the one actually near-completely covered.
+    That is the same rank-position assumption teach-i35 fixed in the
+    single-close-candidate branch just above, at the tie level instead of
+    the runner-up level -- measured for real against `judson_algebra_graph`'s
+    20-node full graph (teach-b5k.1's ring/field nodes), where a long,
+    verbatim-extracted node's sheer vocabulary size let it out-raw-score a
+    small, terse node that the lesson text actually covered almost
+    completely.
+
+    This fabricates that geometry directly against `_resolve_candidates`,
+    bypassing lesson-text/graph machinery entirely: 'top' has the largest
+    vocabulary (40 words) and wins on raw score (10), but the text only
+    covers a quarter of its own vocabulary (25%). 'rival' scores one point
+    lower (9, within margin 2 of top, so both land in the same tie) but has
+    a small, tightly-matched vocabulary (10 words) that the text covers
+    almost completely (90%) -- decisively above every other close
+    candidate's coverage. The old code, which only checked `top`'s own
+    coverage (25%, far below the 85% bar), would abstain and never notice
+    'rival' at all. The fixed code must search every close candidate and
+    return 'rival'.
+    """
+    by_node_id = {
+        "top": frozenset(f"w{i}" for i in range(40)),
+        "rival": frozenset(f"v{i}" for i in range(10)),
+    }
+    index = VocabularyIndex(graph=ConceptGraph(nodes=(), edges=()), by_node_id=by_node_id)
+    candidates = (
+        ConceptMatch(node_id="top", score=10, matched_words=frozenset(f"w{i}" for i in range(10))),
+        ConceptMatch(node_id="rival", score=9, matched_words=frozenset(f"v{i}" for i in range(9))),
+    )
+    text_words = frozenset(f"w{i}" for i in range(10)) | frozenset(f"v{i}" for i in range(9))
+    node_id, reason = _resolve_candidates(candidates, index, text_words, min_margin=2)
+    assert node_id == "rival", (
+        f"expected 'rival' (90% coverage of its own vocabulary, decisively "
+        f"ahead of top's 25%), got {node_id!r} (reason: {reason!r}) -- the "
+        "multi-candidate coverage tiebreak is only checking the raw-score "
+        "leader's own coverage again, the same positional assumption "
+        "teach-i35 fixed one branch up"
+    )
+    assert reason is None
+
+
+def test_decisive_margin_still_abstains_when_a_rival_is_covered_far_better():
+    """teach-9wx: the single-close-candidate branch's `margin > min_margin`
+    path (a DECISIVE raw-score win) used to return `top` with NO coverage
+    check of any kind, on the theory that a margin this size settles the
+    question outright. Measured for real against a lesson on group
+    homomorphisms scored through `judson_algebra_graph`'s full graph's
+    semantic tier: the raw-score leader,
+    judson:16.3-ring-homomorphisms-and-ideals, led the runner-up by 7 words
+    (decisively above `_SEMANTIC_MIN_MARGIN`'s 3) while covering only 17.5%
+    of its own vocabulary -- the true answer,
+    judson:11.1-group-homomorphisms, sat in third place by raw score but
+    covered 57.1% of its own.
+
+    This fabricates that geometry directly against `_resolve_candidates`,
+    bypassing lesson-text/graph machinery entirely: 'top' has a large
+    vocabulary (40 words) and wins decisively on raw score (10 vs the
+    runner-up's 4, margin 6 >> min_margin 2), but the text covers only a
+    quarter of its own vocabulary (25%). 'rival' scores lower (4, clears
+    `_MIN_MATCH_WORDS`) but has a small, tightly-matched vocabulary (8
+    words) the text covers almost completely (87.5%) -- a 62.5-point
+    coverage gap, decisively above `_DECISIVE_MARGIN_COVERAGE_GAP` (0.25).
+    The old code never looked at 'rival' at all once the margin cleared;
+    the fixed code must abstain and name 'rival' as the reason.
+    """
+    by_node_id = {
+        "top": frozenset(f"w{i}" for i in range(40)),
+        "rival": frozenset(f"v{i}" for i in range(8)),
+    }
+    index = VocabularyIndex(graph=ConceptGraph(nodes=(), edges=()), by_node_id=by_node_id)
+    candidates = (
+        ConceptMatch(node_id="top", score=10, matched_words=frozenset(f"w{i}" for i in range(10))),
+        ConceptMatch(node_id="rival", score=4, matched_words=frozenset(f"v{i}" for i in range(4))),
+    )
+    text_words = frozenset(f"w{i}" for i in range(10)) | frozenset(f"v{i}" for i in range(7))
+    node_id, reason = _resolve_candidates(candidates, index, text_words, min_margin=2)
+    assert node_id is None, (
+        f"expected abstention -- 'rival' covers 87.5% of its own vocabulary "
+        f"vs top's 25%, a gap far past _DECISIVE_MARGIN_COVERAGE_GAP -- got a "
+        f"confident answer of {node_id!r} instead (reason: {reason!r}); the "
+        "decisive-margin path is still returning the raw-score leader with "
+        "no coverage check"
+    )
+    assert reason is not None and "rival" in reason, (
+        f"abstain reason must name 'rival' as the better-covered candidate, got: {reason!r}"
+    )
+
+
+def test_decisive_margin_not_second_guessed_when_the_rival_gap_is_narrow():
+    """teach-9wx's flip side, guarding against overcorrection:
+    `judson_algebra_graph.py`'s real SIGNPOSTED_LESSON fixture is a
+    decisive win (judson:6.2-lagranges-theorem, raw margin 6) where a
+    smaller-vocabulary prerequisite (judson:6.1-cosets) is proportionally
+    BETTER covered (66.7%) than the correctly-recovered target (58.8%) --
+    an 8-point gap. A fix that vetoes any rival with higher coverage at all
+    (the near-margin branch's bar, used at `margin <= min_margin`) would
+    wrongly abstain here and break
+    `test_judson_algebra_graph.py::test_signposted_prerequisites_are_recovered`.
+    `_DECISIVE_MARGIN_COVERAGE_GAP` exists precisely so a gap this narrow
+    does not veto the winner.
+
+    This fabricates the same proportions directly against
+    `_resolve_candidates`: 'top' (17 words vocab, matched 10 -> 58.8%
+    coverage) decisively outscores 'rival' (6 words vocab, matched 4 ->
+    66.7% coverage) by margin 6. The gap (7.9 points) is far under
+    `_DECISIVE_MARGIN_COVERAGE_GAP` (0.25), so the fixed code must still
+    return 'top'.
+    """
+    by_node_id = {
+        "top": frozenset(f"w{i}" for i in range(17)),
+        "rival": frozenset(f"v{i}" for i in range(6)),
+    }
+    index = VocabularyIndex(graph=ConceptGraph(nodes=(), edges=()), by_node_id=by_node_id)
+    candidates = (
+        ConceptMatch(node_id="top", score=10, matched_words=frozenset(f"w{i}" for i in range(10))),
+        ConceptMatch(node_id="rival", score=4, matched_words=frozenset(f"v{i}" for i in range(4))),
+    )
+    text_words = frozenset(f"w{i}" for i in range(10)) | frozenset(f"v{i}" for i in range(4))
+    node_id, reason = _resolve_candidates(candidates, index, text_words, min_margin=2)
+    assert node_id == "top", (
+        f"expected 'top' (58.8% coverage, decisive margin over 'rival') -- "
+        f"got {node_id!r} instead (reason: {reason!r}); a rival covered only "
+        "somewhat better must not veto a decisive win, or the real "
+        "SIGNPOSTED_LESSON fixture would regress"
+    )
+    assert reason is None
+
+
+def test_decisive_margin_not_vetoed_by_a_rival_too_thin_in_absolute_terms():
+    """teach-hpa: `_DECISIVE_MARGIN_COVERAGE_GAP` alone cannot tell a rival
+    that is genuinely better covered because the winner is wrong (the case
+    above) apart from a rival whose coverage FRACTION is only high because
+    its own vocabulary is tiny. Measured for real against
+    `judson_algebra_graph`'s full graph: a lesson genuinely about
+    judson:16.3-ring-homomorphisms-and-ideals (raw score 17, own coverage
+    30%) has judson:11.1-group-homomorphisms -- a 7-word node sharing
+    "kernel"/"normal"/"homomorphism" vocabulary -- score only 5 (own
+    coverage 71%, a 41-point gap, comfortably past
+    `_DECISIVE_MARGIN_COVERAGE_GAP`). Pre-teach-hpa this wrongly vetoed a
+    genuinely correct decisive win
+    (test_concept_recovery_judson_full_graph_generalization_round2.py's
+    RING_HOMOMORPHISMS). The rival's raw score (5) is only 29% of the
+    winner's (17) -- below `_DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO` (0.35)
+    -- so it is not a credible enough absolute showing to veto, and the
+    fixed code must return 'top'.
+
+    This fabricates that exact geometry directly against
+    `_resolve_candidates`, bypassing lesson-text/graph machinery entirely.
+    Must not be confused with
+    test_decisive_margin_still_abstains_when_a_rival_is_covered_far_better
+    just above: that fixture's rival (score 4 of top's 10, ratio 0.4) stays
+    above the ratio floor and must still veto -- this is deliberately the
+    same coverage-gap shape at a lower rival/winner score ratio, not a
+    weakening of that test.
+    """
+    by_node_id = {
+        "top": frozenset(f"w{i}" for i in range(57)),
+        "rival": frozenset(f"v{i}" for i in range(7)),
+    }
+    index = VocabularyIndex(graph=ConceptGraph(nodes=(), edges=()), by_node_id=by_node_id)
+    candidates = (
+        ConceptMatch(node_id="top", score=17, matched_words=frozenset(f"w{i}" for i in range(17))),
+        ConceptMatch(node_id="rival", score=5, matched_words=frozenset(f"v{i}" for i in range(5))),
+    )
+    text_words = frozenset(f"w{i}" for i in range(17)) | frozenset(f"v{i}" for i in range(5))
+    node_id, reason = _resolve_candidates(candidates, index, text_words, min_margin=2)
+    assert node_id == "top", (
+        f"expected 'top' -- 'rival' covers 71% of its own (tiny, 7-word) "
+        f"vocabulary but only scored 5 raw words against top's 17 (ratio "
+        f"0.29, below _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO), so it is not "
+        f"a credible enough absolute showing to veto a decisive winner -- "
+        f"got {node_id!r} instead (reason: {reason!r})"
+    )
+    assert reason is None
+
+
+def test_coverage_fraction_ignores_score_and_uses_literal_text_overlap():
+    """teach-t7j's actual mechanism, tested directly rather than only
+    through downstream branch behavior: `_coverage_fraction` must compute
+    coverage from `node_words & text_words` -- literal overlap -- and must
+    NOT derive it from `match.score`, even when a candidate's `score` came
+    from the semantic tier's synonym-expanded matching and so overstates
+    how much of the node's own vocabulary is really in the text.
+
+    This candidate has an inflated `score` of 9 (as if 9 of its 10 node
+    words were semantically credited) but only 2 of its node words are
+    literally present in `text_words`. If coverage were still derived from
+    `match.score / len(node_words)` (the pre-fix formula), this would report
+    90%. The fix must report the literal figure, 20%.
+    """
+    by_node_id = {"n": frozenset(f"w{i}" for i in range(10))}
+    index = VocabularyIndex(graph=ConceptGraph(nodes=(), edges=()), by_node_id=by_node_id)
+    inflated_match = ConceptMatch(node_id="n", score=9, matched_words=frozenset(f"w{i}" for i in range(9)))
+    text_words = frozenset({"w0", "w1", "unrelated_word_from_elsewhere"})
+    fraction = _coverage_fraction(inflated_match, index, text_words)
+    assert fraction == 0.2, (
+        f"expected 20% (2 of 10 node words literally in text_words), got "
+        f"{fraction:.0%} -- coverage is being derived from the inflated "
+        f"match.score (9/10 = 90%) instead of literal text overlap, exactly "
+        f"the bug teach-t7j fixes"
+    )

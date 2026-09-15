@@ -20,7 +20,7 @@ Node/edge schema, and why each field is shaped the way it is:
 
   ConceptNode.id            globally unique string. A domain owns its own
                              namespacing convention (e.g. "va-math-sol:8.1",
-                             "dummit-foote:3.1-normal-subgroups",
+                             "judson:10.1-factor-groups-and-normal-subgroups",
                              "va-reading-sol:3.4-main-idea"); the engine
                              never parses it, only compares it for equality.
   ConceptNode.domain         opaque tag ("math", "reading", "writing",
@@ -222,16 +222,16 @@ class ConceptGraph:
 
 if __name__ == "__main__":
     # Two domains that share nothing but the schema: a math node named after
-    # a Dummit & Foote section, a reading node named after a VA reading SOL
-    # code. If this module needed a single math-specific field or branch to
-    # handle both, this check would be the place that would fail.
+    # a Judson section, a reading node named after a VA reading SOL code. If
+    # this module needed a single math-specific field or branch to handle
+    # both, this check would be the place that would fail.
     math_cosets = ConceptNode(
-        id="dummit-foote:3.1-cosets", domain="math", label="Cosets",
-        standard_ref="D&F 3.1",
+        id="judson:6.1-cosets", domain="math", label="Cosets",
+        standard_ref="Judson ch. 6",
     )
     math_normal_subgroups = ConceptNode(
-        id="dummit-foote:3.1-normal-subgroups", domain="math",
-        label="Normal subgroups", standard_ref="D&F 3.1",
+        id="judson:10.1-factor-groups-and-normal-subgroups", domain="math",
+        label="Normal subgroups", standard_ref="Judson ch. 10",
     )
     reading_main_idea = ConceptNode(
         id="va-reading-sol:3.4-main-idea", domain="reading",

@@ -69,7 +69,7 @@ def test_planner_state_itself_is_correctly_flagged_as_unfit_to_cross():
 
 def test_emit_lesson_artifact_carries_only_turns():
     state = PlannerState(
-        target_node_id="dummit-foote-3.1-normal-subgroups",
+        target_node_id="judson:10.1-factor-groups-and-normal-subgroups",
         traversal=("groups", "subgroups", "normal-subgroups"),
         answer_key={"q1": "the kernel of a homomorphism is normal"},
         turns=(

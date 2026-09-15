@@ -1,0 +1,416 @@
+{
+  "schema": "judson-ring-field-v1",
+  "source": {
+    "provider": "Thomas W. Judson and Robert A. Beezer, Abstract Algebra: Theory and Applications",
+    "author": "Thomas W. Judson, Robert A. Beezer",
+    "license": "https://www.gnu.org/licenses/fdl-1.3.html",
+    "commit": "3069910e3ded72ff5e18837a97a0e810c92790e2",
+    "retrieved_via": "https://codeload.github.com/twjudson/aata/tar.gz/3069910e3ded72ff5e18837a97a0e810c92790e2 (src/*.xml PreTeXt source; COPYING for the notice)",
+    "extracted_by": "teach/extract_judson_ring_field.py, via teach.pretext_parser. Re-derive with: uv run python -m teach.extract_judson_ring_field",
+    "license_note": "GFDL 1.3+ is copyleft and is NOT the same license as the foundational half (Levin, CC BY-SA 4.0). The two do not merge; each node carries its own terms. The verbatim COPYING notice lives in teach.judson_algebra_graph.JUDSON_SOURCE."
+  },
+  "nodes": [
+    {
+      "id": "judson:16.1-rings",
+      "label": "Rings",
+      "chapter": 16,
+      "section": "Rings",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Rings\", sec. \"Rings\"",
+      "terms": [
+        "ring",
+        "unity",
+        "identity",
+        "commutative ring",
+        "integral domain",
+        "division ring",
+        "unit",
+        "field",
+        "zero divisor",
+        "subring"
+      ],
+      "definition": "A nonempty set $R$ is a ring if it has two closed binary operations, addition and multiplication, satisfying the following conditions. $a + b = b + a$ for $a, b \\in R$. $(a + b) + c = a + ( b + c)$ for $a, b, c \\in R$. There is an element $0$ in $R$ such that $a + 0 = a$ for all $a \\in R$. For every element $a \\in R$, there exists an element $-a$ in $R$ such that $a + (-a) = 0$. $(ab) c = a ( b c)$ for $a, b, c \\in R$. For $a, b, c \\in R$, $$a( b + c)&= ab +ac \\\\ (a + b)c & = ac + bc$$ . This last condition, the distributive axiom, relates the binary operations of addition and multiplication. Notice that the first four axioms simply require that a ring be an abelian group under addition, so we could also have defined a ring to be an abelian group $(R, +)$ together with a second binary operation satisfying the fifth and sixth conditions given above. If there is an element $1 \\in R$ such that $1 \\neq 0$ and $1a = a1 = a$ for each element $a \\in R$, we say that $R$ is a ring with unity or identity. A ring $R$ for which $ab = ba$ for all $a, b$ in $R$ is called a commutative ring. A commutative ring $R$ with identity is called an integral domain if, for every $a, b \\in R$ such that $ab = 0$, either $a = 0$ or $b = 0$. A division ring is a ring $R$, with an identity, in which every nonzero element in $R$ is a unit; that is, for each $a \\in R$ with $a \\neq 0$, there exists a unique element $a^{-1}$ such that $a^{-1} a = a a^{-1} = 1$. A commutative division ring is called a field. The relationship among rings, integral domains, division rings, and fields is shown in . A nonzero element $a$ in a commutative ring $R$ is called a zero divisor if there is a nonzero element $b$ in $R$ such that $ab = 0$. In the previous example, $3$ and $4$ are zero divisors in ${\\mathbb Z}_{12}$. Just as we have subgroups of groups, we have an analogous class of substructures for rings. A subring $S$ of a ring $R$ is a subset $S$ of $R$ such that $S$ is also a ring under the inherited operations from $R$.",
+      "provenance": [
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Rings",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Rings",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Rings",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Rings",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        }
+      ]
+    },
+    {
+      "id": "judson:16.2-integral-domains-and-fields",
+      "label": "Integral Domains and Fields",
+      "chapter": 16,
+      "section": "Integral Domains and Fields",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Rings\", sec. \"Integral Domains and Fields\"",
+      "terms": [
+        "zero divisor",
+        "integral domain",
+        "unit",
+        "division ring",
+        "field",
+        "characteristic"
+      ],
+      "definition": "Let us briefly recall some definitions. If $R$ is a commutative ring and $r$ is a nonzero element in $R$, then $r$ is said to be a zero divisor if there is some nonzero element $s \\in R$ such that $rs = 0$. A commutative ring with identity is said to be an integral domain if it has no zero divisors. If an element $a$ in a ring $R$ with identity has a multiplicative inverse, we say that $a$ is a unit. If every nonzero element in a ring $R$ is a unit, then $R$ is called a division ring. A commutative division ring is called a field. For any nonnegative integer $n$ and any element $r$ in a ring $R$ we write $r + \\cdots + r$ ($n$ times) as $nr$. We define the characteristic of a ring $R$ to be the least positive integer $n$ such that $nr = 0$ for all $r \\in R$. If no such integer exists, then the characteristic of $R$ is defined to be $0$. We will denote the characteristic of $R$ by $\\chr R$.",
+      "provenance": [
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Integral Domains and Fields",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Integral Domains and Fields",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        }
+      ]
+    },
+    {
+      "id": "judson:16.3-ring-homomorphisms-and-ideals",
+      "label": "Ring Homomorphisms and Ideals",
+      "chapter": 16,
+      "section": "Ring Homomorphisms and Ideals",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Rings\", sec. \"Ring Homomorphisms and Ideals\"",
+      "terms": [
+        "ring homomorphism",
+        "isomorphism",
+        "kernel",
+        "ideal",
+        "principal ideal",
+        "factor",
+        "quotient ring",
+        "natural",
+        "canonical homomorphism"
+      ],
+      "definition": "In the study of groups, a homomorphism is a map that preserves the operation of the group. Similarly, a homomorphism between rings preserves the operations of addition and multiplication in the ring. More specifically, if $R$ and $S$ are rings, then a ring homomorphism is a map $\\phi : R \\rightarrow S$ satisfying $$\\phi( a + b ) & = \\phi( a ) + \\phi(b) \\\\ \\phi( a b ) & = \\phi( a ) \\phi(b)$$ for all $a, b \\in R$. If $\\phi : R \\rightarrow S$ is a one-to-one and onto homomorphism, then $\\phi$ is called an isomorphism of rings. The set of elements that a ring homomorphism maps to $0$ plays a fundamental role in the theory of rings. For any ring homomorphism $\\phi : R \\rightarrow S$, we define the kernel of a ring homomorphism to be the set $$\\ker \\phi = \\{ r \\in R : \\phi( r ) = 0 \\}$$ . In group theory we found that normal subgroups play a special role. These subgroups have nice characteristics that make them more interesting to study than arbitrary subgroups. In ring theory the objects corresponding to normal subgroups are a special class of subrings called ideals. An ideal in a ring $R$ is a subring $I$ of $R$ such that if $a$ is in $I$ and $r$ is in $R$, then both $ar$ and $ra$ are in $I$; that is, $rI \\subset I$ and $Ir \\subset I$ for all $r \\in R$. If $R$ is a commutative ring with identity, then an ideal of the form $\\langle a \\rangle = \\{ ar : r \\in R \\}$ is called a principal ideal. The ring $R/I$ in is called the factor or quotient ring. Just as with group homomorphisms and normal subgroups, there is a relationship between ring homomorphisms and ideals. The map $\\phi : R \\rightarrow R/I$ is often called the natural or canonical homomorphism. In ring theory we have isomorphism theorems relating ideals and ring homomorphisms similar to the isomorphism theorems for groups that relate normal subgroups and homomorphisms in . We will prove only the First Isomorphism Theorem for rings in this chapter and leave the proofs of the other two theorems as exercises. All of the proofs are similar to the proofs of the isomorphism theorems for groups.",
+      "provenance": [
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Ring Homomorphisms and Ideals",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Ring Homomorphisms and Ideals",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Ring Homomorphisms and Ideals",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Ring Homomorphisms and Ideals",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Ring Homomorphisms and Ideals",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Ring Homomorphisms and Ideals",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        }
+      ]
+    },
+    {
+      "id": "judson:16.4-maximal-and-prime-ideals",
+      "label": "Maximal and Prime Ideals",
+      "chapter": 16,
+      "section": "Maximal and Prime Ideals",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Rings\", sec. \"Maximal and Prime Ideals\"",
+      "terms": [
+        "maximal ideal",
+        "prime ideal"
+      ],
+      "definition": "A proper ideal $M$ of a ring $R$ is a maximal ideal of $R$ if the ideal $M$ is not a proper subset of any ideal of $R$ except $R$ itself. That is, $M$ is a maximal ideal if for any ideal $I$ properly containing $M$, $I = R$. The following theorem completely characterizes maximal ideals for commutative rings with identity in terms of their corresponding factor rings. A proper ideal $P$ in a commutative ring $R$ is called a prime ideal if whenever $ab \\in P$, then either $a \\in P$ or $b \\in P$. It is possible to define prime ideals in a noncommutative ring. See [1] or [3].",
+      "provenance": [
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Maximal and Prime Ideals",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Maximal and Prime Ideals",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        }
+      ]
+    },
+    {
+      "id": "judson:17.1-polynomial-rings",
+      "label": "Polynomial Rings",
+      "chapter": 17,
+      "section": "Polynomial Rings",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Polynomials\", sec. \"Polynomial Rings\"",
+      "terms": [
+        "polynomial over $R$",
+        "indeterminate",
+        "coefficients",
+        "leading coefficient",
+        "monic",
+        "degree",
+        "ring of polynomials in two indeterminates $x$ and $y$ with coefficients in",
+        "ring of polynomials in",
+        "indeterminates with coefficients in",
+        "evaluation homomorphism"
+      ],
+      "definition": "Throughout this chapter we shall assume that $R$ is a commutative ring with identity. Any expression of the form $$f(x) = \\sum^{n}_{i=0} a_i x^i = a_0 + a_1 x +a_2 x^2 + \\cdots + a_n x^n$$ , where $a_i \\in R$ and $a_n \\neq 0$, is called a polynomial over $R$ with indeterminate $x$. The elements $a_0, a_1, \\ldots, a_n$ are called the coefficients of $f$. The coefficient $a_n$ is called the leading coefficient. A polynomial is called monic if the leading coefficient is $1$. If $n$ is the largest nonnegative number for which $a_n \\neq 0$, we say that the degree of $f$ is $n$ and write $\\deg f(x) = n$. If no such $n$ exists\u2014that is, if $f=0$ is the zero polynomial\u2014then the degree of $f$ is defined to be $-\\infty$. We will denote the set of all polynomials with coefficients in a ring $R$ by $R[x]$. Two polynomials are equal exactly when their corresponding coefficients are equal; that is, if we let $$p(x) & = a_0 + a_1 x + \\cdots + a_n x^n \\\\ q(x) & = b_0 + b_1 x + \\cdots + b_m x^m$$ , then $p(x) = q(x)$ if and only if $a_i = b_i$ for all $i \\geq 0$. We also want to consider polynomials in two or more variables, such as $x^2 - 3 x y + 2 y^3$. Let $R$ be a ring and suppose that we are given two indeterminates $x$ and $y$. Certainly we can form the ring $(R[x])[y]$. It is straightforward but perhaps tedious to show that $(R[x])[y] \\cong R([y])[x]$. We shall identify these two rings by this isomorphism and simply write $R[x,y]$. The ring $R[x, y]$ is called the ring of polynomials in two indeterminates $x$ and $y$ with coefficients in $R$. We can define the ring of polynomials in $n$ indeterminates with coefficients in $R$ similarly. We shall denote this ring by $R[x_1, x_2, \\ldots, x_n]$. The map $\\phi_{\\alpha} : R[x] \\rightarrow R$ is called the evaluation homomorphism at $\\alpha$.",
+      "provenance": [
+        {
+          "source_file": "poly.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Polynomial Rings",
+          "file_sha256": "ac0972f1a14b0f61cc2d8e0ce6dc28264841e17d4f2b03ab87f7522686395201"
+        },
+        {
+          "source_file": "poly.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Polynomial Rings",
+          "file_sha256": "ac0972f1a14b0f61cc2d8e0ce6dc28264841e17d4f2b03ab87f7522686395201"
+        },
+        {
+          "source_file": "poly.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Polynomial Rings",
+          "file_sha256": "ac0972f1a14b0f61cc2d8e0ce6dc28264841e17d4f2b03ab87f7522686395201"
+        }
+      ]
+    },
+    {
+      "id": "judson:18.1-fields-of-fractions",
+      "label": "Fields of Fractions",
+      "chapter": 18,
+      "section": "Fields of Fractions",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Integral Domains\", sec. \"Fields of Fractions\"",
+      "terms": [
+        "field of fractions",
+        "field of quotients"
+      ],
+      "definition": "The field $F_D$ in is called the field of fractions or field of quotients of the integral domain $D$.",
+      "provenance": [
+        {
+          "source_file": "domains.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Fields of Fractions",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        }
+      ]
+    },
+    {
+      "id": "judson:18.2-factorization-in-integral-domains",
+      "label": "Factorization in Integral Domains",
+      "chapter": 18,
+      "section": "Factorization in Integral Domains",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Integral Domains\", sec. \"Factorization in Integral Domains\"",
+      "terms": [
+        "divides",
+        "unit",
+        "associates",
+        "irreducible",
+        "prime",
+        "unique factorization domain",
+        "UFD",
+        "principal ideal domain",
+        "PID",
+        "ascending chain condition",
+        "ACC",
+        "Noetherian rings",
+        "Euclidean domain",
+        "Euclidean valuation",
+        "content",
+        "primitive"
+      ],
+      "definition": "Let $R$ be a commutative ring with identity, and let $a$ and $b$ be elements in $R$. We say that $a$ divides $b$, and write $a \\mid b$, if there exists an element $c \\in R$ such that $b = ac$. A unit in $R$ is an element that has a multiplicative inverse. Two elements $a$ and $b$ in $R$ are said to be associates if there exists a unit $u$ in $R$ such that $a = ub$. Let $D$ be an integral domain. A nonzero element $p \\in D$ that is not a unit is said to be irreducible provided that whenever $p = ab$, either $a$ or $b$ is a unit. Furthermore, $p$ is prime if whenever $p \\mid ab$ either $p \\mid a$ or $p \\mid b$. The Fundamental Theorem of Arithmetic states that every positive integer $n \\gt 1$ can be factored into a product of prime numbers $p_1 \\cdots p_k$, where the $p_i$'s are not necessarily distinct. We also know that such factorizations are unique up to the order of the $p_i$'s. We can easily extend this result to the integers. The question arises of whether or not such factorizations are possible in other rings. Generalizing this definition, we say an integral domain $D$ is a unique factorization domain, or UFD, if $D$ satisfies the following criteria. Let $a \\in D$ such that $a \\neq 0$ and $a$ is not a unit. Then $a$ can be written as the product of irreducible elements in $D$. Let $a = p_1 \\cdots p_r = q_1 \\cdots q_s$, where the $p_i$'s and the $q_i$'s are irreducible. Then $r=s$ and there is a $\\pi \\in S_r$ such that $p_i$ and $q_{\\pi(j)}$ are associates for $j = 1, \\ldots, r$. Let $R$ be a commutative ring with identity. Recall that a principal ideal generated by $a \\in R$ is an ideal of the form $\\langle a \\rangle = \\{ ra : r \\in R \\}$. An integral domain in which every ideal is principal is called a principal ideal domain, or PID. Any commutative ring satisfying the condition in is said to satisfy the ascending chain condition, or ACC. Such rings are called Noetherian rings, after Emmy Noether. Let $D$ be an integral domain such that there is a function $\\nu : D \\setminus \\{0\\} \\to \\mathbb N_0 = \\mathbb N \\cup \\{0\\}$ satisfying the following conditions. If $a$ and $b$ are nonzero elements in $D$, then $\\nu(a) \\leq \\nu(ab)$. Let $a, b \\in D$ and suppose that $b \\neq 0$. Then there exist elements $q, r \\in D$ such that $a = bq + r$ and either $r = 0$ or $\\nu(r) \\lt \\nu(b)$. Then $D$ is called a Euclidean domain and $\\nu$ is called a Euclidean valuation. Let $D$ be a unique factorization domain and suppose that $$p(x) = a_n x^n + \\cdots + a_1 x + a_0$$ in $D[x]$. Then the content of $p(x)$ is the greatest common divisor of $a_0, \\ldots, a_n$. We say that $p(x)$ is primitive if $\\gcd(a_0, \\ldots, a_n ) = 1$.",
+      "provenance": [
+        {
+          "source_file": "domains.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Factorization in Integral Domains",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        },
+        {
+          "source_file": "domains.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Factorization in Integral Domains",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        },
+        {
+          "source_file": "domains.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Factorization in Integral Domains",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        },
+        {
+          "source_file": "domains.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Factorization in Integral Domains",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        },
+        {
+          "source_file": "domains.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Factorization in Integral Domains",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        },
+        {
+          "source_file": "domains.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Factorization in Integral Domains",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        },
+        {
+          "source_file": "domains.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Factorization in Integral Domains",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        }
+      ]
+    },
+    {
+      "id": "judson:21.1-extension-fields",
+      "label": "Extension Fields",
+      "chapter": 21,
+      "section": "Extension Fields",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Fields\", sec. \"Extension Fields\"",
+      "terms": [
+        "extension field",
+        "base field",
+        "algebraic",
+        "transcendental",
+        "algebraic extension",
+        "simple extension",
+        "algebraic number",
+        "transcendental number",
+        "minimal polynomial",
+        "degree of $\\alpha$ over $F$",
+        "finite extension of degree $n$ over $F$",
+        "algebraic closure",
+        "algebraically closed"
+      ],
+      "definition": "A field $E$ is an extension field of a field $F$ if $F$ is a subfield of $E$. The field $F$ is called the base field. We write $F \\subset E$. An element $\\alpha$ in an extension field $E$ over $F$ is algebraic over $F$ if $f(\\alpha)=0$ for some nonzero polynomial $f(x) \\in F[x]$. An element in $E$ that is not algebraic over $F$ is transcendental over $F$. An extension field $E$ of a field $F$ is an algebraic extension of $F$ if every element in $E$ is algebraic over $F$. If $E$ is a field extension of $F$ and $\\alpha_1, \\ldots, \\alpha_n$ are contained in $E$, we denote the smallest field containing $F$ and $\\alpha_1, \\ldots, \\alpha_n$ by $F( \\alpha_1, \\ldots, \\alpha_n)$. If $E = F( \\alpha )$ for some $\\alpha \\in E$, then $E$ is a simple extension of $F$. A complex number that is algebraic over ${\\mathbb Q}$ is an algebraic number. A transcendental number is an element of ${\\mathbb C}$ that is transcendental over ${\\mathbb Q}$. Let $E$ be an extension field of $F$ and $\\alpha \\in E$ be algebraic over $F$. The unique monic polynomial $p(x)$ of the last theorem is called the minimal polynomial for $\\alpha$ over $F$. The degree of $p(x)$ is the degree of $\\alpha$ over $F$. If an extension field $E$ of a field $F$ is a finite dimensional vector space over $F$ of dimension $n$, then we say that $E$ is a finite extension of degree $n$ over $F$. We write $$[E:F]= n$$ . to indicate the dimension of $E$ over $F$. Let $E$ be a field extension of a field $F$. We define the algebraic closure of a field $F$ in $E$ to be the field consisting of all elements in $E$ that are algebraic over $F$. A field $F$ is algebraically closed if every nonconstant polynomial in $F[x]$ has a root in $F$.",
+      "provenance": [
+        {
+          "source_file": "fields.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Extension Fields",
+          "file_sha256": "d257dd1ad0879d5d22fa8a675f01382d7b7b0f0cc284bad2ea18376d8500f273"
+        },
+        {
+          "source_file": "fields.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Extension Fields",
+          "file_sha256": "d257dd1ad0879d5d22fa8a675f01382d7b7b0f0cc284bad2ea18376d8500f273"
+        },
+        {
+          "source_file": "fields.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Extension Fields",
+          "file_sha256": "d257dd1ad0879d5d22fa8a675f01382d7b7b0f0cc284bad2ea18376d8500f273"
+        },
+        {
+          "source_file": "fields.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Extension Fields",
+          "file_sha256": "d257dd1ad0879d5d22fa8a675f01382d7b7b0f0cc284bad2ea18376d8500f273"
+        },
+        {
+          "source_file": "fields.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Extension Fields",
+          "file_sha256": "d257dd1ad0879d5d22fa8a675f01382d7b7b0f0cc284bad2ea18376d8500f273"
+        },
+        {
+          "source_file": "fields.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Extension Fields",
+          "file_sha256": "d257dd1ad0879d5d22fa8a675f01382d7b7b0f0cc284bad2ea18376d8500f273"
+        }
+      ]
+    },
+    {
+      "id": "judson:21.2-splitting-fields",
+      "label": "Splitting Fields",
+      "chapter": 21,
+      "section": "Splitting Fields",
+      "standard_ref": "Judson, Abstract Algebra: Theory and Applications, ch. \"Fields\", sec. \"Splitting Fields\"",
+      "terms": [
+        "splitting field",
+        "splits"
+      ],
+      "definition": "Let $F$ be a field and $p(x) = a_0 + a_1 x + \\cdots + a_n x^n$ be a nonconstant polynomial in $F[x]$. An extension field $E$ of $F$ is a splitting field of $p(x)$ if there exist elements $\\alpha_1, \\ldots, \\alpha_n$ in $E$ such that $E = F( \\alpha_1, \\ldots, \\alpha_n )$ and $$p(x) = ( x - \\alpha_1 )(x - \\alpha_2) \\cdots (x - \\alpha_n)$$ . A polynomial $p(x) \\in F[x]$ splits in $E$ if it is the product of linear factors in $E[x]$.",
+      "provenance": [
+        {
+          "source_file": "fields.xml",
+          "xml_id": null,
+          "kind": "term-definition",
+          "section_title": "Splitting Fields",
+          "file_sha256": "d257dd1ad0879d5d22fa8a675f01382d7b7b0f0cc284bad2ea18376d8500f273"
+        }
+      ]
+    }
+  ]
+}

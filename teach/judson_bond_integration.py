@@ -1,40 +1,51 @@
 """Checker-side integration run for teach-8xw.15: the epic's actual test
 case, executed for real.
 
-sandbox-prompt.md's TEST CASE: "Teach Dummit & Foote to a learner whose
-stated interest is James Bond. The checker must confirm the algebra is
-correct and the prerequisites were really established -- not that the Bond
-framing was enjoyable." Every module this calls already existed and was
-already tested against its own fixtures; nothing here is new checker logic.
-What's new is that this is the first time all three checkers run against
-the SAME real lesson, produced by a real producer, with the blind boundary
-actually enforced between them rather than assumed.
+Formerly `teach/dnf_bond_integration.py`. Renamed and re-derived under
+teach-8xw.56 alongside `teach/judson_algebra_graph.py` and
+`teach/judson_bond_lesson.py` when the abstract-algebra test case moved from
+Dummit & Foote to Thomas W. Judson's *Abstract Algebra: Theory and
+Applications* (open, GNU FDL 1.3+).
+
+sandbox-prompt.md's TEST CASE: "Teach [the abstract-algebra text] to a
+learner whose stated interest is James Bond. The checker must confirm the
+algebra is correct and the prerequisites were really established -- not
+that the Bond framing was enjoyable." Every module this calls already
+existed and was already tested against its own fixtures; nothing here is
+new checker logic. What's new is that this is the first time all three
+checkers run against the SAME real lesson, produced by a real producer,
+with the blind boundary actually enforced between them rather than assumed.
 
 THE BOUNDARY, ENFORCED, NOT JUST DESCRIBED
 
 `run_integration_check` below takes a `LessonArtifact` and nothing else
-producer-shaped. It is not given `teach.dnf_bond_lesson`'s `PlannerState`,
+producer-shaped. It is not given `teach.judson_bond_lesson`'s `PlannerState`,
 its traversal, or its answer key -- only `artifact.text`, plus the two
 inputs that are legitimately checker-side domain knowledge and not producer
-state: the D&F `ConceptGraph` (the curriculum a checker is expected to
+state: the Judson `ConceptGraph` (the curriculum a checker is expected to
 already know, exactly like `concept_recovery`'s own module docstring
 describes) and `MATH_SOURCE` (the reference text a checker is expected to
-already have). If this module imported anything from `teach.dnf_bond_lesson`
-other than `build_lesson`, that would be the exact leak
-`teach.boundary.check_no_forbidden_fields` exists to catch elsewhere in this
-repo -- so it doesn't.
+already have). If this module imported anything from
+`teach.judson_bond_lesson` other than `build_lesson`, that would be the
+exact leak `teach.boundary.check_no_forbidden_fields` exists to catch
+elsewhere in this repo -- so it doesn't.
 
 WHAT THIS RUN HONESTLY DOES NOT COVER (report this, never paper over it):
 
   - `teach.math_facts.MATH_SOURCE` has exactly two `SourceFact`s.
     `kernel-normal-subgroup` topically lives on
-    `dummit-foote:3.3-isomorphism-theorems` (teach-25o), which is NOT on
-    this lesson's traversal to Lagrange's Theorem (`prerequisite_closure`
-    for the target is exactly the 0.1/1.1/2.1/3.1 chain). So this run can
-    only ever exercise `lagrange-order-divides`; a `kernel-normal-subgroup`
-    CONFIRMED/CONTRADICTED verdict from this text would be worth
-    investigating as a bug, not celebrating as extra coverage. Reported
-    explicitly below rather than left for a reader to notice its absence.
+    `judson:11.1-group-homomorphisms` (teach-8xw.56), reached in this graph
+    via Normal Subgroups (ch. 10) and Cosets (ch. 6) -- NOT via Isomorphisms
+    (ch. 9), which the re-derived graph deliberately does not connect to
+    Homomorphisms in either direction (see `judson_algebra_graph.py`'s EDGES
+    DELIBERATELY NOT ASSERTED). Homomorphisms is NOT on this lesson's
+    traversal to Lagrange's Theorem (`prerequisite_closure` for the target
+    is exactly the sets/group-definitions/subgroups/cosets chain). So this
+    run can only ever exercise `lagrange-order-divides`; a
+    `kernel-normal-subgroup` CONFIRMED/CONTRADICTED verdict from this text
+    would be worth investigating as a bug, not celebrating as extra
+    coverage. Reported explicitly below rather than left for a reader to
+    notice its absence.
   - `teach.potential_checker`'s `evidenced_ceiling` check can only compare a
     claim's promised ceiling against what this SAME lesson's text
     evidences -- there is no independent producer-side ground truth on the
@@ -48,10 +59,10 @@ WHAT THIS RUN HONESTLY DOES NOT COVER (report this, never paper over it):
     merely being present, or performance disguised as the learner's own
     work inside a tutor turn, both still read as evidenced here. That
     residual is fundamental to the blind-checker boundary, not a to-do.
-  - `concept_recovery` runs against the real, teach-25o-extended D&F graph
-    (11 nodes), not the VA Math SOL graph -- undergraduate abstract algebra
-    is out of the K-12 SOL graph's scope entirely, per teach-8xw.15's own
-    bead description. This run does not touch the SOL graph at all.
+  - `concept_recovery` runs against the real Judson graph (11 nodes), not
+    the VA Math SOL graph -- undergraduate abstract algebra is out of the
+    K-12 SOL graph's scope entirely, per teach-8xw.15's own bead
+    description. This run does not touch the SOL graph at all.
 """
 from __future__ import annotations
 
@@ -59,8 +70,8 @@ import dataclasses
 
 from teach.boundary import LessonArtifact
 from teach.concept_recovery import RecoveryResult, recover_from_lesson_text
-from teach.dummit_foote_graph import TARGET_NODE_ID, load_dummit_foote_graph
 from teach.fact_checker import FactCheck, Verdict as FactVerdict, check_lesson_text as check_facts
+from teach.judson_algebra_graph import TARGET_NODE_ID, load_judson_algebra_graph
 from teach.math_facts import MATH_SOURCE
 from teach.potential_checker import (
     Coverage,
@@ -118,7 +129,7 @@ class IntegrationReport:
         # tutor sentences are domain content, not potential-claims), so it
         # reads nearly the same on every lesson. This secondary line
         # narrows to sentences that directly address the learner
-        # ("you"/"your"/"yours") -- never replacing the total above, since
+        # ("you"/"your"/"yours"), never replacing the total above, since
         # this subset is blind to pronoun-free praise by construction (see
         # `_SECOND_PERSON_REFERENCE`'s docstring) and is reported alongside
         # it, not instead of it.
@@ -146,10 +157,10 @@ class IntegrationReport:
 def run_integration_check(artifact: LessonArtifact) -> IntegrationReport:
     """The checker side of teach-8xw.15's acceptance test. Takes ONLY a
     `LessonArtifact` (plus the checker's own legitimate domain knowledge:
-    the D&F graph and the math reference source) -- no planner state, no
+    the Judson graph and the math reference source) -- no planner state, no
     import of anything producer-internal.
     """
-    graph = load_dummit_foote_graph()
+    graph = load_judson_algebra_graph()
     covered_topics = {fact.topic for fact in MATH_SOURCE.facts}
     exercised_topics = {"lagrange-order-divides"}
     return IntegrationReport(
@@ -162,7 +173,7 @@ def run_integration_check(artifact: LessonArtifact) -> IntegrationReport:
 
 
 def _self_check() -> None:
-    from teach.dnf_bond_lesson import build_lesson
+    from teach.judson_bond_lesson import build_lesson
 
     artifact = build_lesson()
     # The boundary this bead is built to enforce: nothing beyond `.text`
@@ -178,7 +189,7 @@ def _self_check() -> None:
     )
     # The lesson signposts cosets explicitly ("Recall that the left coset
     # gH...") -- it must land in assumed, not unsignposted.
-    assert "dummit-foote:3.1-cosets" in report.recovery.assumed_prerequisite_ids
+    assert "judson:6.1-cosets" in report.recovery.assumed_prerequisite_ids
     assert report.recovery.unsignposted_prerequisite_ids == ()
 
     # fact_checker: Lagrange's theorem is stated correctly and confirmed;
@@ -202,11 +213,11 @@ def _self_check() -> None:
     # Lagrange's Theorem on your own" used to follow eight consecutive
     # tutor-only turns with no learner contribution about cosets or
     # Lagrange anywhere in them. teach-8xw.51 fixed the lesson itself
-    # (`teach/dnf_bond_lesson.py` now gives the learner a real turn to
-    # carry the coset-counting argument through, immediately before that
-    # line credits them for it), so this asserts the corrected, honest
-    # "clean" result, not the false "clean" the pre-teach-8xw.45 checker
-    # gave the old (broken) lesson text.
+    # (the Bond lesson module now gives the learner a real turn to carry
+    # the coset-counting argument through, immediately before that line
+    # credits them for it), so this asserts the corrected, honest "clean"
+    # result, not the false "clean" the pre-teach-8xw.45 checker gave the
+    # old (broken) lesson text.
     #
     # This must also be reported alongside how much of the lesson's
     # tutor-spoken text was actually classifiable, not as an unqualified
@@ -270,7 +281,7 @@ def _self_check() -> None:
 
     print(report.render())
     print()
-    print("OK: end-to-end Bond/D&F run -- taught concept, prerequisite, and")
+    print("OK: end-to-end Bond/Judson run -- taught concept, prerequisite, and")
     print("Lagrange's theorem all recovered correctly from lesson text alone;")
     print("no contradicted facts; no inflated-potential flags among the "
           f"{len(report.potential_coverage.classified)} classified potential-claim sentence(s) "

@@ -31,7 +31,7 @@ def test_demo_lesson_passes_the_real_honesty_checker_clean():
     a moment ago" had no learner turn anywhere near it. teach-8xw.51 fixed
     `build_demo_lesson` itself: it now inserts a real learner turn (quoting
     `_DEMO_MOMENT.prior_commitment` back, the same way
-    teach.dnf_bond_lesson.build_lesson does) immediately before the
+    teach.judson_bond_lesson.build_lesson does) immediately before the
     commitment_consistency move, so this asserts the restored, now
     genuinely earned, clean result."""
     report = run_check()
@@ -57,7 +57,7 @@ def test_every_principle_individually_passes_the_real_checker_clean_except_commi
     this a moment ago," and a turn-adjacency check run against a one-turn
     transcript can never find a preceding learner turn, by construction, no
     matter how the move is actually used in a real lesson (contrast
-    teach.dnf_bond_lesson.build_lesson, where the same move sits right
+    teach.judson_bond_lesson.build_lesson, where the same move sits right
     after a genuine learner turn and is NOT flagged there -- see
     test_honesty_rubric_verdicts_reachable_from_generated_text). This is not
     a bug in the move or a false positive to chase: checking a context-

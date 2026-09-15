@@ -30,8 +30,9 @@ is judged against sources rather than model recollection: BHS / Leningrad
 Codex, with the Dead Sea Scrolls and ancient versions for variants, in the Old
 Testament; Nestle-Aland 27/28 and UBS 4/5 in the New.
 
-The test case is Dummit & Foote taught to a learner whose stated interest is
-James Bond. It passes when the checker confirms the algebra is correct and the
-prerequisites genuinely landed — not when the Bond framing was enjoyable.
+The test case is Judson's *Abstract Algebra: Theory and Applications* (open,
+GNU FDL 1.3+) taught to a learner whose stated interest is James Bond. It
+passes when the checker confirms the algebra is correct and the prerequisites
+genuinely landed — not when the Bond framing was enjoyable.
 
 Status: scaffolded, nothing built. The epic is `teach-8xw`.

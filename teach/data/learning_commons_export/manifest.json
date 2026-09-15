@@ -1,0 +1,98 @@
+{
+  "counts": {
+    "bridge_relationships": 6,
+    "definitional_relationships": 40,
+    "llm_inferred_relationships": 0,
+    "methodological_relationships": 8,
+    "nodes": 32,
+    "relationships": 48
+  },
+  "edge_evidence": {
+    "definitional-rule-adjudicated": "Same rule, applied across the two textbooks, with independent adjudication and an independent refutation pass.",
+    "llm-inferred": "NONE PRESENT. teach-b5k.2 had a local model propose 127 relations over all 240 foundation/algebra pairs; teach-b5k.3's independent checker refused all 127, so no LLM-inferred edge reached this dataset. Recorded here because an absence is invisible otherwise.",
+    "read-off-definition": "Asserted only where the target's definition cannot be stated without a term the source defines, read from the pinned PreTeXt source."
+  },
+  "generated_by": "teach/learning_commons_export.py (teach-j4n.1)",
+  "llm_bridge_attempt": {
+    "checker_independence": [
+      "the producer's reason/rationale",
+      "its confidence",
+      "which model produced it",
+      "the producer's prompt"
+    ],
+    "checker_model": "qwen2.5-coder:14b",
+    "confirmed": 0,
+    "note": "Every proposed relation was refused. The zero is a fact about the producer, not the mathematics: a mechanical scan finds real textual evidence on 22 of the 240 pairs, and the model proposed none of them. The bridge in this dataset is definitional instead.",
+    "pairs_asked": 240,
+    "producer_model": "llama3:latest",
+    "relations_proposed": 127,
+    "verdicts": {
+      "refused": 127
+    }
+  },
+  "provenance": {
+    "algebraic_half": {
+      "license": "https://www.gnu.org/licenses/fdl-1.3.html",
+      "retrieved_via": "https://github.com/twjudson/aata (src/*.xml PreTeXt source; COPYING for the license notice above)",
+      "text": "Thomas W. Judson and Robert A. Beezer, Abstract Algebra: Theory and Applications"
+    },
+    "foundational_half": {
+      "commit": "a8e4949bc45daf100930c1182983778f56ab689f",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "note": "CC BY-SA 4.0 applies to the 3rd edition, which is what this commit is. The repository's master branch is the 4th edition and is CC BY-NC-SA 4.0 -- the pinned commit is what makes this publishable, not the repository.",
+      "text": "Oscar Levin, Discrete Mathematics: An Open Introduction, 3rd edition"
+    },
+    "licenses_do_not_merge": "CC BY-SA 4.0 and GFDL 1.3+ are different copyleft licenses. There is no dataset-level license: each record carries its own, and a bridge relationship spanning both carries both notices."
+  },
+  "relation_types": {
+    "methodological_prerequisite": {
+      "claim": "The target's PROOFS invoke the inference method the source defines. The target's definition does NOT use the source's vocabulary -- this is why the definitional rule could never find these edges.",
+      "count": 8,
+      "coverage": "Derived from 88 of Judson's 207 <proof> elements -- the other 119 are in chapters this graph models no node for (galois, algcodes, boolean, finite, sylow, actions, struct, ...). NOT exhaustive.",
+      "evidence": "The method is NAMED in a <proof> element inside the target's section (e.g. 'We will use mathematical induction on the degree of p(x)'). Each edge carries the proof count and a verbatim excerpt.",
+      "refused": {
+        "levin-dmoi:deduction-rules": "No named-method marker. Judson never writes 'by modus ponens'.",
+        "levin-dmoi:direct-proof": "No positive textual marker exists. Its signature is the ABSENCE of a named method, and inferring 'this is a direct proof because it does not say otherwise' would manufacture an edge out of silence. Judson's proofs plainly use direct proof constantly; this graph cannot evidence it, and says so rather than asserting it.",
+        "levin-dmoi:predicates-and-quantifiers": "Quantifier language is everywhere in the proofs ('for all' in 29, 'there exists' in 49) but it is logical VOCABULARY, not a method operator. Counting it would repeat the error this bead exists to correct: matching a word instead of the thing the word does.",
+        "levin-dmoi:proof-by-contrapositive": "Judson NAMES this method in exactly 2 proofs, and both are in sections this graph does not model as nodes (finite.xml 'Structure of a Finite Field' and isomorph.xml 'Direct Products'). So it has zero edges here despite genuinely being used in the book -- a coverage limit, not a claim that Judson avoids contrapositive arguments.",
+        "levin-dmoi:propositional-logic": "'if and only if' appears in 3 proofs; it is a statement form, not an inference operator invoked by name.",
+        "levin-dmoi:set-operations": "No named-method marker; it is subject matter, not a proof technique.",
+        "levin-dmoi:statements": "No named-method marker; it is foundational vocabulary, not a technique."
+      },
+      "vs_buildsTowards": "A CLOSER fit for buildsTowards than the definitional edges are: a methodological prerequisite genuinely is a directional progression rather than a strict ordering."
+    },
+    "note": "Two distinct claims share one Learning Commons relationshipType because Learning Commons has vocabulary for neither. They are kept apart by x_teachRelation, never merged.",
+    "precedes": {
+      "claim": "The target's DEFINITION cannot be stated without a term the source defines.",
+      "count": 40,
+      "evidence": "Read off the definition text in the pinned PreTeXt source, adjudicated.",
+      "vs_buildsTowards": "STRICTLY STRONGER than buildsTowards, which explicitly does not require prerequisite order."
+    }
+  },
+  "schema": "learning-commons-knowledge-graph-record-shape",
+  "schema_conformance": {
+    "nodes": "CONFORMANT. Every record is a LearningComponent and carries all eight required properties (academicSubject, attributionStatement, author, description, identifier, inLanguage, license, provider).",
+    "relationships": "EXTENSION, NOT CONFORMANT. These are LearningComponent -> LearningComponent edges carrying relationshipType 'buildsTowards'. The published schema defines no LearningComponent -> LearningComponent relationship at all: LearningComponent's only relationship is 'supports', which points at a StandardsFrameworkItem, and 'buildsTowards' runs between StandardsFrameworkItems.",
+    "semantic_gap": "buildsTowards is documented as a directional progression WITHOUT requiring strict prerequisite order. Every edge here is strictly stronger than that -- src must be established before dst -- so x_teachRelation records the real claim.",
+    "unrepresentable_relations": "The plan also asked for 'generalizes' and 'is example of'. Learning Commons has no vocabulary for either, and no edge of those kinds survived verification, so none is emitted. Had any survived, it would have carried x_teachRelation rather than being flattened into buildsTowards.",
+    "why_not_standardsframeworkitem": "StandardsFrameworkItem requires caseIdentifierURI and caseIdentifierUUID (identifiers in 1EdTech's CASE Network, which these textbook concepts do not have) and jurisdiction, whose enum is the 50 US states plus Washington, D.C. A textbook has no jurisdiction. Emitting these would be fabricated identifiers and a fabricated jurisdiction, so the extension above was preferred over false conformance."
+  },
+  "upstream_bytes": {
+    "judson-aata": {
+      "commit": "3069910e3ded72ff5e18837a97a0e810c92790e2",
+      "license": "https://www.gnu.org/licenses/fdl-1.3.html",
+      "per_file_sha256": "teach/data/textbook_provenance.json",
+      "repo": "https://github.com/twjudson/aata",
+      "source_files": 33,
+      "tarball_sha256": "bd46a53dd68043fe6db4f979a8a240392b272eb4d6bb34f9aac15396d5257360"
+    },
+    "levin-dmoi": {
+      "commit": "a8e4949bc45daf100930c1182983778f56ab689f",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "per_file_sha256": "teach/data/textbook_provenance.json",
+      "repo": "https://github.com/oscarlevin/discrete-book",
+      "source_files": 42,
+      "tarball_sha256": "2636245826d7ee1b5161e04ee733509344735e2a18df168ab08afbbd472c5f34"
+    }
+  }
+}

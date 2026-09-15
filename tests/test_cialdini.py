@@ -97,11 +97,11 @@ def test_liking_requires_shared_frame():
 def test_authority_cites_the_named_source_and_the_fact():
     moment = MotivationMoment(
         concept_name="cosets",
-        cited_source="Dummit and Foote's Abstract Algebra",
+        cited_source="Judson's Abstract Algebra: Theory and Applications",
         authority_fact="cosets partition the group",
     )
     output = render_authority(moment, 0)
-    assert "Dummit and Foote's Abstract Algebra" in output
+    assert "Judson's Abstract Algebra: Theory and Applications" in output
     assert "cosets partition the group" in output
 
 

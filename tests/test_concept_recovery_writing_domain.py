@@ -4,7 +4,7 @@ Writing SOL K-12 ConceptGraph (teach/va_writing_sol_graph.py, teach-5aj).
 Before this bead, `grep -rl concept_recovery tests/` returned exactly three
 files -- test_concept_recovery.py (math), test_concept_recovery_non_math_
 domain.py (reading, va_reading_sol_graph only), and
-test_dummit_foote_graph.py -- and none of them imported
+test_judson_algebra_graph.py -- and none of them imported
 teach.va_writing_sol_graph. teach-5aj's own handoff said as much explicitly:
 "Whether this graph's vocabulary is recoverable from real lesson text is
 unmeasured." Unlike the reading domain (teach-8xw.29), writing had never even

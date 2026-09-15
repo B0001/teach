@@ -55,13 +55,13 @@ adjacent to that claim or it doesn't. `_tutor_turns_with_precedent` /
 precedes a "you just did X" claim, the transcript itself contradicts the
 claim's premise, and `evidenced_ceiling` reports `False` rather than the
 `True` a text-only pattern match would have handed out. This caught real
-cases, not a hypothetical one: `teach.dnf_bond_lesson`'s closing line ("You
-just carried that coset argument through to Lagrange's Theorem on your
-own") follows eight consecutive tutor-only turns with no learner
+cases, not a hypothetical one: `teach.judson_bond_lesson`'s closing line
+("You just carried that coset argument through to Lagrange's Theorem on
+your own") follows eight consecutive tutor-only turns with no learner
 contribution about cosets or Lagrange anywhere in them, and
 `teach.cialdini_integration_check`'s demo lesson renders all seven
 Cialdini moves as consecutive tutor turns with the one learner turn
-appended only at the end -- see `tests/test_dnf_bond_integration.py`,
+appended only at the end -- see `tests/test_judson_bond_integration.py`,
 `tests/test_cialdini_integration_check.py`, and
 `sandbox-handoffs/teach-8xw.45.md` for the reproductions, and teach-8xw.51
 for the follow-up bead fixing those two producers.
@@ -655,7 +655,7 @@ class Coverage:
     vague filler, and STILL was not run through the honesty rubric, because
     `_claim_type` didn't recognize its construction. That is an unchecked
     sentence, not a clean one, and callers that print a summary line (e.g.
-    `dnf_bond_integration`) must say so rather than folding it into "no
+    `judson_bond_integration`) must say so rather than folding it into "no
     flags."
 
     teach-8xw.19: `seen` (formerly `about_learner`) is every tutor-spoken
@@ -696,7 +696,7 @@ class Coverage:
     third-person by genre convention, so it contributes nothing to this
     subset no matter how long the lesson runs, while direct address to the
     learner does. A caller must report both views, never one alone -- see
-    `dnf_bond_integration.py`'s render().
+    `judson_bond_integration.py`'s render().
     """
 
     seen: tuple[str, ...]
@@ -812,7 +812,7 @@ INFLATED_EXAMPLE_TEXT = (
 # in whether a learner turn sits immediately before it. Kept side by side so
 # a future change to `_tutor_turns_with_precedent`/`_evidenced_ceiling` is
 # checked against a real minimal-pair reproduction, not just the full
-# dnf_bond_lesson/cialdini_integration_check fixtures those functions were
+# judson_bond_lesson/cialdini_integration_check fixtures those functions were
 # actually found and fixed against (see this module's own docstring and
 # sandbox-handoffs/teach-8xw.45.md).
 _TEACH_8XW_45_CLAIM_SENTENCE = (

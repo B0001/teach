@@ -8,7 +8,7 @@ component in the whole system: "the producer is explicitly optimized to be
 persuasive... That is precisely the machinery that makes an ineffective
 lesson feel like an effective one." Before this module, that claim was
 false -- the only trace of it in the producer was one hand-authored
-sentence (`teach/dnf_bond_lesson.py`'s closing encouragement line), not a
+sentence (`teach/judson_bond_lesson.py`'s closing encouragement line), not a
 generation mechanism. This module is that mechanism, built the same way
 `teach/cbt_primitives.py` built the CBT layer: a named, enumerable set of
 moves, each with a one-line "when to use," each rendering real (if
@@ -85,8 +85,8 @@ moves and proves each renders non-empty, on-topic, *varying* output (two
 template variants per move, selected by an explicit index -- proof this is
 generation logic, not one hand-authored string per principle) from a
 minimal fake `MotivationMoment`. It does not decide *when* in a real
-traversal each principle should fire (that is `teach/dnf_bond_lesson.py` or
-a future integration's job, same division of labor `cbt_primitives.py`
+traversal each principle should fire (that is `teach/judson_bond_lesson.py`
+or a future integration's job, same division of labor `cbt_primitives.py`
 draws for the CBT layer).
 
 `teach/cialdini_integration_check.py` remains the module that runs this
@@ -97,8 +97,8 @@ this module.
 
 teach-8xw.38 changed one thing: `render_authority`'s `authority_fact` field
 is free text a caller could fill with an overpromise dressed as a citation
-("Dummit and Foote states this plainly: every student who masters this
-theorem goes on to prove new results with ease") -- unlike
+("Judson states this plainly: every student who masters this theorem goes
+on to prove new results with ease") -- unlike
 `render_social_proof`'s `peer_difficulty`, which the fixed templates only
 ever slot into difficulty-shaped sentences, `authority_fact` is embedded
 verbatim with no wrapping constraint at all. So `render_authority` now
@@ -483,7 +483,7 @@ FAKE_CONTEXTS: dict[PrincipleName, MotivationMoment] = {
     ),
     PrincipleName.AUTHORITY: MotivationMoment(
         concept_name="normal subgroups",
-        cited_source="Dummit and Foote's Abstract Algebra",
+        cited_source="Judson's Abstract Algebra: Theory and Applications",
         authority_fact="a subgroup is normal exactly when its left and right cosets coincide",
     ),
     PrincipleName.SCARCITY: MotivationMoment(

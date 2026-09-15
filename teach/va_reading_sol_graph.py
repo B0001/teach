@@ -4,7 +4,7 @@ concept_recovery.py's module docstring and the design memory
 (`bd memories teach-8xw-10-concept-recovery-design`) both claim vocabulary
 extraction is domain-agnostic by construction. That claim had never been
 exercised against a real non-math `ConceptGraph` -- every data-backed graph
-in this repo before this module was VA Math SOL or Dummit & Foote, both math.
+in this repo before this module was VA Math SOL or Judson's Abstract Algebra, both math.
 This module is the non-math counterpart: the Virginia English SOL reading
 strands, grades K-8, loaded the same way teach-8xw.5 loaded VA Math SOL --
 from the same real source, not synthetic filler written to make a checker

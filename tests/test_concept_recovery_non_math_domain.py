@@ -3,7 +3,7 @@ non-math ConceptGraph (VA Reading SOL K-8, teach/va_reading_sol_graph.py) --
 not a synthetic fixture built to make the checker look good.
 
 Before this bead, every data-backed ConceptGraph exercised anywhere in this
-repo's tests (teach/va_math_sol_graph.py, teach/dummit_foote_graph.py) was
+repo's tests (teach/va_math_sol_graph.py, teach/judson_algebra_graph.py) was
 math. concept_recovery.py's module docstring and the design memory (`bd
 memories teach-8xw-10-concept-recovery-design`) both claim domain-agnostic
 genericity, but that claim had never been run against a real non-math

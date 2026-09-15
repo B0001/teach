@@ -30,16 +30,16 @@ def graph():
     return ConceptGraph(
         nodes=(
             ConceptNode(
-                id="dummit-foote:3.1-cosets", domain="math", label="cosets",
+                id="judson:6.1-cosets", domain="math", label="cosets",
                 facts={"statement": "a coset partitions a group into equal-size classes"},
             ),
             ConceptNode(
-                id="dummit-foote:3.1-normal-subgroups", domain="math", label="normal subgroups",
+                id="judson:10.1-factor-groups-and-normal-subgroups", domain="math", label="normal subgroups",
                 facts={"statement": "a subgroup is normal when its left and right cosets coincide"},
             ),
             ConceptNode(
-                id="dummit-foote:3.3-quotient-groups", domain="math", label="quotient groups",
-                facts={"statement": "the cosets of a normal subgroup form a group under coset multiplication"},
+                id="judson:11.1-group-homomorphisms", domain="math", label="homomorphisms",
+                facts={"statement": "the kernel of a homomorphism is a normal subgroup"},
             ),
         ),
         edges=(),
@@ -131,7 +131,7 @@ def test_template_backend_includes_persona_tone_and_prompt():
 def test_beats_preserves_traversal_order_and_labels(graph, traversal):
     steps = beats(graph, traversal)
     assert [b.node_id for b in steps] == list(traversal)
-    assert [b.label for b in steps] == ["cosets", "normal subgroups", "quotient groups"]
+    assert [b.label for b in steps] == ["cosets", "normal subgroups", "homomorphisms"]
 
 
 def test_beats_flattens_opaque_facts_regardless_of_shape():

@@ -13,3 +13,4 @@ __pycache__/
 # ~/.cache/teach-upstream/ -- see teach/upstream_provenance.py. This line is
 # belt-and-braces for the most likely accidental placement.
 teach/data/*.jsonl
+.partial.json
