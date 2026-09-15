@@ -6,6 +6,8 @@ language-agnostic ACTFL graph -- same structural discipline
 test_actfl_can_do_graph.py and test_va_writing_sol_graph.py apply to their
 own graphs.
 """
+import json
+
 import pytest
 
 from teach.concept_graph import GraphError, PrerequisiteEdge
@@ -15,6 +17,7 @@ from teach.actfl_can_do_graph import (
     load_actfl_presentational_graph,
     load_actfl_intercultural_graph,
 )
+from teach.publish_graph import _hf_license_id, build_dataset_files
 from teach.va_world_language_sol_graph import (
     DOMAIN,
     LEVEL_ORDER,
@@ -182,3 +185,36 @@ def test_no_node_id_collisions_with_actfl_graph():
         for n in graph.nodes
     }
     assert va_ids.isdisjoint(actfl_ids)
+
+
+def test_no_license_is_fabricated_but_real_usage_terms_are_recorded():
+    """teach-8xw.58: unlike va_reading_sol_graph.py/va_writing_sol_graph.py
+    (which inherit the Learning Commons compiled feed's stated CC BY 4.0),
+    this graph was hand-transcribed from VDOE's raw PDF with no Learning
+    Commons license to inherit. VDOE's own stated terms (checked live
+    against the actual document and VDOE's own web-policies page, not
+    assumed by association with the other VA SOL graphs) are an
+    all-rights-reserved, non-commercial-use notice -- not CC BY 4.0, and not
+    mappable to any HF SPDX identifier. Asserting "license" absent (rather
+    than a guessed value) is itself the thing under test here."""
+    assert "license" not in SOURCE
+    assert "non-commercial purposes only" in SOURCE["usage_terms"]
+    assert "written permission of VDOE" in SOURCE["usage_terms"]
+    assert "Copyright 2025 Virginia Department of Education" in SOURCE["usage_terms"]
+    assert SOURCE["usage_terms_wayback_snapshot"] in SOURCE["usage_terms_wayback_url"]
+    assert "web.archive.org" in SOURCE["usage_terms_wayback_url"]
+
+    # The absence of "license" must degrade to honest abstention ("unknown"),
+    # never to a guessed identifier like "cc-by-4.0" or "cc-by-nc-4.0" -- the
+    # same behavior _hf_license_id already guarantees for None (see
+    # publish_graph.py's own self-check), exercised here through this
+    # graph's actual SOURCE dict and actual published card, not a synthetic
+    # fixture.
+    assert _hf_license_id(SOURCE.get("license")) == "unknown"
+    graph = load_va_world_language_sol_graph()
+    files = build_dataset_files(graph, source=SOURCE, repo_id="example/va-world-language-sol")
+    manifest = json.loads(files["manifest.json"])
+    assert "license" not in manifest["source"]
+    assert manifest["source"]["usage_terms"] == SOURCE["usage_terms"]
+    readme = files["README.md"].decode("utf-8")
+    assert "license: unknown" in readme
