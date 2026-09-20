@@ -375,12 +375,17 @@ class GraphSpec:
     merely an unverified license, a *confirmed* one this repo cannot honor
     by guessing. Building and dry-running a blocked graph is still allowed
     (that is how a reviewer inspects what *would* ship); `publish_many` with
-    `dry_run=False` refuses outright. This is a worker-level engineering
-    guard, not the licensing decision itself -- clearing it requires a
-    recorded repo-owner decision (see teach-8xw.58's notes), at which point
-    a future session removes this field for that key, the same way
-    teach-8xw.57's GFDL decision was landed by editing code only after the
-    decision existed, never by a CLI override flag.
+    `dry_run=False` refuses outright.
+
+    For the five graphs that carry it today (va-world-language-sol and the
+    four actfl-can-do-*) this is no longer an open question awaiting an
+    answer: the repo owner decided on 2026-09-20 (teach-8xw.58) NOT to
+    publish them to the public HuggingFace registry. The field is the
+    permanent record of that decision, not a placeholder -- a future session
+    should not clear it, and there is deliberately no CLI override flag.
+    Clearing it would require a new, recorded owner decision reversing this
+    one, landed the same way teach-8xw.57's GFDL decision was: by editing
+    code only after the decision exists.
     """
 
     key: str
@@ -579,8 +584,8 @@ def publish_many(
         if blocked:
             raise ValueError(
                 "publish_many(dry_run=False) refused: the following graph(s) "
-                "are blocked pending a repo-owner licensing decision and "
-                "must not be pushed live -- " + "; ".join(
+                "are excluded from the public registry by a recorded "
+                "repo-owner decision and must not be pushed live -- " + "; ".join(
                     f"{s.key}: {s.blocked_reason}" for s in blocked
                 )
             )
@@ -735,9 +740,10 @@ def _graph_registry() -> dict[str, GraphSpec]:
                 "VDOE's own stated terms for this document (see "
                 "SOURCE['usage_terms']) are a confirmed non-commercial-use, "
                 "permission-required notice with no resolvable HF license "
-                "id -- same shape of question as ACTFL's below. Needs a "
-                "recorded repo-owner decision (teach-8xw.58) before a live "
-                "publish, not a guessed license."
+                "id -- same shape of question as ACTFL's below. DECIDED "
+                "2026-09-20 by the repo owner (teach-8xw.58): this graph is "
+                "permanently excluded from the public registry. Not pending "
+                "-- do not clear."
             ),
         ),
         # teach-8xw.58: ACTFL's SOURCE has no "license" key either -- its own
@@ -746,7 +752,8 @@ def _graph_registry() -> dict[str, GraphSpec]:
         # onto any HF license identifier `_hf_license_id` knows (correctly
         # reports "unknown" rather than guessing "cc-by-nc" or similar).
         # Same shape of question GFDL vs CC-BY was for Judson (teach-8xw.57)
-        # -- the repo owner's call, not a worker's. Registered here
+        # -- the repo owner's call, not a worker's, and the owner has now
+        # made it: do not publish (2026-09-20). Registered here
         # (buildable, dry-run-able, tested) because excluding them from the
         # registry entirely would be this worker making that same call
         # unilaterally in the other direction; `blocked_reason` below is
@@ -760,8 +767,9 @@ def _graph_registry() -> dict[str, GraphSpec]:
             blocked_reason=(
                 "ACTFL's own stated usage_terms restrict to educational/"
                 "non-profit use only, commercial use or sale prohibited -- "
-                "no resolvable HF license id. Needs a recorded repo-owner "
-                "decision (teach-8xw.58) before a live publish."
+                "no resolvable HF license id. DECIDED 2026-09-20 by the repo "
+                "owner (teach-8xw.58): this graph is permanently excluded "
+                "from the public registry. Not pending -- do not clear."
             ),
         ),
         GraphSpec(
@@ -772,8 +780,9 @@ def _graph_registry() -> dict[str, GraphSpec]:
             blocked_reason=(
                 "ACTFL's own stated usage_terms restrict to educational/"
                 "non-profit use only, commercial use or sale prohibited -- "
-                "no resolvable HF license id. Needs a recorded repo-owner "
-                "decision (teach-8xw.58) before a live publish."
+                "no resolvable HF license id. DECIDED 2026-09-20 by the repo "
+                "owner (teach-8xw.58): this graph is permanently excluded "
+                "from the public registry. Not pending -- do not clear."
             ),
         ),
         GraphSpec(
@@ -784,8 +793,9 @@ def _graph_registry() -> dict[str, GraphSpec]:
             blocked_reason=(
                 "ACTFL's own stated usage_terms restrict to educational/"
                 "non-profit use only, commercial use or sale prohibited -- "
-                "no resolvable HF license id. Needs a recorded repo-owner "
-                "decision (teach-8xw.58) before a live publish."
+                "no resolvable HF license id. DECIDED 2026-09-20 by the repo "
+                "owner (teach-8xw.58): this graph is permanently excluded "
+                "from the public registry. Not pending -- do not clear."
             ),
         ),
         GraphSpec(
@@ -795,8 +805,9 @@ def _graph_registry() -> dict[str, GraphSpec]:
             blocked_reason=(
                 "ACTFL's own stated usage_terms restrict to educational/"
                 "non-profit use only, commercial use or sale prohibited -- "
-                "no resolvable HF license id. Needs a recorded repo-owner "
-                "decision (teach-8xw.58) before a live publish."
+                "no resolvable HF license id. DECIDED 2026-09-20 by the repo "
+                "owner (teach-8xw.58): this graph is permanently excluded "
+                "from the public registry. Not pending -- do not clear."
             ),
             description="NCSSFL-ACTFL Can-Do Statements, Intercultural Communication (5 major levels)",
         ),
@@ -1048,8 +1059,8 @@ def _selfcheck() -> None:
     # teach-8xw.58: the five graphs with a confirmed, non-mappable usage
     # restriction (ACTFL's four Can-Do graphs plus va-world-language-sol)
     # must dry-run cleanly (a reviewer can still inspect what would ship)
-    # but refuse outright on an actual live push -- pending a repo-owner
-    # decision this self-check cannot make for them.
+    # but refuse outright on an actual live push -- the repo owner decided
+    # on 2026-09-20 (teach-8xw.58) not to publish them at all.
     blocked_keys = {
         "va-world-language-sol",
         "actfl-can-do-interpersonal",
@@ -1094,7 +1105,8 @@ def _selfcheck() -> None:
         "OK: graphs with a confirmed non-mappable usage restriction "
         "(va-world-language-sol, the four actfl-can-do-* graphs) dry-run "
         "cleanly but refuse a live publish, individually or mixed into a "
-        "larger batch, until a repo-owner licensing decision is recorded"
+        "larger batch -- permanently, per the repo owner's recorded "
+        "2026-09-20 decision not to publish them (teach-8xw.58)"
     )
 
 
