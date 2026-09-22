@@ -102,11 +102,30 @@ def test_shema_fact_citation_discloses_the_peshitta_cross_check_and_nc_license()
 
 
 def test_isaiah_voice_in_wilderness_correctly_attributed_is_confirmed():
+    claim = "Isaiah declares, 'A voice cries: In the wilderness prepare the way of the LORD.'"
+    assert verify_claim(claim, BIBLICAL_OT_SOURCE) is Verdict.CONFIRMED
+
+
+def test_isaiah_claim_mentioning_another_book_in_passing_now_abstains():
+    """teach-dds / round 3: this claim legitimately names another book
+    (John, via "the Gospels ... John the Baptist") without attributing
+    Isaiah's content to it -- the attribution-anchored false_pattern
+    correctly doesn't fire here. But round 3 found misattribution
+    sentences whose verbs weren't in that pattern's hand-curated list
+    either, so a second, weaker `caution_patterns` signal was added: blind
+    co-occurrence of any other book's name, no verb required. That signal
+    can't tell this passing mention apart from a real misattribution, so it
+    abstains rather than confirms -- a deliberate recall loss in the safe
+    direction (see teach.fact_checker.SourceFact's caution_patterns
+    docstring). This claim used to be this test file's CONFIRMED example
+    for this fact; it was moved here once caution_patterns made it abstain,
+    and test_isaiah_voice_in_wilderness_correctly_attributed_is_confirmed
+    above was given a replacement claim that doesn't name another book."""
     claim = (
         "Isaiah's 'A voice cries: prepare the way of the LORD' is later "
         "quoted by all four Gospels about John the Baptist."
     )
-    assert verify_claim(claim, BIBLICAL_OT_SOURCE) is Verdict.CONFIRMED
+    assert verify_claim(claim, BIBLICAL_OT_SOURCE) is Verdict.CANNOT_VERIFY
 
 
 def test_isaiah_line_misattributed_to_matthew_is_contradicted():
@@ -202,10 +221,7 @@ def test_every_fact_citation_names_wlc_or_the_apparatus_gap():
 
 
 def test_check_lesson_text_carries_the_dss_caveat_on_a_confirmed_verdict():
-    text = (
-        "Tutor: Isaiah's 'A voice cries: prepare the way of the LORD' is "
-        "later quoted by all four Gospels about John the Baptist."
-    )
+    text = "Tutor: Isaiah declares, 'A voice cries: In the wilderness prepare the way of the LORD.'"
     checks = check_lesson_text(text, BIBLICAL_OT_SOURCE)
     assert len(checks) == 1
     assert checks[0].verdict is Verdict.CONFIRMED

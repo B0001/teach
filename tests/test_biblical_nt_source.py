@@ -12,6 +12,7 @@ from teach.biblical_nt_source import (
     BIBLICAL_NT_SOURCE,
     FALSE_CLAIM,
     TRUE_CLAIM,
+    TRUE_CLAIM_MENTIONS_ANOTHER_BOOK_IN_PASSING,
 )
 from teach.fact_checker import Verdict, check_lesson_text, verify_claim
 
@@ -82,6 +83,49 @@ def test_genesis_conflation_is_contradicted():
         "God created the heavens and the earth."
     )
     assert verify_claim(claim, BIBLICAL_NT_SOURCE) is Verdict.CONTRADICTED
+
+
+def test_true_claim_mentioning_another_book_in_passing_now_abstains():
+    """teach-dds / round 3: a true claim that legitimately names another
+    book (Genesis) without attributing John's content to it used to
+    confirm -- the attribution-anchored false_pattern correctly didn't fire
+    (no attribution verb next to "Genesis" here). But round 3 found
+    misattribution sentences whose verbs weren't in that pattern's
+    hand-curated list either ("...is the first verse of Titus, not of any
+    Gospel"), so a second, weaker `caution_patterns` signal was added:
+    blind co-occurrence of any other book's name, no verb required. That
+    signal can't distinguish this passing mention from a real
+    misattribution, so it abstains rather than confirms -- a deliberate
+    recall loss in the safe direction (see
+    teach.fact_checker.SourceFact's caution_patterns docstring)."""
+    assert (
+        verify_claim(TRUE_CLAIM_MENTIONS_ANOTHER_BOOK_IN_PASSING, BIBLICAL_NT_SOURCE)
+        is Verdict.CANNOT_VERIFY
+    )
+
+
+def test_shortest_verse_misattributed_to_2_john_is_not_dangerously_confirmed():
+    """teach-dds: found by code review (not a held-out round), while
+    checking _ALL_BIBLE_BOOKS' coverage after round 3's fix. Both John
+    facts use own=("john",), and _other_book_names excluded that string
+    from the "other book" alternation -- but the bare "john" regex also
+    matches inside "1 John"/"2 John"/"3 John", which ARE different
+    canonical books from the Gospel of John. So a misattribution naming an
+    epistle slipped past both false_patterns and caution_patterns entirely
+    and landed a dangerous CONFIRMED, the same failure class this whole
+    bead exists to close. Fixed by listing "1 john"/"2 john"/"3 john" as
+    distinct entries in _ALL_BIBLE_BOOKS so they survive the own=("john",)
+    exclusion."""
+    claim = "'Jesus wept' is found in 2 John, the shortest of the epistles."
+    assert verify_claim(claim, BIBLICAL_NT_SOURCE) is not Verdict.CONFIRMED
+
+
+def test_opening_word_misattributed_to_3_john_is_not_dangerously_confirmed():
+    claim = (
+        "The opening line 'In the beginning was the Word, and the Word was "
+        "with God, and the Word was God' can also be found in 3 John."
+    )
+    assert verify_claim(claim, BIBLICAL_NT_SOURCE) is not Verdict.CONFIRMED
 
 
 def test_word_was_with_god_paraphrase_is_confirmed():
