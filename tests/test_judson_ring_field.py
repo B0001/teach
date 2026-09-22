@@ -18,7 +18,8 @@ from teach.judson_algebra_graph import (
     load_judson_ring_field_data,
     prerequisite_closure,
 )
-from teach.pretext_parser import DEFINITION_KIND, JUDSON_SRC, iter_blocks
+from teach.extract_judson_ring_field import _excerpted_text
+from teach.pretext_parser import JUDSON_SRC, iter_blocks
 
 needs_judson = pytest.mark.skipif(
     not JUDSON_SRC.is_dir(), reason=f"pinned Judson source not cached at {JUDSON_SRC}"
@@ -150,12 +151,16 @@ def test_extract_still_matches_the_live_pinned_source():
                 assert digest == p["file_sha256"], f"{fname} changed on disk"
             match = [
                 b for b in cache[fname]
-                if b.kind == DEFINITION_KIND
+                if b.kind == p["kind"]
                 and b.xml_id == p["xml_id"]
                 and b.section_title == p["section_title"]
             ]
             assert match, f"{n['id']}: no live block for {p}"
-            assert any(b.text in n["definition"] for b in match), (
+            live_texts = [
+                _excerpted_text(n["id"], b) if p.get("excerpted") else b.text
+                for b in match
+            ]
+            assert any(t in n["definition"] for t in live_texts), (
                 f"{n['id']}: live text in {fname} is no longer a substring of "
                 "the extracted definition"
             )

@@ -78,15 +78,36 @@ lesson texts):
   scorer but tied with 4.W/7.W/8.W within `_MIN_MARGIN`, so a real match
   was missed but not with a wrong answer.
 
-SCOPE OF WHAT THIS MEASURES, PLAINLY STATED: 8 held-out lesson texts, 1
-domain (VA Writing SOL K-12), 1 checker (concept_recovery.py's raw+semantic
-tiers), measured once. 2/4 taught-concept-recovery attempts landed exactly
-right (including their prerequisite outcome); 2/4 did not (1 safe
-abstention, 1 dangerous wrong answer). 1/2 abstain-designed cases correctly
-abstained; 1/2 falsely matched. This is not a claim that the module
-generalizes to writing lesson text broadly, nor a claim that it fails
-broadly -- it is what these 8 independently-authored texts showed, no more
-and no less. A wider round could show a different mix in either direction.
+SCOPE OF WHAT THIS MEASURED AT THE TIME, PLAINLY STATED: 8 held-out lesson
+texts, 1 domain (VA Writing SOL K-12), 1 checker (concept_recovery.py's
+raw+semantic tiers), measured once. 2/4 taught-concept-recovery attempts
+landed exactly right (including their prerequisite outcome); 2/4 did not (1
+safe abstention, 1 dangerous wrong answer). 1/2 abstain-designed cases
+correctly abstained; 1/2 falsely matched. This is not a claim that the
+module generalizes to writing lesson text broadly, nor a claim that it
+fails broadly -- it is what these 8 independently-authored texts showed, no
+more and no less. A wider round could show a different mix in either
+direction.
+
+UPDATE (teach-25s, after teach-l7u's fix -- the paragraphs above are left
+standing as the historical record, per teach-8xw.40's precedent of
+correcting in place rather than rewriting history): the three confident
+wrong answers this round surfaced (GRADE10_UNSIGNPOSTED,
+READING_THEME_ABSTAIN, REVISING_AMBIGUOUS) were filed and fixed under
+teach-l7u, which closed against this round's own reproductions -- so
+re-running this exact text against the fixed module is diagnostic of the
+fix, not a fresh generalization measurement (sandbox-prompt.md: "you cannot
+hold out examples from yourself"). The test functions below were rewritten
+by teach-l7u's close to assert the current, honest behavior on this same
+text, and now all 8 pass: 2/8 fully correct recoveries (GRADE4, GRADE7),
+0/8 confident wrong answers, 6/8 safe abstentions (2 on genuinely
+out-of-domain text, 1 on deliberately ungraded generic content, 3 safe
+misses where a correct top-scorer existed but tied within margin). A real,
+independent generalization measurement of the FIXED module against fresh
+held-out text is a separate concern, already covered by
+tests/test_concept_recovery_writing_domain_generalization_round2.py
+(teach-8xw.53) onward -- do not read this file's current all-green result
+as evidence the fix generalizes; read round 2+ for that.
 """
 from teach.concept_recovery import recover_from_lesson_text
 from teach.va_writing_sol_graph import load_va_writing_sol_graph

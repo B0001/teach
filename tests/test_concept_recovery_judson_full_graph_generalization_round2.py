@@ -335,8 +335,23 @@ def test_integral_domains_fields_abstains_via_preexisting_near_margin_floor():
     """SAFE ABSTENTION through the pre-existing near-margin self-floor check
     (teach-l7u/teach-i35's code, margin <= min_margin branch), not
     teach-9wx's new decisive-margin code -- confirmed unrelated to this bead
-    by checking which abstain branch actually fired."""
+    by checking which abstain branch actually fired.
+
+    UPDATE (teach-57f): the abstain branch shifted again. teach-57f's
+    `_DISCOURSE_STOPWORDS` addition removed generic discourse words (e.g.
+    "condition", not itself in that list, was untouched, but several
+    connective words judson:18.2's uniquely discursive `definition` prose
+    used were) from every node's vocabulary, which happened to drop
+    judson:18.2's raw score against this text from 12 to 10 -- landing it in
+    an exact 3-way tie with judson:16.1-rings and the correct answer,
+    judson:16.2-integral-domains-and-fields, rather than the single-candidate
+    near-margin-floor branch originally measured here. The outcome is still
+    the SAME SAFE ABSTENTION (`taught_node_id is None`), just via the
+    multi-candidate tie branch instead -- an even more clearly ambiguous
+    result (an exact 3-way score tie) than the one originally observed, not
+    a weaker one. See teach-57f's handoff for the full trace."""
     result = recover_from_lesson_text(INTEGRAL_DOMAINS_FIELDS, GRAPH)
     assert result.taught_node_id is None
     assert result.abstain_reason is not None
-    assert "covers just" in result.abstain_reason
+    assert "too close to call" in result.abstain_reason
+    assert "judson:16.2-integral-domains-and-fields" in result.abstain_reason

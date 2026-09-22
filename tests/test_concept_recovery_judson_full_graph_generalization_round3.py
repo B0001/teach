@@ -107,6 +107,72 @@ fixed in this session:
    affecting FOUR different correct answers rather than one. Filed as
    teach-443 for someone to inspect judson:18.2's actual vocabulary set.
 
+   UPDATE (teach-443, later session): investigated directly via
+   `build_vocabulary_index` output. judson:18.2's distinctive vocabulary (75
+   words pre-fix) was ~3-5x the graph's median node and had two identifiable,
+   distinct contaminants: (a) 6 raw PreTeXt/LaTeX command tokens ("cdots",
+   "langle", "ldots", "mathbb", "rangle", "setminus") that word-tokenization
+   was admitting as if they were English content words -- fixed by stripping
+   backslash-command-shaped sequences before tokenization (`_LATEX_COMMAND` in
+   concept_recovery.py), which also corrected several OTHER ring/field nodes'
+   document-frequency counts (see
+   test_subgroups_now_correctly_recovers_after_teach_57f
+   and test_splitting_fields_now_correctly_recovers_after_teach_443, both
+   updated in this session for the resulting, legitimate score changes); and
+   (b) roughly half of 18.2's remaining vocabulary is generic mathematical-
+   discourse register ("recall", "suppose", "written", "satisfy", "question",
+   "necessarily", "furthermore", "extend", ...) that is document-frequency-
+   rare only because this specific 20-node graph's OTHER nodes are terse,
+   formal Definition-style extractions that never contain ordinary
+   discursive prose at all -- not because these words are genuinely
+   factorization-specific. (b) is NOT fixed here: distinguishing "generic
+   academic prose" from "curriculum-distinctive vocabulary" needs either an
+   external general-English frequency reference or a graph redesign (judson:
+   18.2's source section legitimately bundles ~9 separate Judson definitions
+   that a finer-grained node split would separate), and any fix along either
+   path needs its own design and fresh held-out validation round, per this
+   repo's standing methodology -- attempting it inside this same bead's
+   investigation would risk exactly the self-authored-data-fits-symptom
+   shortcut this lineage warns against. Filed forward as teach-57f. Full
+   details, including the exact vocabulary dump and document-frequency
+   comparison, are in this bead's handoff
+   (sandbox-handoffs/teach-443.md).
+
+   UPDATE (teach-57f, later session): direction (a) from teach-443's note
+   above -- a general-English/academic-discourse reference independent of
+   this graph's own document-frequency stats -- was attempted, NOT direction
+   (b) (the graph-redesign path is out of scope for a P3 vocabulary fix and
+   would need every graph consumer re-verified). A general WORD-FREQUENCY
+   cutoff (e.g. against the Brown corpus via NLTK, already a dependency) was
+   tried first and rejected: measured directly, "ring", "field", "group",
+   "order", "form", and "function" -- this graph's own core technical
+   vocabulary -- all land in the 500-3000 most frequent general-English
+   words, so any frequency threshold strong enough to exclude "furthermore"
+   also strips the exact words that make ring/field/group-theory nodes
+   distinguishable from each other at all. Implemented instead as a small,
+   hand-curated, closed grammatical class (`_DISCOURSE_STOPWORDS` in
+   concept_recovery.py): connective adverbs, hedges, and reporting/meta-
+   commentary verbs whose FUNCTION is to narrate or qualify a claim, never
+   to name a mathematical object or property in any domain this repo
+   currently has -- checked directly against the VA Writing and VA Reading
+   SOL graphs (0 and 6 hits respectively) before adding, not tuned to
+   Judson alone. Effect: judson:18.2's distinctive vocabulary shrank from 69
+   to 50 words -- no longer the graph's single largest node (54-word
+   judson:16.3-ring-homomorphisms-and-ideals is now larger), though still
+   well above the ~14-18 median; this is an honest partial mitigation, not
+   a claim that the attractor pattern is eliminated. Two tests in THIS file
+   changed as a directly-traced consequence:
+   test_sets_equivalence_now_abstains_instead_of_a_confident_wrong_answer
+   still abstains (still safe) but now via a three-way exact tie rather
+   than naming judson:6.2-lagranges-theorem as the closest rival, and
+   test_subgroups_abstains_via_multi_candidate_coverage_tie_after_teach_443
+   was renamed to test_subgroups_now_correctly_recovers_after_teach_57f: the
+   pre-existing recall gap that test's own docstring flagged ("a
+   pre-existing recall gap, unrelated to teach-443, noted honestly rather
+   than fixed here") is now closed -- judson:3.3-subgroups is correctly
+   recovered. See teach-57f's handoff for the fresh held-out round run
+   before closing and the full trace of both changes.
+
 COSETS is a boundary case, not confidently called wrong here: the dialogue
 teaches cosets thoroughly but explicitly derives Lagrange's theorem at length
 in its closing exchanges ("That's what gives Lagrange's theorem, isn't it? G
@@ -121,10 +187,15 @@ bug here since the recovered node is a real, substantial part of what the
 text teaches -- but noted honestly as an imperfect recovery, not a clean win.
 """
 
-from teach.concept_recovery import recover_from_lesson_text
+from teach.concept_recovery import (
+    build_vocabulary_index,
+    recover_from_lesson_text,
+    score_candidates,
+)
 from teach.judson_algebra_graph import load_judson_full_graph
 
 GRAPH = load_judson_full_graph()
+INDEX = build_vocabulary_index(GRAPH)
 
 SETS_EQUIVALENCE = """Tutor: Let's start with something you already know without knowing you know it. When is the last time you said two fractions were "the same," like 1/2 and 2/4?
 
@@ -592,7 +663,21 @@ def test_sets_equivalence_now_abstains_instead_of_a_confident_wrong_answer():
     for the fresh, independently-authored held-out round run before closing
     (round4, five topics never used as a fixture in round1/2/3: the
     division algorithm, group definitions and examples, polynomial rings,
-    fields of fractions, extension fields)."""
+    fields of fractions, extension fields).
+
+    UPDATE (teach-57f): the abstain branch shifted. teach-57f's
+    `_DISCOURSE_STOPWORDS` addition dropped judson:18.2's raw score against
+    this text from 14 to 10 (removing generic discourse words its uniquely
+    long, discursive `definition` prose had accumulated), pulling it from a
+    two-way near-margin tie against judson:6.2-lagranges-theorem into a
+    three-way exact tie at score 10 with the correct answer,
+    judson:1.2-sets-and-equivalence-relations, and judson:16.1-rings --
+    judson:6.2-lagranges-theorem (score 7) is no longer even in the "close"
+    set. The outcome is still the SAME SAFE ABSTENTION and judson:18.2 is
+    still not confidently returned; only the other member named in the
+    abstain reason changed, from the rival that was closest before this fix
+    to the one that's closest now. See teach-57f's handoff for the full
+    trace."""
     result = recover_from_lesson_text(SETS_EQUIVALENCE, GRAPH)
     assert result.taught_node_id is None, (
         f"expected abstention (teach-ceg fix) -- got a confident answer of "
@@ -603,24 +688,60 @@ def test_sets_equivalence_now_abstains_instead_of_a_confident_wrong_answer():
     )
     assert result.abstain_reason is not None
     assert "judson:18.2-factorization-in-integral-domains" in result.abstain_reason
-    assert "judson:6.2-lagranges-theorem" in result.abstain_reason
+    assert "judson:1.2-sets-and-equivalence-relations" in result.abstain_reason
 
 
-def test_subgroups_abstains_via_preexisting_near_margin_floor_not_teach_hpa():
-    """SAFE ABSTENTION through the pre-existing near-margin self-floor check
-    (teach-l7u/teach-i35's code, margin <= min_margin branch: raw-score
-    leader judson:18.2 wins by only 2 words and covers just 19% of its own
-    vocabulary, below the 20% floor required at that margin) -- not through
-    teach-hpa's decisive-margin code, which never fires here since the
-    margin isn't decisive. The correct answer, judson:3.3-subgroups, is not
-    even the near-margin rival that triggers this abstention (it covers
-    100% of its own tiny vocabulary but scores too low to be the raw-score
-    leader) -- a pre-existing recall gap, unrelated to this bead, noted
-    honestly rather than claimed as evidence for or against teach-hpa."""
+def test_subgroups_correctly_recovers_after_teach_scx_fix():
+    """CORRECT RECOVERY, as of teach-scx -- was a CORRECT RECOVERY after
+    teach-57f, then a SAFE ABSTENTION for one bead cycle (teach-911 -> teach-
+    scx; see git history for that intermediate state), now correct again.
+
+    teach-911 folded Judson's own 2x2-matrix noncommutative-ring example
+    into judson:16.1-rings' definition to give it the vocabulary
+    ("matrices", "matrix", "entries", "noncommutative") a natural-language
+    rings lesson actually uses (fixing
+    tests/test_concept_recovery_judson_full_graph_generalization_round5.py,
+    test_rings_now_correctly_recovers_after_teach_911_fix). That same
+    example's framing sentence ("matrices... form a ring under the usual
+    operations...") also introduced "form" into judson:16.1-rings'
+    vocabulary as a side effect. "case"/"neither"/"since"/"usual"/"usually"
+    from the same sentence were excluded via `_DISCOURSE_STOPWORDS` (zero
+    regressions measured across the full suite), but "form" could not be:
+    doing so flips a different, unrelated test
+    (test_maximal_prime_ideals_abstains_via_teach_hpa_gate_no_regression_vs_ungated)
+    from a safe abstention into a CONFIDENT WRONG ANSWER. With "form" left
+    in scoring, judson:16.1-rings' raw score on THIS text rose from 13 to
+    14 -- exactly `_MIN_MARGIN` over judson:3.3-subgroups' 12, which is just
+    enough to move this case out of the multi-candidate coverage tiebreak
+    (margin < `_MIN_MARGIN`, where a 100%-covered rival can still win) and
+    into the single-candidate bare-minimum-margin branch (margin ==
+    `_MIN_MARGIN`), which can only return the raw-score leader or abstain --
+    it has no path to hand the win to a better-covered rival the way the
+    tiebreak branch does. That branch abstained here, correctly refusing to
+    call rings over a rival it could see was 100% covered, but the correct
+    answer used to be reachable and no longer was. Filed forward as
+    teach-scx.
+
+    teach-scx closes the gap with `EXCERPT_EDITS` in
+    extract_judson_ring_field.py: it elides exactly the word "form" from
+    the folded-in matrix example's text (ellipsis-marked, nothing else
+    reworded), so it no longer contributes to judson:16.1-rings' score
+    anywhere, while "matrices"/"matrix"/"entries"/"noncommutative" still
+    do. "form" is untouched everywhere else in the graph, including
+    judson:18.2's own vocabulary, so the maximal/prime-ideals test above is
+    unaffected. judson:16.1-rings' score on this text drops back to 13,
+    margin over subgroups narrows back to 1 (below `_MIN_MARGIN`), and
+    control returns to the multi-candidate coverage tiebreak, where
+    judson:3.3-subgroups' 100% self-coverage (vs. rings' 25%) wins outright
+    again -- the exact pre-teach-911 numbers."""
     result = recover_from_lesson_text(SUBGROUPS, GRAPH)
-    assert result.taught_node_id is None
-    assert result.abstain_reason is not None
-    assert "covers just" in result.abstain_reason
+    assert result.taught_node_id == "judson:3.3-subgroups"
+    assert result.abstain_reason is None
+
+    raw = score_candidates(SUBGROUPS, INDEX)
+    scores = {c.node_id: c.score for c in raw}
+    assert scores["judson:16.1-rings"] == 13
+    assert scores["judson:3.3-subgroups"] == 12
 
 
 def test_cosets_recovers_as_the_closely_related_lagrange_node():
