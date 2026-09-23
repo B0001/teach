@@ -468,7 +468,7 @@ _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO = 0.35
 # the long comment above _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO for the full
 # mechanism and the safe-window measurement ([1.125, 1.30]) that chose 1.25.
 _SEMANTIC_INFLATION_CAP_RATIO = 1.25
-# teach-jkx (open, NOT fixed here -- see this bead's handoff): GROUP_AXIOMS_BLIND,
+# teach-jkx (FIXED in session 5 -- see "FIXED" below and this bead's handoff): GROUP_AXIOMS_BLIND,
 # a blind lesson on group axioms that never mentions rings, is a confident
 # WRONG answer at the semantic tier. judson:3.2-definitions-and-examples is
 # the true topic (55% literal coverage, best of anyone's) but its tier-native
