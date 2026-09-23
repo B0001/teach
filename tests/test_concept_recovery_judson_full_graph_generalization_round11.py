@@ -26,8 +26,11 @@ overlap. teach-zgn's named root cause (16.3's verbose, analogy-heavy node
 text out-scoring the thin 11.1 node on group-homomorphism lessons) is
 still present (teach-cia); see test_true_node_still_trails_16_3_on_raw_overlap.
 """
-from teach.concept_recovery import build_vocabulary_index, recover_from_lesson_text, score_candidates
+from teach.concept_graph import ConceptGraph
+from teach.concept_recovery import build_vocabulary_index, recover_from_lesson_text, recover_taught_concept, score_candidates
 from teach.judson_algebra_graph import load_judson_full_graph
+
+from tests import test_concept_recovery_judson_full_graph_generalization_round10 as round10
 
 GRAPH = load_judson_full_graph()
 INDEX = build_vocabulary_index(GRAPH)
@@ -65,3 +68,23 @@ def test_true_node_still_trails_16_3_on_raw_overlap():
     it and say so."""
     scores = {c.node_id: c.score for c in score_candidates(GROUP_HOMOMORPHISMS_BLIND, INDEX)}
     assert scores["judson:11.1-group-homomorphisms"] < scores["judson:16.3-ring-homomorphisms-and-ideals"]
+
+
+def test_veto_still_catches_it_without_the_lucky_16_1_tie():
+    """teach-cia: GROUP_HOMOMORPHISMS_BLIND abstains in the full graph only
+    because judson:16.1 ties judson:16.3. Remove 16.1 so 16.3 leads
+    decisively: the coverage-gap veto must still fire, because judson:11.1
+    (post-teach-zgn) clears the credibility bar. With teach-zgn's vocabulary
+    reverted, round10's GROUP_HOMOMORPHISMS_BLIND goes confidently wrong in
+    this same setup (measured; this round's own fixture abstains either
+    way), so round10's case is the one that makes this load-bearing."""
+    drop = "judson:16.1-rings"
+    graph = ConceptGraph(
+        nodes=tuple(n for n in GRAPH.nodes if n.id != drop),
+        edges=tuple(e for e in GRAPH.edges if drop not in (e.src, e.dst)),
+    )
+    index = build_vocabulary_index(graph)
+    for text in (GROUP_HOMOMORPHISMS_BLIND, round10.GROUP_HOMOMORPHISMS_BLIND):
+        taught, _, reason = recover_taught_concept(text, index)
+        assert taught is None
+        assert "leads decisively" in reason
