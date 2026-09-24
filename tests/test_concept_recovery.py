@@ -607,18 +607,27 @@ def test_semantic_tier_abstains_on_a_genuinely_ambiguous_math_paraphrase():
 
     Judson splits homomorphisms (ch. 11) and isomorphisms (ch. 9) into
     separate, independently-defined nodes (see judson_algebra_graph.py's
-    EDGE PROVENANCE), so the same style of paraphrase -- one that narrates a
-    map, then upgrades it to an isomorphism, then names its kernel and
-    image -- now genuinely spans three real, distinct neighbors in this
-    graph: judson:11.1-group-homomorphisms (kernel, structure preserving),
-    judson:9.1-definition-and-examples (isomorphic, structure preserving),
-    and judson:1.2-sets-and-equivalence-relations (map/image/onto are that
-    node's own vocabulary, since a homomorphism literally is a particular
-    kind of function). Both the raw and semantic tiers correctly abstain
-    rather than guess among them -- this is sandbox-prompt.md's preference
-    for abstention over a confident wrong answer, exercised in the math
-    domain, mirroring test_semantic_tier_still_abstains_on_a_thin_coincidental_margin
-    above for the VA SOL domain."""
+    EDGE PROVENANCE). This paraphrase narrates a map, mentions in passing
+    that a bijective one is called an isomorphism, then names its kernel
+    and image -- kernel and image being genuinely core, textbook vocabulary
+    of a homomorphism itself (Judson ch. 11 covers both), not just
+    incidental overlap with judson:1.2-sets-and-equivalence-relations's
+    generic map/image/onto vocabulary.
+
+    teach-zgn added "image" (and "injective") to judson:11.1's vocabulary --
+    it was a real gap: judson:11.1 previously had no way to get credit for a
+    lesson that discusses a homomorphism's image, even though "kernel and
+    image" is the standard textbook pairing. That closes what used to look
+    like three-way ambiguity here: with "image" now legitimately part of
+    judson:11.1's own vocabulary, this text -- which spends most of its
+    length on the homomorphism/kernel/image definition and only one aside
+    sentence on isomorphism -- decisively and correctly recovers
+    judson:11.1-group-homomorphisms (raw tier: score 5 vs runner-up 3,
+    38.5% of its own vocabulary covered vs the best rival's 30%). This is
+    the same abstention-over-wrong-answer discipline as before, applied to
+    a text that is no longer actually ambiguous once judson:11.1 is not
+    artificially thin -- see test_semantic_tier_still_abstains_on_a_thin_coincidental_margin
+    above for a case that still correctly abstains."""
     graph = load_judson_algebra_graph()
     text = (
         "Tutor: A homomorphism is a map from one group to another that "
@@ -635,11 +644,12 @@ def test_semantic_tier_abstains_on_a_genuinely_ambiguous_math_paraphrase():
         "the second group."
     )
     result = recover_from_lesson_text(text, graph)
-    assert result.taught_node_id is None, (
-        f"expected abstention, got {result.taught_node_id!r} -- this paraphrase "
-        "genuinely spans homomorphisms, isomorphisms, and sets/functions"
+    assert result.taught_node_id == "judson:11.1-group-homomorphisms", (
+        f"expected this text's homomorphism/kernel/image content to "
+        f"decisively recover judson:11.1 now that teach-zgn added "
+        f"\"image\" to its vocabulary -- got {result.taught_node_id!r}"
     )
-    assert result.abstain_reason is not None
+    assert result.abstain_reason is None
 
 
 def test_resolve_candidates_checks_every_candidates_coverage_not_just_the_runner_up():
@@ -760,7 +770,8 @@ def test_decisive_margin_still_abstains_when_a_rival_is_covered_far_better():
     quarter of its own vocabulary (25%). 'rival' scores lower (4, clears
     `_MIN_MATCH_WORDS`) but has a small, tightly-matched vocabulary (8
     words) the text covers almost completely (87.5%) -- a 62.5-point
-    coverage gap, decisively above `_DECISIVE_MARGIN_COVERAGE_GAP` (0.25).
+    coverage gap, decisively above `_DECISIVE_MARGIN_COVERAGE_GAP` (teach-ceg
+    lowered this from 0.25 to 0.18; 62.5 points clears either value).
     The old code never looked at 'rival' at all once the margin cleared;
     the fixed code must abstain and name 'rival' as the reason.
     """
@@ -804,8 +815,11 @@ def test_decisive_margin_not_second_guessed_when_the_rival_gap_is_narrow():
     `_resolve_candidates`: 'top' (17 words vocab, matched 10 -> 58.8%
     coverage) decisively outscores 'rival' (6 words vocab, matched 4 ->
     66.7% coverage) by margin 6. The gap (7.9 points) is far under
-    `_DECISIVE_MARGIN_COVERAGE_GAP` (0.25), so the fixed code must still
-    return 'top'.
+    `_DECISIVE_MARGIN_COVERAGE_GAP` (teach-ceg lowered this from 0.25 to
+    0.18; 7.9 points is still comfortably under either value -- this is
+    one of the two calibration points 0.18 itself was derived from, see
+    that constant's comment in concept_recovery.py), so the fixed code
+    must still return 'top'.
     """
     by_node_id = {
         "top": frozenset(f"w{i}" for i in range(17)),

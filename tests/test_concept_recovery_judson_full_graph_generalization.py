@@ -269,17 +269,29 @@ def test_factorization_correctly_recovers():
     assert result.taught_node_id == "judson:18.2-factorization-in-integral-domains"
 
 
-def test_splitting_fields_safely_abstains():
-    """SAFE ABSTENTION: intended taught=judson:21.2-splitting-fields, but it
-    ties exactly with judson:21.1-extension-fields at raw score 9 -- a real,
-    close confusability between adjacent sections (a splitting field IS an
-    extension field with an extra condition), and neither clears the
-    multi-candidate coverage tiebreak's margin requirement. Declining rather
-    than guessing between two genuinely close neighbors is the correct,
-    honest call, not a fix failure."""
+def test_splitting_fields_now_correctly_recovers_after_teach_443():
+    """CORRECT RECOVERY (was a SAFE ABSTENTION until teach-443): this used to
+    tie exactly with judson:21.1-extension-fields at raw score 9, and neither
+    cleared the multi-candidate coverage tiebreak's margin requirement, so
+    the module declined rather than guess between two genuinely close
+    neighbors -- a real, close confusability (a splitting field IS an
+    extension field with an extra condition), not a fix failure.
+
+    teach-443 found that judson:18.2-factorization-in-integral-domains'
+    verbatim-extracted `definition` text (and several other ring/field
+    nodes', including this one's own judson:21.2-splitting-fields) still
+    carries raw PreTeXt/LaTeX source -- commands like \\cdots and \\ldots --
+    that word-tokenization was silently admitting as if the bare command name
+    were an English content word. Stripping those before tokenization
+    (`_LATEX_COMMAND` in concept_recovery.py) shrinks the affected nodes'
+    vocabularies to their real prose, which breaks this exact tie: judson:21.2
+    now covers 88.9% of its own (cleaned) vocabulary against
+    judson:21.1's 24.2%, clearing `_MIN_COVERAGE_FRACTION`/
+    `_MIN_COVERAGE_MARGIN` decisively. This is a side effect of a correctness
+    fix made for an unrelated reason (teach-443's investigation of
+    judson:18.2), not a threshold retuned to make this fixture pass."""
     result = recover_from_lesson_text(SPLITTING_FIELDS, GRAPH)
-    assert result.taught_node_id is None
-    assert result.abstain_reason is not None
+    assert result.taught_node_id == "judson:21.2-splitting-fields"
 
 
 def test_lagrange_correctly_recovers_against_the_full_graph():

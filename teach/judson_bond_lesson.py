@@ -80,6 +80,8 @@ to verify.
 """
 from __future__ import annotations
 
+from typing import Callable
+
 from teach.boundary import LessonArtifact, Turn
 from teach.cbt_primitives import (
     LessonMoment,
@@ -212,12 +214,26 @@ def _learner(text: str) -> Turn:
     return Turn(speaker="learner", text=text)
 
 
-def build_planner_state() -> PlannerState:
+def build_planner_state(
+    *,
+    on_turn: Callable[[Turn], None] | None = None,
+    get_learner_answer: Callable[[str], str | None] | None = None,
+) -> PlannerState:
     """Assemble the full producer-side lesson: graph, traversal, persona,
     CBT primitives, and a bounded encouragement line, ending at Lagrange's
     Theorem. This is `PlannerState` -- the producer's own view, including
     everything `teach.boundary` forbids from crossing to a checker. Nothing
     outside this module (and `emit_lesson_artifact`) should call this.
+
+    `on_turn` and `get_learner_answer` are the interactive-CLI seam
+    (teach/cli.py): called with no args, this function is byte-identical to
+    its pre-interactive behavior (every test and self-check in this repo
+    calls it that way). `get_learner_answer(key)` is called at each of the
+    three learner turns ("bijective", "stuck_belief", "lagrange") in
+    traversal order, right before that turn is needed -- a real caller can
+    print preceding turns via `on_turn` and only then prompt for input, so a
+    live session sees content before being asked about it. A `None` or
+    empty return falls back to the scripted default answer.
     """
     graph = load_judson_algebra_graph()
 
@@ -246,17 +262,48 @@ def build_planner_state() -> PlannerState:
     steps = beats(graph, traversal)
     by_id = {b.node_id: b for b in steps}
 
-    turns: list[Turn] = [
+    turns: list[Turn] = []
+
+    def _emit(turn: Turn) -> Turn:
+        turns.append(turn)
+        if on_turn is not None:
+            on_turn(turn)
+        return turn
+
+    def _ask(key: str, default: str) -> str:
+        if get_learner_answer is None:
+            return default
+        answer = get_learner_answer(key)
+        return answer if answer else default
+
+    _DEFAULT_BIJECTIVE_ANSWER = (
+        "Bijective means every asset gets exactly one handler and every "
+        "handler gets covered -- nobody's unassigned, nobody's doubled up."
+    )
+    _DEFAULT_GRADED_EXPOSURE_REACTION = (
+        "I don't know -- there are a lot of these definitions stacking "
+        "up now. I'm not sure I'm cut out for this kind of maths."
+    )
+    _DEFAULT_LAGRANGE_DERIVATION = (
+        "If the blocks are all the same size and together they cover "
+        "everyone with no overlap, then headquarters' count has to be "
+        "some whole number of those blocks -- so Q Branch's size has "
+        "to divide headquarters' size."
+    )
+
+    _emit(
         _tutor(
             "M's briefing is short: a network of field agents, one operation "
             "for combining their moves, and a target roster size that has to "
             "come out right by the end of this. Let's get there properly, "
             "one definition at a time."
-        ),
-        # LIKING: the shared frame is the actual reason this lesson is
-        # Bond-framed at all -- the learner's own stated interest, not an
-        # invented rapport move -- so it fires before any content, setting
-        # the frame the rest of the lesson stays inside.
+        )
+    )
+    # LIKING: the shared frame is the actual reason this lesson is
+    # Bond-framed at all -- the learner's own stated interest, not an
+    # invented rapport move -- so it fires before any content, setting
+    # the frame the rest of the lesson stays inside.
+    _emit(
         _tutor(
             _bond_voice(
                 render_liking(
@@ -266,11 +313,13 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
-        _tutor(BOND_BACKEND(BOND_HANDLER, by_id["judson:1.2-sets-and-equivalence-relations"].node_id)),
-        # RECIPROCITY: hand the learner the worked mapping above before
-        # asking for the next small piece of effort -- the gift is the
-        # narration that just ran, not a separate invented resource.
+        )
+    )
+    _emit(_tutor(BOND_BACKEND(BOND_HANDLER, by_id["judson:1.2-sets-and-equivalence-relations"].node_id)))
+    # RECIPROCITY: hand the learner the worked mapping above before
+    # asking for the next small piece of effort -- the gift is the
+    # narration that just ran, not a separate invented resource.
+    _emit(
         _tutor(
             _bond_voice(
                 render_reciprocity(
@@ -284,7 +333,9 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
+        )
+    )
+    _emit(
         _tutor(
             _bond_voice(
                 render_behavioral_activation(
@@ -297,33 +348,31 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
-        _learner(
-            "Bijective means every asset gets exactly one handler and every "
-            "handler gets covered -- nobody's unassigned, nobody's doubled up."
-        ),
-        # COMMITMENT_CONSISTENCY: point back at the answer the learner just
-        # gave rather than open the group axioms as a fresh, unrelated ask.
+        )
+    )
+    bijective_answer = _ask("bijective", _DEFAULT_BIJECTIVE_ANSWER)
+    _emit(_learner(bijective_answer))
+    # COMMITMENT_CONSISTENCY: point back at the answer the learner just
+    # gave rather than open the group axioms as a fresh, unrelated ask.
+    _emit(
         _tutor(
             _bond_voice(
                 render_commitment_consistency(
                     MotivationMoment(
                         concept_name="Sets and Equivalence Relations",
-                        prior_commitment=(
-                            "Bijective means every asset gets exactly one "
-                            "handler and every handler gets covered -- "
-                            "nobody's unassigned, nobody's doubled up"
-                        ),
+                        prior_commitment=bijective_answer.rstrip("."),
                         consistent_next_step="the group axioms",
                     )
                 )
             )
-        ),
-        _tutor(BOND_BACKEND(BOND_HANDLER, by_id["judson:3.2-definitions-and-examples"].node_id)),
-        _tutor(BOND_BACKEND(BOND_HANDLER, by_id["judson:3.3-subgroups"].node_id)),
-        # AUTHORITY: back the subgroup criterion with the actual named,
-        # checkable textbook section this lesson is drawn from -- a domain
-        # fact, not a claim about the learner.
+        )
+    )
+    _emit(_tutor(BOND_BACKEND(BOND_HANDLER, by_id["judson:3.2-definitions-and-examples"].node_id)))
+    _emit(_tutor(BOND_BACKEND(BOND_HANDLER, by_id["judson:3.3-subgroups"].node_id)))
+    # AUTHORITY: back the subgroup criterion with the actual named,
+    # checkable textbook section this lesson is drawn from -- a domain
+    # fact, not a claim about the learner.
+    _emit(
         _tutor(
             _bond_voice(
                 render_authority(
@@ -339,7 +388,9 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
+        )
+    )
+    _emit(
         _tutor(
             _bond_voice(
                 render_graded_exposure(
@@ -353,14 +404,14 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
-        _learner(
-            "I don't know -- there are a lot of these definitions stacking "
-            "up now. I'm not sure I'm cut out for this kind of maths."
-        ),
-        # SOCIAL_PROOF: normalize the struggle the learner just voiced --
-        # names a shared difficulty, never a shared outcome (see
-        # teach.cialdini's module docstring for why that boundary matters).
+        )
+    )
+    graded_exposure_reaction = _ask("stuck_belief", _DEFAULT_GRADED_EXPOSURE_REACTION)
+    _emit(_learner(graded_exposure_reaction))
+    # SOCIAL_PROOF: normalize the struggle the learner just voiced --
+    # names a shared difficulty, never a shared outcome (see
+    # teach.cialdini's module docstring for why that boundary matters).
+    _emit(
         _tutor(
             _bond_voice(
                 render_social_proof(
@@ -373,23 +424,33 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
+        )
+    )
+    # get_learner_answer(None) means this is a live session: reflect back
+    # the learner's own whole reaction rather than the scripted fragment,
+    # so identify_stuck_belief quotes what they actually said.
+    stuck_belief_statement = (
+        graded_exposure_reaction
+        if get_learner_answer is not None
+        else "I'm not sure I'm cut out for this kind of maths"
+    )
+    _emit(
         _tutor(
             _bond_voice(
                 render_identify_stuck_belief(
                     LessonMoment(
                         concept_name="subgroups",
-                        learner_statement=(
-                            "I'm not sure I'm cut out for this kind of maths"
-                        ),
+                        learner_statement=stuck_belief_statement,
                     )
                 )
             )
-        ),
-        # UNITY: reframe the next step as shared work between tutor and
-        # learner (Pre-Suasion's distinction from LIKING -- a shared
-        # identity, not just a shared interest) right after naming the
-        # stuck belief, before moving back into content.
+        )
+    )
+    # UNITY: reframe the next step as shared work between tutor and
+    # learner (Pre-Suasion's distinction from LIKING -- a shared
+    # identity, not just a shared interest) right after naming the
+    # stuck belief, before moving back into content.
+    _emit(
         _tutor(
             _bond_voice(
                 render_unity(
@@ -399,11 +460,13 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
-        _tutor(BOND_BACKEND(BOND_HANDLER, by_id["judson:6.1-cosets"].node_id)),
-        # SCARCITY: the one easy-to-skim-past detail in what was just
-        # narrated -- attention as the scarce resource, not a fabricated
-        # deadline.
+        )
+    )
+    _emit(_tutor(BOND_BACKEND(BOND_HANDLER, by_id["judson:6.1-cosets"].node_id)))
+    # SCARCITY: the one easy-to-skim-past detail in what was just
+    # narrated -- attention as the scarce resource, not a fabricated
+    # deadline.
+    _emit(
         _tutor(
             _bond_voice(
                 render_scarcity(
@@ -417,7 +480,9 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
+        )
+    )
+    _emit(
         _tutor(
             _bond_voice(
                 render_spaced_retrieval(
@@ -427,37 +492,57 @@ def build_planner_state() -> PlannerState:
                     )
                 )
             )
-        ),
+        )
+    )
+    _emit(
         _tutor(
             "Recall that the left coset gH is the set of products gh, and "
             "you've already shown these cosets partition Q Branch's network "
             "into blocks with no agent left uncovered."
-        ),
-        _tutor(BOND_BACKEND(BOND_HANDLER, by_id[TARGET_NODE_ID].node_id)),
-        # teach-8xw.51: the closing line below credits the learner with
-        # carrying the coset-to-Lagrange argument through "on your own" --
-        # so give them an actual turn to do it first, immediately before
-        # that claim, instead of narrating the whole chain solo and crediting
-        # them for it after the fact.
+        )
+    )
+    _emit(_tutor(BOND_BACKEND(BOND_HANDLER, by_id[TARGET_NODE_ID].node_id)))
+    # teach-8xw.51: the closing line below credits the learner with
+    # carrying the coset-to-Lagrange argument through "on your own" --
+    # so give them an actual turn to do it first, immediately before
+    # that claim, instead of narrating the whole chain solo and crediting
+    # them for it after the fact.
+    _emit(
         _tutor(
             "So: every left coset is the same size as Q Branch itself, and "
             "between them they cover headquarters' whole roster with no "
             "agent counted twice. What does that force about how Q "
             "Branch's roster size relates to headquarters' full count?"
-        ),
-        _learner(
-            "If the blocks are all the same size and together they cover "
-            "everyone with no overlap, then headquarters' count has to be "
-            "some whole number of those blocks -- so Q Branch's size has "
-            "to divide headquarters' size."
-        ),
-        _tutor(
-            "You just carried that coset argument through to Lagrange's "
-            "Theorem on your own. If you keep working through subgroup "
-            "problems like this one, you'll be ready to tackle normal "
-            "subgroups next."
-        ),
-    ]
+        )
+    )
+    lagrange_derivation = _ask("lagrange", _DEFAULT_LAGRANGE_DERIVATION)
+    _emit(_learner(lagrange_derivation))
+    # HONESTY CONSTRAINT (sandbox-prompt.md): only credit the learner with
+    # having carried the argument through if their own derivation actually
+    # states the divisibility conclusion -- the scripted default always
+    # does, but a real interactive answer might not, and this line must not
+    # inflate what a real learner just showed.
+    if "divide" in lagrange_derivation.lower() or "divisor" in lagrange_derivation.lower():
+        _emit(
+            _tutor(
+                "You just carried that coset argument through to Lagrange's "
+                "Theorem on your own. If you keep working through subgroup "
+                "problems like this one, you'll be ready to tackle normal "
+                "subgroups next."
+            )
+        )
+    else:
+        _emit(
+            _tutor(
+                "Not quite there yet -- you've shown the cosets are all the "
+                "same size and cover Q Branch's whole roster with no "
+                "overlap. Equal-size blocks with no overlap have to tile "
+                "the roster exactly, so Q Branch's size must divide "
+                "headquarters' full count. That's Lagrange's Theorem -- "
+                "worth re-deriving until you can close that last step "
+                "yourself."
+            )
+        )
 
     answer_key = {
         "lagrange": "the order of a finite group's subgroup divides the order of the group",
@@ -472,11 +557,21 @@ def build_planner_state() -> PlannerState:
     )
 
 
-def build_lesson() -> LessonArtifact:
+def build_lesson(
+    *,
+    on_turn: Callable[[Turn], None] | None = None,
+    get_learner_answer: Callable[[str], str | None] | None = None,
+) -> LessonArtifact:
     """The single producer-side entry point for teach-8xw.15: build the full
     Bond-framed Judson lesson and cross the boundary exactly once. This is
-    the only function of this module a checker script should ever call."""
-    return emit_lesson_artifact(build_planner_state())
+    the only function of this module a checker script should ever call.
+
+    `on_turn`/`get_learner_answer`: see `build_planner_state`'s docstring --
+    the interactive-CLI seam (teach/cli.py); no-args behavior is unchanged.
+    """
+    return emit_lesson_artifact(
+        build_planner_state(on_turn=on_turn, get_learner_answer=get_learner_answer)
+    )
 
 
 def _self_check() -> None:

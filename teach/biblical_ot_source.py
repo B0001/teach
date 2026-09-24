@@ -157,6 +157,106 @@ import re
 
 from teach.fact_checker import SourceFact
 
+# --- Bible book name vocabulary, for generic misattribution false_patterns
+# teach-dds: a false_pattern keyed to one or two specific rival book names
+# (e.g. just "exodus") only catches a misattribution that happens to name
+# that exact book -- a second, independently-authored held-out round (see
+# tests/test_biblical_sources_held_out_round2.py) confirmed a misattribution
+# naming a DIFFERENT, unanticipated book still slipped through as a false
+# CONFIRMED even after round 1's fix (a generic reassignment-framing guard
+# in teach.fact_checker.verify_claim) closed the three sentences round 1
+# found. Enumerating every canonical book, and matching "this fact's own
+# content, plus ANY book that isn't this fact's own," closes that whole
+# class at once rather than the one specific rival name each fact's
+# original author happened to anticipate.
+_ALL_BIBLE_BOOKS = (
+    "genesis", "exodus", "leviticus", "numbers", "deuteronomy", "joshua",
+    "judges", "ruth", "samuel", "kings", "chronicles", "ezra", "nehemiah",
+    "esther", "job", "psalms?", "proverbs", "ecclesiastes",
+    "song of (?:solomon|songs)", "isaiah", "jeremiah", "lamentations",
+    "ezekiel", "daniel", "hosea", "joel", "amos", "obadiah", "jonah",
+    "micah", "nahum", "habakkuk", "zephaniah", "haggai", "zechariah",
+    "malachi", "matthew", "mark", "luke", "john", "acts", "romans",
+    "corinthians", "galatians", "ephesians", "philippians", "colossians",
+    "thessalonians", "timothy", "titus", "philemon", "hebrews", "james",
+    "peter", "jude", "revelation",
+    # teach-dds: kept in sync with teach/biblical_nt_source.py's identical
+    # list and its "1/2/3 John are different books than the Gospel of John"
+    # comment there -- no fact in THIS module uses own=("john",), so this
+    # module isn't exposed to that collision today, but the list is
+    # duplicated between the two modules and should stay identical.
+    "1\\s+john", "2\\s+john", "3\\s+john",
+)
+
+
+def _other_book_names(own: tuple[str, ...]) -> str:
+    others = [b for b in _ALL_BIBLE_BOOKS if b not in own]
+    return "|".join(others)
+
+
+def _other_book_alternation(own: tuple[str, ...]) -> str:
+    """A regex alternation fragment matching any canonical Bible book name
+    EXCEPT the ones in `own` -- for building a caution_pattern that fires
+    on "this fact's content co-occurs, anywhere in the sentence, with some
+    OTHER book's name," no matter which other book and no matter how it is
+    phrased. See fact_checker.SourceFact's caution_patterns docstring for
+    why this exists as a separate, weaker signal from
+    _other_book_attribution below rather than being folded into
+    false_patterns."""
+    return r"\b(?:" + _other_book_names(own) + r")\b"
+
+
+# teach-dds: plain co-occurrence of "this fact's content" and "some other
+# book's name anywhere in the sentence" is too blunt for a false_pattern
+# (CONTRADICTED) -- a TRUE claim can legitimately mention a different book
+# in passing without attributing the content to it ("...is later quoted by
+# all four Gospels about John the Baptist", "unlike Genesis"). What
+# actually distinguishes a misattribution, PRECISELY, is the other book
+# sitting next to an attribution verb -- "the Gospel of Mark OPENS with...",
+# "FOUND IN Leviticus", "ATTRIBUTED TO Malachi" -- in either word order,
+# within a short window. Deliberately does NOT include bare "quoted"/
+# "quotes" (correct: the Gospels quote Isaiah) so that citation-of-the-
+# source phrasing doesn't get mistaken for attribution.
+#
+# teach-dds / round 3 (see tests/test_biblical_sources_held_out_round3.py):
+# this verb list is still a closed enumeration of English attribution
+# phrasings, and a held-out round generated after this fix landed found
+# sentences that misattribute with NO verb from this list at all --
+# "the declaration ... was WRITTEN DOWN IN THE BOOK OF 1 Samuel" ("written"
+# alone isn't listed, only "written in"; "book of" isn't listed either),
+# "'Jesus wept' IS A VERSE IN the book of Job" ("is" separated from "in" by
+# "a verse", breaking the literal "is\s+in" match). Enumerating verbs has
+# the same closed-world problem enumerating rival book names did -- no
+# finite verb list will cover every way English expresses attribution. This
+# module does not attempt to patch the verb list for these specific
+# sentences (that would repeat exactly the anti-pattern this bead exists to
+# fix, one level down). Instead, `caution_patterns` below (wired into each
+# SourceFact, using `_other_book_alternation`'s blind, unanchored
+# co-occurrence) is the structural close: it can never produce a dangerous
+# CONFIRMED regardless of what attribution phrasing -- or none at all -- a
+# misattribution sentence uses, at the cost of some legitimate true claims
+# abstaining instead of confirming when they merely mention another book.
+_ATTRIBUTION_VERBS = (
+    r"opens?|begins?|starts?|says?|reads?|records?|states?|writes?|"
+    r"is\s+found|found\s+in|appears\s+in|attributed\s+to|comes\s+from|"
+    r"taken\s+from|quoted\s+from|cited\s+from|written\s+in|penned\s+in|"
+    r"is\s+in|is\s+from|belongs\s+to|according\s+to|account|version|"
+    r"narrative|gives?|tells?|recounts?|presents?|provides?|shows?|"
+    r"depicts?|describes?|narrates?|relates?"
+)
+
+
+def _other_book_attribution(own: tuple[str, ...]) -> str:
+    """A false_pattern fragment: some OTHER book's name within a few words
+    of an attribution verb, in either order."""
+    books = r"\b(?:" + _other_book_names(own) + r")\b"
+    verbs = r"\b(?:" + _ATTRIBUTION_VERBS + r")\b"
+    return (
+        rf"(?:{books}(?:\W+\w+){{0,4}}\W+{verbs}"
+        rf"|{verbs}(?:\W+\w+){{0,4}}\W+{books})"
+    )
+
+
 # Appended to each fact's citation. Unlike biblical_nt_source.py's single
 # caveat (every NT fact goes through the same SBLGNT proxy), each OT fact
 # below carries its own ancient-version cross-check: DSS for Isaiah
@@ -230,12 +330,34 @@ _GENESIS_CREATION = SourceFact(
             r"(?=.*\bgenesis\b)(?=.*\bword\b)(?=.*\bbeginning\b)(?=.*\bwas\b)",
             re.IGNORECASE | re.DOTALL,
         ),
+        # teach-dds: Genesis's own creation wording attributed to ANY other
+        # book, not just John by name -- catches "this famous line is
+        # actually how the Gospel of John starts" (round 1) and "the book
+        # of Psalms opens by declaring God created the heavens and the
+        # earth" (round-2-style bare misattributions) alike. Uses the
+        # attribution-anchored fragment (book name next to an attribution
+        # verb), not blind co-occurrence, so a true claim that merely
+        # mentions another book in passing doesn't misfire.
+        re.compile(
+            r"(?=.*\bbeginning\b)(?=.*\bgod\b)(?=.*\bcreated\b)"
+            r"(?=.*\b(?:heavens?|earth)\b)"
+            rf"(?=.*{_other_book_attribution(('genesis',))})",
+            re.IGNORECASE | re.DOTALL,
+        ),
     ),
     true_patterns=(
         re.compile(
             r"(?=.*\bbeginning\b)(?=.*\bgod\b)(?=.*\bcreated\b)(?=.*\b(?:heavens?|earth)\b)",
             re.IGNORECASE | re.DOTALL,
         ),
+    ),
+    # teach-dds / round 3: structural close for misattributions the
+    # attribution-anchored false_pattern above's verb list doesn't cover --
+    # see the _ATTRIBUTION_VERBS comment. Blind co-occurrence of any other
+    # book's name is too weak a signal for CONTRADICTED, but it is exactly
+    # strong enough to withhold CONFIRMED.
+    caution_patterns=(
+        re.compile(_other_book_alternation(("genesis",)), re.IGNORECASE),
     ),
 )
 
@@ -261,6 +383,17 @@ _SHEMA = SourceFact(
             r"(?=.*\b(?:shema|hear,?\s*o\s+israel)\b)(?=.*\bexodus\b)",
             re.IGNORECASE | re.DOTALL,
         ),
+        # teach-dds: the Shema's own wording (hear+israel+lord+one, the
+        # first true_pattern below) does not require "deuteronomy" to be
+        # present, so a misattribution to any OTHER book -- not just Exodus
+        # by name -- was able to fall through to that true_pattern
+        # unconditionally. Same fix shape as _GENESIS_CREATION above,
+        # attribution-anchored rather than blind co-occurrence.
+        re.compile(
+            r"(?=.*\bhear\b)(?=.*\bisrael\b)(?=.*\blord\b)(?=.*\bone\b)"
+            rf"(?=.*{_other_book_attribution(('deuteronomy',))})",
+            re.IGNORECASE | re.DOTALL,
+        ),
     ),
     true_patterns=(
         re.compile(
@@ -270,6 +403,9 @@ _SHEMA = SourceFact(
         re.compile(
             r"(?=.*\bshema\b)(?=.*\bdeuteronomy\b)", re.IGNORECASE | re.DOTALL
         ),
+    ),
+    caution_patterns=(
+        re.compile(_other_book_alternation(("deuteronomy",)), re.IGNORECASE),
     ),
 )
 
@@ -304,6 +440,27 @@ _ISAIAH_VOICE_IN_WILDERNESS = SourceFact(
             r"(?=.*\b(?:originates?|originated|first (?:appears?|written)|comes from)\b)",
             re.IGNORECASE | re.DOTALL,
         ),
+        # teach-dds: the above requires BOTH a specific Gospel name AND an
+        # explicit "originates/first appears/comes from" keyword. A
+        # misattribution to ANY book (not just the four Gospels) with no
+        # such keyword -- e.g. "Isaiah's line actually first appears in
+        # Malachi" -- still trips true_patterns below (which only require
+        # "isaiah" to co-occur with the content, not that no other book is
+        # also named). Generic, attribution-anchored other-book coverage
+        # closes that -- anchored, not blind co-occurrence, because this
+        # fact's own true claim ("...quoted by all four Gospels about John
+        # the Baptist") legitimately names another book (John) without
+        # attributing the content to it.
+        re.compile(
+            r"(?=.*\bprepare\b)(?=.*\bway\b)(?=.*\blord\b)"
+            rf"(?=.*{_other_book_attribution(('isaiah',))})",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        re.compile(
+            r"(?=.*\bvoice\b)(?=.*\bwilderness\b)"
+            rf"(?=.*{_other_book_attribution(('isaiah',))})",
+            re.IGNORECASE | re.DOTALL,
+        ),
     ),
     true_patterns=(
         re.compile(
@@ -314,6 +471,19 @@ _ISAIAH_VOICE_IN_WILDERNESS = SourceFact(
             r"(?=.*\bisaiah\b)(?=.*\bvoice\b)(?=.*\bwilderness\b)",
             re.IGNORECASE | re.DOTALL,
         ),
+    ),
+    # teach-dds / round 3: NOTE this fact's own true claim in
+    # tests/test_biblical_ot_source.py legitimately names another book
+    # (John) in passing -- "...is later quoted by all four Gospels about
+    # John the Baptist" -- without attributing the content to it. Under
+    # caution_patterns, that claim now abstains (CANNOT_VERIFY) instead of
+    # confirming; that recall loss is the deliberate, accepted trade-off
+    # (see fact_checker.SourceFact's caution_patterns docstring). The test
+    # file's confirmed-example claim was changed to one that doesn't name
+    # another book, and the Gospels-quoting sentence was kept as its own
+    # test documenting the trade-off explicitly.
+    caution_patterns=(
+        re.compile(_other_book_alternation(("isaiah",)), re.IGNORECASE),
     ),
 )
 

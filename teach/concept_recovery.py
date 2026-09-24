@@ -214,6 +214,7 @@ as one.
 from __future__ import annotations
 
 import dataclasses
+import math
 import re
 from functools import lru_cache
 from typing import Iterator
@@ -236,6 +237,18 @@ _UUID = re.compile(
     re.IGNORECASE,
 )
 
+# PreTeXt/LaTeX math source leaks into verbatim-extracted node text (teach-443:
+# judson_ring_field.json's `definition` fields keep Judson's own inline math
+# source, e.g. "$\nu(a) \leq \nu(ab)$" or "$D \setminus \{0\} \to \mathbb
+# N_0$"). A raw command like \mathbb, \setminus, \langle, or \cdots is
+# typeset markup, not an English content word -- but once _WORD's [a-z]+
+# pattern drops the leading backslash, the bare command name ("mathbb",
+# "setminus", ...) is indistinguishable from a real word and enters that
+# node's vocabulary as if it were distinctive domain content. Stripped before
+# tokenization, same treatment as _UUID above: a verbatim math-heavy node's
+# vocabulary should reflect its prose, not its markup.
+_LATEX_COMMAND = re.compile(r"\\[a-zA-Z]+")
+
 _STOPWORDS = frozenset(
     """
     the a an and or of to in on for with will student students demonstrate
@@ -246,6 +259,88 @@ _STOPWORDS = frozenset(
     do does did done have has had having use using used also which who
     whom what where why how all each every both few more most other some
     such only own same too very just one two three four five
+    """.split()
+)
+
+# teach-57f: closed-class discourse connectives, hedges, and reporting/
+# meta-commentary verbs (narrating or qualifying a claim, never naming the
+# claim's own subject matter) -- distinct from _STOPWORDS above only in that
+# most of these are >= 4 letters and so were never excluded by that list's
+# existing "if/when/while/who/which/..." function-word category, not because
+# they belong to a different one. A node's own document frequency
+# (`_MAX_DOCUMENT_FREQ` in `build_vocabulary_index`) cannot catch a word that
+# is rare in one graph only because most of that graph's other nodes are too
+# terse and formal to ever use ordinary discourse prose at all -- see
+# teach-443 and this bead for the measured case: judson:18.2-factorization-
+# in-integral-domains's `definition` field is Judson's own uniquely long,
+# discursive PreTeXt prose (it legitimately bundles ~9-10 separate
+# definitions into one section), so words like "furthermore" and "suppose"
+# pass the per-graph filter with document-frequency 1 purely because no
+# other node in that graph is prose-like enough to use them, not because
+# they carry any domain content.
+#
+# This list is deliberately narrower than "every word the teach-57f bug
+# report flagged as generic" -- roughly half of that flagged set (e.g.
+# "unique", "order", "condition", "distinct", "exist", "function", "form",
+# "positive", "common") are words this repo's own domains give real
+# technical meaning to (unique factorization, order of an element, ascending
+# chain condition, existence/uniqueness proofs, greatest common divisor) and
+# are excluded from this list on purpose -- see this bead's handoff for why
+# a general-English word-frequency cutoff was rejected outright: measured
+# against the Brown corpus, "ring", "field", "group", "order", "form", and
+# "function" all land in the 500-3000 most frequent general-English words,
+# so any frequency-based filter strong enough to catch "furthermore" also
+# guts the exact vocabulary that makes this graph's nodes distinguishable at
+# all. Only words whose grammatical FUNCTION is to connect or hedge a claim
+# (never to name a mathematical object or property, in any domain this repo
+# currently has) are listed here -- checked directly against every node of
+# the VA Writing and VA Reading SOL graphs (0 and 6 hits respectively, out
+# of 19-55-word node vocabularies -- see this bead's handoff) before adding,
+# so this is not tuned to the Judson graph alone.
+# teach-911: five more closed-class hedges/connectives, added for the same
+# reason as the block above -- judson:16.1-rings' folded-in matrix example
+# (see EXTRA_STATEMENT_IDS in extract_judson_ring_field.py) introduces
+# "since"/"usual"/"usually"/"case"/"neither" as a side effect of quoting
+# Judson's own sentence ("This ring is noncommutative, since it is usually
+# the case that AB != BA... when neither A nor B is zero"), and each of the
+# five is a hedge/connective, not a term naming the ring axioms or the
+# example's actual mathematical content ("matrices", "matrix", "entries",
+# "noncommutative" -- the words this fix is actually trying to add).
+#
+# "form" was also a candidate (the same sentence: "matrices... form a ring
+# under the usual operations") but is DELIBERATELY EXCLUDED: adding it here
+# flips test_maximal_prime_ideals_abstains_via_teach_hpa_gate_no_regression_vs_ungated
+# from a safe abstention into a CONFIDENT WRONG ANSWER
+# (judson:18.2-factorization-in-integral-domains) by removing "form" from
+# some other node's vocabulary that gate's ratio depends on -- measured
+# directly, not assumed. That is a strictly worse failure than the one this
+# bead is fixing, so "form" stays in scoring despite being a plausible
+# hedge-word candidate; see teach-57f's own comment above for why "form" was
+# already excluded once before, for an unrelated reason (Brown-corpus
+# frequency argument) that turns out to also protect this case.
+#
+# Even with "form" excluded here, folding in the matrix example still
+# measurably increased judson:16.1-rings' raw score against a few OTHER,
+# unrelated topics enough to turn two previously-clean correct recoveries
+# into safe abstentions (judson:3.3-subgroups, judson:21.1-extension-fields).
+# That could not be fixed by excluding "form" globally -- see above -- so it
+# was filed forward as teach-scx rather than fixed here.
+#
+# teach-scx: closed with a narrower cut than a global stopword. "form" stays
+# in THIS module's scoring for every node (unchanged from the paragraph
+# above); `EXCERPT_EDITS` in extract_judson_ring_field.py instead elides
+# just that one word from the folded-in matrix example's own text, so it
+# never becomes part of judson:16.1-rings' vocabulary in the first place,
+# while "matrices"/"matrix"/"entries"/"noncommutative" still do. That
+# restores judson:3.3-subgroups' and judson:21.1-extension-fields' correct
+# recoveries (round3, round4) without touching judson:18.2's vocabulary or
+# this module's own thresholds at all.
+_DISCOURSE_STOPWORDS = frozenset(
+    """
+    after easily either furthermore generalizing know necessarily possible
+    provided question recall result said states suppose whenever whether
+    write written
+    case neither since usual usually
     """.split()
 )
 
@@ -367,6 +462,105 @@ _DECISIVE_MARGIN_COVERAGE_GAP = 0.18
 # this bead's handoff for the fresh, independently-authored round run before
 # closing.
 _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO = 0.35
+# teach-jkx session 5's fix: caps how much the semantic tier may inflate the
+# WINNER's score, relative to its own raw-tier score, before that score is
+# used to decide whether a rival is "credible" in _resolve_candidates. See
+# the long comment above _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO for the full
+# mechanism and the safe-window measurement ([1.125, 1.30]) that chose 1.25.
+_SEMANTIC_INFLATION_CAP_RATIO = 1.25
+# teach-jkx (FIXED in session 5 -- see "FIXED" below and this bead's handoff): GROUP_AXIOMS_BLIND,
+# a blind lesson on group axioms that never mentions rings, is a confident
+# WRONG answer at the semantic tier. judson:3.2-definitions-and-examples is
+# the true topic (55% literal coverage, best of anyone's) but its tier-native
+# ratio against the semantic-inflated winner (6/18 = 0.33) falls just under
+# this filter's 0.35 threshold and gets wrongly excluded from
+# `credible_rivals`, so the coverage-gap veto below never fires.
+#
+# TWO fix directions were tried in this bead's sessions and BOTH falsified
+# against the pre-existing test suite (not even a fresh held-out round --
+# see this bead's handoff for full traces):
+#
+# 1. Switch this ratio to LITERAL overlap (`_literal_overlap_count`,
+#    unaffected by semantic-tier inflation): fixes GROUP_AXIOMS_BLIND, but
+#    reopens two previously-correct decisive wins as false abstentions
+#    (test_signposted_prerequisites_are_recovered's cosets rival; RINGS
+#    round5's judson:3.2 rival) -- both are cases where a small-vocabulary
+#    node's trivially-high coverage fraction, no longer damped by tier-native
+#    score, clears the credibility bar and triggers an unwanted veto.
+#
+# 2. On top of (1), gate the veto on the WINNER also lacking evidence
+#    independent of whatever vocabulary it shares with the best rival (an
+#    "exclusive coverage" floor). This separates the two regressions above
+#    from the original bug on exactly five known cases (calibrated, not
+#    validated: HOMOMORPHISMS 14% / GROUP_AXIOMS_BLIND 17% must-veto vs.
+#    RING_HOMOMORPHISMS 28% / RINGS round5 30% / SIGNPOSTED_LESSON 50%
+#    must-not-veto) -- but is immediately falsified by a SIXTH case already
+#    in this same suite, not authored to test it:
+#    test_maximal_prime_ideals_abstains_via_teach_hpa_gate_no_regression_vs_ungated.
+#    There, the wrong winner (judson:18.2-factorization-in-integral-domains)
+#    has 29.2% exclusive coverage against the correct rival
+#    (judson:16.4-maximal-and-prime-ideals) -- inside the range (1) called
+#    "safe" -- because factorization and maximal/prime ideals are themselves
+#    closely related ring-theory topics that share substantial real
+#    vocabulary, not just boilerplate. Also independently confirms graph
+#    topology alone cannot distinguish the cases either: judson:3.2 (the
+#    rival that must be allowed to win in GROUP_AXIOMS_BLIND) is a direct
+#    PrerequisiteEdge source of judson:16.1-rings in the graph -- the
+#    IDENTICAL edge relationship as judson:3.2/rings in the RINGS regression
+#    and cosets/Lagrange in the SIGNPOSTED_LESSON regression, where that same
+#    relationship must NOT veto. "Is the excluded rival a direct prerequisite
+#    of the winner" is true in both the bug and its regressions alike, so it
+#    cannot gate anything.
+#
+# FIXED (teach-jkx session 5). None of the signals above -- tier-native
+# ratio, literal ratio, winner's-exclusive-coverage, graph topology -- ever
+# separated "lesson genuinely about X that reviews its own prerequisite Y in
+# passing" from "lesson genuinely about Y, mis-scored as X" without breaking
+# one or the other. Session 4 additionally instrumented the WHOLE test suite
+# (63 confident resolutions) and found existing, legitimately-correct
+# recoveries as low as 8.1% winner coverage -- below GROUP_AXIOMS_BLIND's own
+# 25.0%, so no absolute coverage floor on the winner can separate the bug
+# from real recoveries either. That closed off every remaining
+# THRESHOLD-MOVE lead this bead had.
+#
+# Session 5's fix is not a threshold move: it attacks the bug's own named
+# root cause (uneven WordNet synonym inflation between the winner and the
+# rival at the semantic tier) directly, instead of gating some derived
+# ratio or coverage number computed after the inflation has already
+# happened. `_resolve_candidates` now accepts an optional `raw_scores` map
+# (the same candidate's score from the RAW tier, already computed by
+# `recover_taught_concept` before the semantic tier ever runs); when
+# present, the winner's score used for the `credible_rivals` ratio is capped
+# at its own raw-tier score times `_SEMANTIC_INFLATION_CAP_RATIO` (1.25) --
+# i.e. the semantic tier is allowed to add real synonym-driven credit to the
+# winner, just not more than 25% beyond what its literal words alone
+# support. This uncaps the rival's ratio test without touching the rival's
+# score at all, letting the pre-existing `_DECISIVE_MARGIN_COVERAGE_GAP`
+# veto fire the way it already does at the raw tier.
+#
+# Validated against: the full pre-existing suite (only
+# GROUP_AXIOMS_BLIND's own pinned-bug test in round7 flips, as that test's
+# own docstring anticipated); round9's three-topic held-out round (built by
+# session 4 to falsify the coverage-floor lead, still passes unmodified);
+# session 1's five round8 scratch fixtures (identical, safe results to
+# baseline); and round10 -- a THIRD independently-authored, blind, tool-less
+# held-out round built specifically to stress this fix (two topics that
+# reach the semantic tier and must not produce a confident wrong answer; see
+# tests/test_concept_recovery_judson_full_graph_generalization_round10.py).
+# A parameter sweep of `_SEMANTIC_INFLATION_CAP_RATIO` against that same
+# suite found a comfortable safe window of [1.125, 1.30] -- not a
+# razor-thin threshold -- with 1.25 chosen near its middle. Values at or
+# below ~1.10 degenerate back into the already-falsified "raw-tier-only
+# credibility" direction and reopen the same two regressions (RINGS round5,
+# SIGNPOSTED_LESSON) that every earlier over-aggressive fix in this bead
+# hit.
+#
+# Round10 also surfaced a DIFFERENT, unrelated confident-wrong-answer bug
+# (a group-homomorphisms lesson recovered as judson:16.3-ring-homomorphisms-
+# and-ideals) that this fix does not and should not touch: it resolves
+# confidently at the RAW tier alone, before the semantic tier -- and
+# therefore before this fix -- ever runs. Filed separately as teach-zgn; see
+# round10's own docstring and pinned test for the full diagnosis.
 # A word that appears in the vocabulary of more than this many nodes is
 # curriculum boilerplate, not a discriminating signal -- excluded from
 # scoring entirely. See module docstring.
@@ -418,7 +612,12 @@ _ASSUMED_KNOWN_WINDOW_SENTENCES = 2
 
 def _words(text: str) -> set[str]:
     text = _UUID.sub(" ", text)
-    return {w for w in _WORD.findall(text.lower()) if len(w) >= 4 and w not in _STOPWORDS}
+    text = _LATEX_COMMAND.sub(" ", text)
+    return {
+        w
+        for w in _WORD.findall(text.lower())
+        if len(w) >= 4 and w not in _STOPWORDS and w not in _DISCOURSE_STOPWORDS
+    }
 
 
 def _flatten_strings(value: object) -> Iterator[str]:
@@ -684,6 +883,7 @@ def _resolve_candidates(
     index: VocabularyIndex,
     text_words: frozenset[str],
     min_margin: int = _MIN_MARGIN,
+    raw_scores: dict[str, int] | None = None,
 ) -> tuple[str | None, str | None]:
     """Apply this module's abstention thresholds (min-match, margin, then
     the coverage tiebreak) to an already-scored candidate list. Shared by
@@ -820,9 +1020,23 @@ def _resolve_candidates(
             # measured case this fixes (RING_HOMOMORPHISMS) without
             # reopening the one it must not reopen (HOMOMORPHISMS).
             rival_matches = [c for c in candidates if c is not top and c.score >= _MIN_MATCH_WORDS]
+            # teach-jkx session 5's fix: cap the WINNER's score used for this
+            # ratio at its own raw-tier score inflated by no more than
+            # _SEMANTIC_INFLATION_CAP_RATIO, when a raw score is available.
+            # This targets the bug's own named root cause (uneven WordNet
+            # inflation) directly, instead of gating on the already-inflated
+            # ratio. See _SEMANTIC_INFLATION_CAP_RATIO's comment and the long
+            # comment above _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO for the
+            # validation this fix went through.
+            credibility_top_score = top.score
+            if raw_scores is not None:
+                raw_top = raw_scores.get(top.node_id, 0)
+                credibility_top_score = min(
+                    top.score, math.ceil(raw_top * _SEMANTIC_INFLATION_CAP_RATIO)
+                )
             credible_rivals = [
                 c for c in rival_matches
-                if c.score >= _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO * top.score
+                if c.score >= _DECISIVE_MARGIN_RIVAL_MIN_SCORE_RATIO * credibility_top_score
             ]
             if credible_rivals:
                 best_rival = max(credible_rivals, key=lambda c: _coverage_fraction(c, index, text_words))
@@ -893,8 +1107,10 @@ def recover_taught_concept(text: str, index: VocabularyIndex) -> tuple[str | Non
         return taught_node_id, candidates, None
 
     semantic_candidates = score_candidates_semantic(text, index)
+    raw_scores = {c.node_id: c.score for c in candidates}
     semantic_taught_node_id, semantic_abstain_reason = _resolve_candidates(
-        semantic_candidates, index, text_words, min_margin=_SEMANTIC_MIN_MARGIN
+        semantic_candidates, index, text_words, min_margin=_SEMANTIC_MIN_MARGIN,
+        raw_scores=raw_scores,
     )
     if semantic_taught_node_id is not None:
         return semantic_taught_node_id, semantic_candidates, None

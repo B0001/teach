@@ -28,7 +28,7 @@
         "zero divisor",
         "subring"
       ],
-      "definition": "A nonempty set $R$ is a ring if it has two closed binary operations, addition and multiplication, satisfying the following conditions. $a + b = b + a$ for $a, b \\in R$. $(a + b) + c = a + ( b + c)$ for $a, b, c \\in R$. There is an element $0$ in $R$ such that $a + 0 = a$ for all $a \\in R$. For every element $a \\in R$, there exists an element $-a$ in $R$ such that $a + (-a) = 0$. $(ab) c = a ( b c)$ for $a, b, c \\in R$. For $a, b, c \\in R$, $$a( b + c)&= ab +ac \\\\ (a + b)c & = ac + bc$$ . This last condition, the distributive axiom, relates the binary operations of addition and multiplication. Notice that the first four axioms simply require that a ring be an abelian group under addition, so we could also have defined a ring to be an abelian group $(R, +)$ together with a second binary operation satisfying the fifth and sixth conditions given above. If there is an element $1 \\in R$ such that $1 \\neq 0$ and $1a = a1 = a$ for each element $a \\in R$, we say that $R$ is a ring with unity or identity. A ring $R$ for which $ab = ba$ for all $a, b$ in $R$ is called a commutative ring. A commutative ring $R$ with identity is called an integral domain if, for every $a, b \\in R$ such that $ab = 0$, either $a = 0$ or $b = 0$. A division ring is a ring $R$, with an identity, in which every nonzero element in $R$ is a unit; that is, for each $a \\in R$ with $a \\neq 0$, there exists a unique element $a^{-1}$ such that $a^{-1} a = a a^{-1} = 1$. A commutative division ring is called a field. The relationship among rings, integral domains, division rings, and fields is shown in . A nonzero element $a$ in a commutative ring $R$ is called a zero divisor if there is a nonzero element $b$ in $R$ such that $ab = 0$. In the previous example, $3$ and $4$ are zero divisors in ${\\mathbb Z}_{12}$. Just as we have subgroups of groups, we have an analogous class of substructures for rings. A subring $S$ of a ring $R$ is a subset $S$ of $R$ such that $S$ is also a ring under the inherited operations from $R$.",
+      "definition": "A nonempty set $R$ is a ring if it has two closed binary operations, addition and multiplication, satisfying the following conditions. $a + b = b + a$ for $a, b \\in R$. $(a + b) + c = a + ( b + c)$ for $a, b, c \\in R$. There is an element $0$ in $R$ such that $a + 0 = a$ for all $a \\in R$. For every element $a \\in R$, there exists an element $-a$ in $R$ such that $a + (-a) = 0$. $(ab) c = a ( b c)$ for $a, b, c \\in R$. For $a, b, c \\in R$, $$a( b + c)&= ab +ac \\\\ (a + b)c & = ac + bc$$ . This last condition, the distributive axiom, relates the binary operations of addition and multiplication. Notice that the first four axioms simply require that a ring be an abelian group under addition, so we could also have defined a ring to be an abelian group $(R, +)$ together with a second binary operation satisfying the fifth and sixth conditions given above. If there is an element $1 \\in R$ such that $1 \\neq 0$ and $1a = a1 = a$ for each element $a \\in R$, we say that $R$ is a ring with unity or identity. A ring $R$ for which $ab = ba$ for all $a, b$ in $R$ is called a commutative ring. A commutative ring $R$ with identity is called an integral domain if, for every $a, b \\in R$ such that $ab = 0$, either $a = 0$ or $b = 0$. A division ring is a ring $R$, with an identity, in which every nonzero element in $R$ is a unit; that is, for each $a \\in R$ with $a \\neq 0$, there exists a unique element $a^{-1}$ such that $a^{-1} a = a a^{-1} = 1$. A commutative division ring is called a field. The relationship among rings, integral domains, division rings, and fields is shown in . A nonzero element $a$ in a commutative ring $R$ is called a zero divisor if there is a nonzero element $b$ in $R$ such that $ab = 0$. In the previous example, $3$ and $4$ are zero divisors in ${\\mathbb Z}_{12}$. Just as we have subgroups of groups, we have an analogous class of substructures for rings. A subring $S$ of a ring $R$ is a subset $S$ of $R$ such that $S$ is also a ring under the inherited operations from $R$. The $2 \\times 2$ matrices with entries in ${\\mathbb R}$ \u2026 a ring under the usual operations of matrix addition and multiplication. This ring is noncommutative, since it is usually the case that $AB \\neq BA$. Also, notice that we can have $AB = 0$ when neither $A$ nor $B$ is zero.",
       "provenance": [
         {
           "source_file": "rings.xml",
@@ -57,6 +57,14 @@
           "kind": "term-definition",
           "section_title": "Rings",
           "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615"
+        },
+        {
+          "source_file": "rings.xml",
+          "xml_id": "rings-example-matrix",
+          "kind": "example",
+          "section_title": "Rings",
+          "file_sha256": "857c93085832770e966b02cf3e91559c6a3c7d36f7fa454e3f44382acec68615",
+          "excerpted": true
         }
       ]
     },
@@ -236,12 +244,26 @@
         "field of fractions",
         "field of quotients"
       ],
-      "definition": "The field $F_D$ in is called the field of fractions or field of quotients of the integral domain $D$.",
+      "definition": "The field $F_D$ in is called the field of fractions or field of quotients of the integral domain $D$. The set of equivalence classes of $S$, $F_D$, under the equivalence relation $\\sim$, together with the operations of addition and multiplication defined by $$[a, b] + [c, d] & = [ad + b c, b d] \\\\ [ a, b] \\cdot [c, d] & = [ac, b d]$$ , is a field. Let $D$ be an integral domain. Then $D$ can be embedded in a field of fractions $F_D$, where any element in $F_D$ can be expressed as the quotient of two elements in $D$. Furthermore, the field of fractions $F_D$ is unique in the sense that if $E$ is any field containing $D$, then there exists a map $\\psi : F_D \\rightarrow E$ giving an isomorphism with a subfield of $E$ such that $\\psi(a) = a$ for all elements $a \\in D$, where we identify $a$ with its image in $F_D$.",
       "provenance": [
         {
           "source_file": "domains.xml",
           "xml_id": null,
           "kind": "term-definition",
+          "section_title": "Fields of Fractions",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        },
+        {
+          "source_file": "domains.xml",
+          "xml_id": "domains-lemma-field-of-fractions",
+          "kind": "lemma",
+          "section_title": "Fields of Fractions",
+          "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
+        },
+        {
+          "source_file": "domains.xml",
+          "xml_id": "domains-theorem-field-of-quotients",
+          "kind": "theorem",
           "section_title": "Fields of Fractions",
           "file_sha256": "cdadd1a266f58008c8ae025c76cf8dfcdeaa821f985253d348c58114715fdd04"
         }

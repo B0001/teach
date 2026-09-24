@@ -74,6 +74,25 @@ class SourceFact:
     false_patterns are checked before true_patterns by `verify_claim`, so a
     known misconception or negation wins even if it also contains the
     fact's true-statement keywords.
+
+    teach-dds: caution_patterns is a THIRD, weaker signal, optional and
+    empty by default. false_patterns are a precise claim -- "this specific
+    phrasing IS the known misconception" -- and any attempt to enumerate
+    every phrasing a misattribution might use (specific rival names,
+    specific attribution verbs) is closed-world and will always have a gap
+    a fresh held-out round can find (see biblical_ot_source.py /
+    biblical_nt_source.py's module comments for the two rounds that found
+    exactly that gap, one level apart, on this same bead). caution_patterns
+    instead names "candidate rival identifiers that, merely by co-occurring
+    with this fact's content anywhere in the sentence, make the checker
+    unable to be sure this content is attributed to the right source" --
+    no attribution-verb or word-window requirement at all. A true_patterns
+    hit that also matches a caution_pattern abstains (CANNOT_VERIFY)
+    instead of confirming, the same "prefer abstention to a confident
+    answer" trade a false confirm can never recover from. This does cost
+    recall (a true claim that mentions a rival identifier in passing, with
+    no misattribution intended, now abstains instead of confirming) but
+    that is the safe direction to lose recall in.
     """
 
     topic: str
@@ -81,6 +100,7 @@ class SourceFact:
     topic_patterns: tuple[Pattern[str], ...]
     true_patterns: tuple[Pattern[str], ...]
     false_patterns: tuple[Pattern[str], ...]
+    caution_patterns: tuple[Pattern[str], ...] = ()
 
 
 class SourceAdapter(Protocol):
@@ -107,15 +127,73 @@ def find_topic(claim_text: str, source: SourceAdapter) -> SourceFact | None:
     return None
 
 
+# teach-dds: a SourceFact's true_patterns match a claim's CONTENT (the
+# verse's own wording appearing in the sentence) with no way to tell WHO
+# the sentence says that content belongs to. A misattribution sentence that
+# phrases the wrong attribution as "X is actually Y" carries the right-hand
+# fact's content, on-topic by content alone, without repeating whatever
+# specific rival keyword a fact's false_patterns happened to be keyed to
+# (a book name, in the cases that first surfaced this) -- so it fell
+# through false_patterns and landed a false CONFIRMED. Round1's three
+# dangerous sentences (see tests/test_biblical_sources_held_out_round1.py)
+# shared no rival keyword at all: one named a Gospel, one named a book, one
+# named neither and only reassigned the narrative MOMENT. What they shared
+# instead was this generic reassignment framing -- "is actually", "in fact",
+# "originates in/from", "comes from", a trailing ", not the/from/in ..."
+# clause. This guard is deliberately domain- and fact-agnostic (lives here,
+# not duplicated as a false_pattern in every SourceFact) so it applies to
+# every fact any domain ever adds, not just the three sentences that found
+# it -- per this bead's own instruction not to patch just those three.
+#
+# When it fires on a true_pattern hit that false_patterns didn't already
+# catch, this checker cannot tell whether the reassignment target is the
+# fact's own correct source (a harmless restatement) or a wrong one (a
+# misattribution) -- so it abstains rather than guesses, per
+# sandbox-prompt.md's "prefer abstention to a confident answer." That
+# trades a small amount of recall (a true claim that happens to use this
+# phrasing now abstains instead of confirming) for closing a false-CONFIRMED
+# safety hole, the same trade-off direction this checker already makes
+# everywhere else.
+_REASSIGNMENT_FRAMING = re.compile(
+    r"\bactually\b"
+    r"|\bin fact\b"
+    r"|\bin reality\b"
+    r"|\breally\s+(?:is|was|comes|belongs|originates)\b"
+    r"|\boriginates?\s+(?:in|from|with)\b"
+    r"|\bcomes?\s+from\b"
+    r"|,\s*not\s+(?:the|from|in)\b",
+    re.IGNORECASE,
+)
+
+
+def _has_reassignment_framing(text: str) -> bool:
+    return _REASSIGNMENT_FRAMING.search(text) is not None
+
+
 def verify_claim(claim_text: str, source: SourceAdapter) -> Verdict:
     """claim-in/verdict-out: the interface teach-8xw.4 reserved for this
-    bead. Domain-ignorant -- all domain knowledge lives in `source`."""
+    bead. Domain-ignorant -- all domain knowledge lives in `source`.
+
+    teach-dds: a true_patterns hit that the sentence also frames as a
+    reassignment (see _REASSIGNMENT_FRAMING) abstains instead of
+    confirming -- content overlap with a fact's own wording is not the same
+    as the sentence actually attributing that content to this fact's
+    source, and false_patterns cannot enumerate every way a sentence might
+    reassign it to something else. A true_patterns hit that also matches a
+    caution_pattern (see SourceFact's docstring) abstains for the same
+    reason, one notch weaker: not framed as a reassignment, but co-occurring
+    with some other candidate source this checker cannot rule out.
+    """
     fact = find_topic(claim_text, source)
     if fact is None:
         return Verdict.CANNOT_VERIFY
     if _matches_any(fact.false_patterns, claim_text):
         return Verdict.CONTRADICTED
     if _matches_any(fact.true_patterns, claim_text):
+        if _has_reassignment_framing(claim_text):
+            return Verdict.CANNOT_VERIFY
+        if _matches_any(fact.caution_patterns, claim_text):
+            return Verdict.CANNOT_VERIFY
         return Verdict.CONFIRMED
     return Verdict.CANNOT_VERIFY
 

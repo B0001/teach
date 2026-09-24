@@ -39,12 +39,19 @@ RAW RESULT, honestly reported, no rounding:
   FALSE_MISATTRIBUTION  (10 sentences, 2/verse x 5 verses):
     1/10 CONTRADICTED (caught correctly),
     6/10 CANNOT_VERIFY (safe miss -- abstained rather than guessed),
-    3/10 CONFIRMED  <-- DANGEROUS. A false claim was validated as true.
-    This is a real safety-property violation, not a recall gap, and is
-    filed as teach-dds (new bug bead) rather than fixed in this bead --
-    fixing it now would spend this same round as tuning data. See the
-    three `test_dangerous_*` functions below, each `xfail(strict=True)`
-    pending that bead.
+    3/10 CONFIRMED (AS MEASURED AT THE TIME)  <-- DANGEROUS. A false claim
+    was validated as true. This was a real safety-property violation, not
+    a recall gap, and was filed as teach-dds (new bug bead) rather than
+    fixed in this bead -- fixing it in the same session that measured it
+    would have spent this round as tuning data. See the three
+    `test_dangerous_*` functions below: teach-dds later fixed the
+    underlying gap (a domain-agnostic reassignment-framing guard in
+    teach.fact_checker.verify_claim, not a per-sentence keyword patch --
+    see that module's `_REASSIGNMENT_FRAMING`), so those three tests are no
+    longer `xfail` and now assert the fixed (CANNOT_VERIFY) behavior
+    directly. The 3/10-CONFIRMED figure above is the historical
+    as-measured result this round produced BEFORE that fix, kept honest
+    rather than silently edited to match the current behavior.
 
   AMBIGUOUS   (5 sentences, 1/verse x 5 verses): 5/5 CANNOT_VERIFY. Correct.
 
@@ -59,7 +66,7 @@ the FALSE_MISATTRIBUTION's safe misses already counted above -- see the
 per-category breakdown, this total line is just an arithmetic check:
 10 TRUE + 10 FALSE_MISATTRIBUTION + 5 AMBIGUOUS + 5 OFF_TOPIC = 30).
 
-Root cause of the 3 dangerous CONFIRMEDs (see each xfail test's docstring
+Root cause of the 3 dangerous CONFIRMEDs (see each test's docstring
 for specifics): every seeded fact's `true_patterns` matches on the
 verse's own content/wording appearing in the sentence, unconditionally.
 Each fact's `false_patterns` only catches a misattribution when a
@@ -79,8 +86,6 @@ not a vocabulary-coverage gap the way teach-8xw.33's Lagrange gap was.
 from teach.biblical_nt_source import BIBLICAL_NT_SOURCE
 from teach.biblical_ot_source import BIBLICAL_OT_SOURCE
 from teach.fact_checker import Verdict, check_lesson_text, verify_claim
-
-import pytest
 
 # --- the 30 sentences, verbatim from the no-repo-access agent's output ------
 
@@ -274,62 +279,57 @@ def test_john1_false_2_safe_miss_abstains():
     assert verify_claim(JOHN1_FALSE_2, BIBLICAL_NT_SOURCE) is Verdict.CANNOT_VERIFY
 
 
-# --- FALSE_MISATTRIBUTION: DANGEROUS false-CONFIRMEDs (3/10) ------------
-# Filed as teach-dds. NOT fixed in this bead -- per this bead's own text,
-# tuning against the round that found the gap spends the round; a fresh
-# no-repo-access round would be needed to show any fix actually
-# generalizes. xfail(strict=True) so a future fix is loudly detected (XPASS)
-# and forces removal of the marker, and so a future regression that
-# resurrects any of these three is impossible to merge silently.
+# --- FALSE_MISATTRIBUTION: DANGEROUS false-CONFIRMEDs (3/10) -- FIXED ---
+# teach-dds fixed this: teach.fact_checker.verify_claim now abstains
+# (CANNOT_VERIFY) instead of confirming when a true_patterns hit also
+# carries generic reassignment framing ("is actually", "in fact",
+# "originates in/from", "comes from", a trailing ", not the/from/in ..."
+# clause) that false_patterns didn't already catch -- see
+# teach/fact_checker.py's _REASSIGNMENT_FRAMING. That guard is
+# domain-/fact-agnostic (lives in the shared checker, not duplicated as a
+# false_pattern per fact), so it isn't a keyword patch for just these three
+# sentences. No longer xfail: these now measure the fixed behavior directly
+# and must keep passing.
 
-@pytest.mark.xfail(
-    strict=True,
-    raises=AssertionError,
-    reason="teach-dds: dangerous false-CONFIRMED, Genesis-content "
-    "misattributed to John without the literal word 'genesis' appearing",
-)
 def test_dangerous_genesis_misattributed_to_john_not_confirmed():
     """Sentence claims Genesis's own opening line is "actually how the
     Gospel of John starts" -- a false misattribution. _GENESIS_CREATION's
-    false_patterns require the literal word "genesis" to co-occur with
-    "word"+"beginning"+"was"; this sentence names "the Gospel of John"
-    instead, so false_patterns never fire. true_patterns match on
-    beginning+god+created+heavens/earth alone, with no check for
-    misattributing framing, so verify_claim returns CONFIRMED -- the
-    checker validates a false claim as true. Measured actual behavior
-    today: CONFIRMED. Desired/safe: CANNOT_VERIFY or CONTRADICTED, but
-    never CONFIRMED."""
+    original false_patterns required the literal word "genesis" to co-occur
+    with "word"+"beginning"+"was"; this sentence names "the Gospel of John"
+    instead, so false_patterns never fired. Before the teach-dds fix,
+    true_patterns matched on beginning+god+created+heavens/earth alone with
+    no check for misattributing framing, so verify_claim returned
+    CONFIRMED.
+
+    Two fixes now both catch this sentence: the generic
+    reassignment-framing guard ("actually") would abstain on its own, but
+    _GENESIS_CREATION also gained an attribution-anchored other-book
+    false_pattern (content + "John" adjacent to "starts") added later in
+    teach-dds for a second, independently-found gap -- and false_patterns
+    are checked before true_patterns, so that stronger, specific
+    CONTRADICTED verdict wins here rather than the generic abstention."""
     verdict = verify_claim(GENESIS_FALSE_1, BIBLICAL_OT_SOURCE)
     assert verdict is not Verdict.CONFIRMED, (
         f"dangerous false-CONFIRMED reproduced (teach-dds): {verdict}"
     )
+    assert verdict is Verdict.CONTRADICTED
 
 
-@pytest.mark.xfail(
-    strict=True,
-    raises=AssertionError,
-    reason="teach-dds: dangerous false-CONFIRMED, John's content "
-    "misattributed to Genesis without the literal word 'john' appearing",
-)
 def test_dangerous_john1_misattributed_to_genesis_not_confirmed():
     """Mirror image of the Genesis case: claims John 1:1's content is
     "actually the opening of the book of Genesis." _JOHN_OPENING_WORD's
     false_patterns both require the literal word "john"; this sentence
     never says "john" at all -- it only names the wrong destination,
-    "Genesis." true_patterns match on word+beginning+was alone. Measured
-    actual behavior today: CONFIRMED."""
+    "Genesis." Before the fix, true_patterns matched on word+beginning+was
+    alone and verify_claim returned CONFIRMED. The reassignment-framing
+    guard ("actually") now catches it."""
     verdict = verify_claim(JOHN1_FALSE_1, BIBLICAL_NT_SOURCE)
     assert verdict is not Verdict.CONFIRMED, (
         f"dangerous false-CONFIRMED reproduced (teach-dds): {verdict}"
     )
+    assert verdict is Verdict.CANNOT_VERIFY
 
 
-@pytest.mark.xfail(
-    strict=True,
-    raises=AssertionError,
-    reason="teach-dds: dangerous false-CONFIRMED, 'Jesus wept' "
-    "misattributed to the wrong narrative moment (no other book named)",
-)
 def test_dangerous_john11_wrong_narrative_context_not_confirmed():
     """Claims "Jesus wept" is "actually describing the moment right before
     the crucifixion, not the raising of Lazarus" -- false (it is Lazarus's
@@ -337,12 +337,15 @@ def test_dangerous_john11_wrong_narrative_context_not_confirmed():
     literal phrase "jesus wept" unconditionally; its false_patterns only
     fire when a DIFFERENT BOOK NAME is present (luke/mark/matthew/acts/
     genesis/exodus/psalms), which this sentence never does -- it
-    misattributes the narrative moment, not the book. Measured actual
-    behavior today: CONFIRMED."""
+    misattributes the narrative moment, not the book. Before the fix,
+    verify_claim returned CONFIRMED. The reassignment-framing guard
+    ("actually describing" and the trailing ", not the raising of Lazarus")
+    now catches it."""
     verdict = verify_claim(JOHN11_FALSE_2, BIBLICAL_NT_SOURCE)
     assert verdict is not Verdict.CONFIRMED, (
         f"dangerous false-CONFIRMED reproduced (teach-dds): {verdict}"
     )
+    assert verdict is Verdict.CANNOT_VERIFY
 
 
 # --- AMBIGUOUS: 5/5 correctly abstain -----------------------------------
@@ -389,25 +392,20 @@ def test_john11_off_topic_abstains():
     assert verify_claim(JOHN11_OFF_TOPIC, BIBLICAL_NT_SOURCE) is Verdict.CANNOT_VERIFY
 
 
-# --- check_lesson_text: prove the same dangerous CONFIRMED reproduces via
-# the full lesson-text pipeline (sentence splitting + extract_domain_claims
-# + verify_claim), not just the low-level verify_claim entry point, since
-# check_lesson_text is what a real consumer of this checker actually calls.
+# --- check_lesson_text: prove the same fix holds via the full lesson-text
+# pipeline (sentence splitting + extract_domain_claims + verify_claim), not
+# just the low-level verify_claim entry point, since check_lesson_text is
+# what a real consumer of this checker actually calls. No longer xfail --
+# teach-dds fixed the underlying gap in verify_claim itself.
 
-@pytest.mark.xfail(
-    strict=True,
-    raises=AssertionError,
-    reason="teach-dds: same dangerous false-CONFIRMED as "
-    "test_dangerous_genesis_misattributed_to_john_not_confirmed, "
-    "reproduced through the full check_lesson_text pipeline rather than "
-    "a direct verify_claim() call",
-)
 def test_check_lesson_text_reproduces_dangerous_confirm_via_full_pipeline():
     """A real consumer of this checker calls check_lesson_text, not
-    verify_claim directly. This proves the teach-dds bug is not an
+    verify_claim directly. This proves the teach-dds fix is not an
     artifact of calling verify_claim in isolation -- sentence splitting
     and extract_domain_claims both pass GENESIS_FALSE_1 through unchanged,
-    and it still lands CONFIRMED."""
+    and it now resolves CONTRADICTED (see
+    test_dangerous_genesis_misattributed_to_john_not_confirmed for why
+    CONTRADICTED rather than CANNOT_VERIFY) rather than landing CONFIRMED."""
     text = "tutor: " + GENESIS_TRUE_1 + " " + GENESIS_FALSE_1
     checks = check_lesson_text(text, BIBLICAL_OT_SOURCE)
     assert len(checks) == 2
@@ -418,3 +416,4 @@ def test_check_lesson_text_reproduces_dangerous_confirm_via_full_pipeline():
         f"dangerous false-CONFIRMED reproduced via check_lesson_text "
         f"(teach-dds): {checks[1].verdict}"
     )
+    assert checks[1].verdict is Verdict.CONTRADICTED
