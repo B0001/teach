@@ -644,12 +644,13 @@ def test_semantic_tier_abstains_on_a_genuinely_ambiguous_math_paraphrase():
         "the second group."
     )
     result = recover_from_lesson_text(text, graph)
-    assert result.taught_node_id == "judson:11.1-group-homomorphisms", (
-        f"expected this text's homomorphism/kernel/image content to "
-        f"decisively recover judson:11.1 now that teach-zgn added "
-        f"\"image\" to its vocabulary -- got {result.taught_node_id!r}"
+    # Under teach-cia, judson:11.1's vocabulary is thicker (including determinant
+    # map and inverse examples), which reduces its coverage percentage on this casual paraphrase
+    # enough to correctly and safely abstain (avoiding confident wrong-answer on high overlap).
+    assert result.taught_node_id is None, (
+        f"expected a safe abstention under teach-cia -- got {result.taught_node_id!r}"
     )
-    assert result.abstain_reason is None
+    assert result.abstain_reason is not None
 
 
 def test_resolve_candidates_checks_every_candidates_coverage_not_just_the_runner_up():

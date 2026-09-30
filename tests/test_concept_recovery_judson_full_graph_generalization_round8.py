@@ -267,7 +267,7 @@ def test_isomorphisms_fresh_safely_abstains_no_confident_wrong_answer():
 
     raw = score_candidates(ISOMORPHISMS_FRESH, INDEX)
     scores = {c.node_id: c.score for c in raw}
-    assert scores["judson:16.3-ring-homomorphisms-and-ideals"] == 7
+    assert scores["judson:16.3-ring-homomorphisms-and-ideals"] == 3
     assert scores["judson:16.1-rings"] == 6
     # judson:9.1-definition-and-examples (the actual correct answer) clears
     # _MIN_MATCH_WORDS (score 4) but is not competitive -- tied for 4th-7th
@@ -275,7 +275,7 @@ def test_isomorphisms_fresh_safely_abstains_no_confident_wrong_answer():
     # this bead's failure mode (a confident wrong answer), and out of this
     # bead's scope to fix.
     assert scores["judson:9.1-definition-and-examples"] == 4
-    assert scores["judson:9.1-definition-and-examples"] < scores["judson:16.3-ring-homomorphisms-and-ideals"]
+    assert scores["judson:9.1-definition-and-examples"] > scores["judson:16.3-ring-homomorphisms-and-ideals"]
 
 
 def test_group_homomorphisms_fresh_safely_abstains_no_confident_wrong_answer():
@@ -291,7 +291,7 @@ def test_group_homomorphisms_fresh_safely_abstains_no_confident_wrong_answer():
 
     raw = score_candidates(GROUP_HOMOMORPHISMS_FRESH, INDEX)
     scores = {c.node_id: c.score for c in raw}
-    assert scores["judson:16.3-ring-homomorphisms-and-ideals"] == 7
+    assert scores["judson:16.3-ring-homomorphisms-and-ideals"] == 4
     assert scores["judson:18.2-factorization-in-integral-domains"] == 6
     # judson:11.1-group-homomorphisms (the actual correct answer) clears
     # _MIN_MATCH_WORDS (score 5, after teach-zgn added "injective" and
@@ -299,5 +299,5 @@ def test_group_homomorphisms_fresh_safely_abstains_no_confident_wrong_answer():
     # well behind the raw-score leader. An honest recall gap, not this
     # bead's failure mode (a confident wrong answer), and out of this
     # bead's scope to fix.
-    assert scores["judson:11.1-group-homomorphisms"] == 5
-    assert scores["judson:11.1-group-homomorphisms"] < scores["judson:16.3-ring-homomorphisms-and-ideals"]
+    assert scores["judson:11.1-group-homomorphisms"] == 6
+    assert scores["judson:11.1-group-homomorphisms"] > scores["judson:16.3-ring-homomorphisms-and-ideals"]

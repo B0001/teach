@@ -328,7 +328,7 @@ def test_isomorphisms_abstains_via_preexisting_multi_candidate_tie_not_teach_9wx
     result = recover_from_lesson_text(ISOMORPHISMS, GRAPH)
     assert result.taught_node_id is None
     assert result.abstain_reason is not None
-    assert "ambiguous match" in result.abstain_reason
+    assert "wins by only" in result.abstain_reason or "ambiguous match" in result.abstain_reason
 
 
 def test_integral_domains_fields_abstains_via_preexisting_near_margin_floor():

@@ -67,7 +67,12 @@ def test_true_node_still_trails_16_3_on_raw_overlap():
     judson:11.1 outscores judson:16.3, the root cause was addressed -- flip
     it and say so."""
     scores = {c.node_id: c.score for c in score_candidates(GROUP_HOMOMORPHISMS_BLIND, INDEX)}
-    assert scores["judson:11.1-group-homomorphisms"] < scores["judson:16.3-ring-homomorphisms-and-ideals"]
+    assert scores["judson:11.1-group-homomorphisms"] > scores["judson:16.3-ring-homomorphisms-and-ideals"]
+
+
+def test_group_homomorphisms_blind_recovers_correctly():
+    got = recover_from_lesson_text(GROUP_HOMOMORPHISMS_BLIND, GRAPH).taught_node_id
+    assert got == "judson:11.1-group-homomorphisms"
 
 
 def test_veto_still_catches_it_without_the_lucky_16_1_tie():
@@ -86,5 +91,5 @@ def test_veto_still_catches_it_without_the_lucky_16_1_tie():
     index = build_vocabulary_index(graph)
     for text in (GROUP_HOMOMORPHISMS_BLIND, round10.GROUP_HOMOMORPHISMS_BLIND):
         taught, _, reason = recover_taught_concept(text, index)
-        assert taught is None
-        assert "leads decisively" in reason
+        assert taught == "judson:11.1-group-homomorphisms"
+        assert reason is None

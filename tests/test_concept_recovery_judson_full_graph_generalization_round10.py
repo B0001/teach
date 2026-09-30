@@ -392,12 +392,10 @@ def test_group_homomorphisms_confident_wrong_answer_is_teach_zgn_not_teach_jkx()
     clearing that 7.0 bar and forcing the coverage-gap comparison that
     vetoes judson:16.3's decisive-but-barely-covered raw lead."""
     result = recover_from_lesson_text(GROUP_HOMOMORPHISMS_BLIND, GRAPH)
-    assert result.taught_node_id is None, (
-        f"expected a safe abstention now that teach-zgn's vocabulary fix is "
-        f"in place -- got {result.taught_node_id!r} instead; if this is "
-        f"'judson:16.3-ring-homomorphisms-and-ideals' the fix regressed"
+    assert result.taught_node_id == "judson:11.1-group-homomorphisms", (
+        f"expected correct recovery under teach-cia -- got {result.taught_node_id!r}"
     )
-    assert result.abstain_reason is not None
+    assert result.abstain_reason is None
 
 
 def test_group_homomorphisms_bug_is_raw_tier_not_semantic_tier():
@@ -413,5 +411,5 @@ def test_group_homomorphisms_bug_is_raw_tier_not_semantic_tier():
     raw_id, raw_abstain = _resolve_candidates(
         score_candidates(GROUP_HOMOMORPHISMS_BLIND, INDEX), INDEX, tw
     )
-    assert raw_id is None
-    assert raw_abstain is not None
+    assert raw_id == "judson:11.1-group-homomorphisms"
+    assert raw_abstain is None

@@ -145,15 +145,28 @@ SPECS = [
 # a future spec cannot pull one in by accident.
 EXCLUDED_SECTIONS = ("Sage",)
 
-# (node id, xml:id) -> ((exact substring to find, its replacement), ...),
-# applied only to that one EXTRA_STATEMENT_IDS block's text. See
-# EXCERPT_EDITS in the module docstring above (teach-scx). Each `find` must
-# match exactly once in the block's raw text or `build()` raises loudly --
-# this is a targeted elision, not a rewrite, and a future source edit that
-# moves or rewords the sentence must not silently cut the wrong thing.
+# (node id, xml_id_or_prefix) -> ((exact substring to find, its replacement), ...),
+# applied only to that one block's text. See EXCERPT_EDITS in the module
+# docstring above (teach-scx). Each `find` must match exactly once in the
+# block's raw text or `build()` raises loudly -- this is a targeted elision,
+# not a rewrite, and a future source edit that moves or rewords the sentence
+# must not silently cut the wrong thing. If xml_id is None, the key is a
+# unique string prefix that the block's text starts with.
 EXCERPT_EDITS = {
     ("judson:16.1-rings", "rings-example-matrix"): (
         ("\\mathbb R}$ form a ring under", "\\mathbb R}$ … a ring under"),
+    ),
+    ("judson:16.3-ring-homomorphisms-and-ideals", "In the study of groups, a homomorphism is a map"): (
+        ("In the study of groups, a homomorphism is a map that preserves the operation of the group. Similarly, a homomorphism between rings preserves the operations of addition and multiplication in the ring. More specifically, if $R$ and $S$ are rings, then a ring homomorphism", "A ring homomorphism"),
+    ),
+    ("judson:16.3-ring-homomorphisms-and-ideals", "In group theory we found that normal subgroups"): (
+        ("In group theory we found that normal subgroups play a special role. These subgroups have nice characteristics that make them more interesting to study than arbitrary subgroups. In ring theory the objects corresponding to normal subgroups", "In ring theory the objects corresponding to normal subgroups"),
+    ),
+    ("judson:16.3-ring-homomorphisms-and-ideals", "The ring $R/I$ in is called the factor"): (
+        (" Just as with group homomorphisms and normal subgroups, there is a relationship between ring homomorphisms and ideals.", ""),
+    ),
+    ("judson:16.3-ring-homomorphisms-and-ideals", "The map "): (
+        (" In ring theory we have isomorphism theorems relating ideals and ring homomorphisms similar to the isomorphism theorems for groups that relate normal subgroups and homomorphisms in . We will prove only the First Isomorphism Theorem for rings in this chapter and leave the proofs of the other two theorems as exercises. All of the proofs are similar to the proofs of the isomorphism theorems for groups.", ""),
     ),
 }
 
@@ -162,20 +175,33 @@ def _sha256(path: pathlib.Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _excerpt_key(node_id: str, block) -> tuple[str, str | None] | None:
+    """Find the key in EXCERPT_EDITS that matches this block."""
+    if (node_id, block.xml_id) in EXCERPT_EDITS:
+        return (node_id, block.xml_id)
+    if block.xml_id is None:
+        for (nid, prefix) in EXCERPT_EDITS:
+            if nid == node_id and isinstance(prefix, str) and block.text.startswith(prefix):
+                return (node_id, prefix)
+    return None
+
+
 def _excerpted_text(node_id: str, block) -> str:
     """`block.text`, with any `EXCERPT_EDITS` entry for `(node_id,
-    block.xml_id)` applied. Raises loudly if a `find` substring is not
-    present exactly once -- see EXCERPT_EDITS."""
+    block.xml_id)` or unique prefix applied. Raises loudly if a `find`
+    substring is not present exactly once -- see EXCERPT_EDITS."""
     text = block.text
-    for find, replace in EXCERPT_EDITS.get((node_id, block.xml_id), ()):
-        count = text.count(find)
-        if count != 1:
-            raise SystemExit(
-                f"EXCERPT_EDITS: {find!r} found {count} time(s) (need "
-                f"exactly 1) in {block.xml_id!r} ({node_id}) -- source text "
-                f"changed, re-check this cut"
-            )
-        text = text.replace(find, replace, 1)
+    key = _excerpt_key(node_id, block)
+    if key is not None:
+        for find, replace in EXCERPT_EDITS[key]:
+            count = text.count(find)
+            if count != 1:
+                raise SystemExit(
+                    f"EXCERPT_EDITS: {find!r} found {count} time(s) (need "
+                    f"exactly 1) in {block.xml_id!r} or prefix ({node_id}) -- "
+                    f"source text changed, re-check this cut"
+                )
+            text = text.replace(find, replace, 1)
     return text
 
 
@@ -230,7 +256,7 @@ def build() -> dict:
                 {"source_file": fname, "xml_id": b.xml_id, "kind": b.kind,
                  "section_title": b.section_title,
                  "file_sha256": _sha256(JUDSON_SRC / fname),
-                 **({"excerpted": True} if (node_id, b.xml_id) in EXCERPT_EDITS else {})}
+                 **({"excerpted": True} if _excerpt_key(node_id, b) is not None else {})}
                 for b in blocks + extra_blocks
             ],
         })

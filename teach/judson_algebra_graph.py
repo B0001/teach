@@ -420,7 +420,11 @@ _NODES = (
                 "identity of H. Theorem: the kernel of phi is a normal "
                 "subgroup of G. There is no injective homomorphism from "
                 "Z_7 to Z_12, since 7 does not divide 12. The image of phi "
-                "is the set of all phi(g) for g in G."
+                "is the set of all phi(g) for g in G. A homomorphism sends "
+                "the identity to the identity and matching identities. "
+                "Example: the determinant map det from the general linear group "
+                "GL_2(R) of invertible matrices to the multiplicative group of "
+                "reals is a homomorphism since det(AB) = det(A) det(B)."
             ),
             "fact_topics": ("kernel-normal-subgroup",),
         },

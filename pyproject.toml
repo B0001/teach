@@ -28,8 +28,8 @@ testpaths = ["tests"]
 # narrator is a sibling repo on the host, not a package on any index. Two
 # worker sessions burned searching GitHub/PyPI for it before it was mounted.
 # Read-only: workers read its story-generation machinery, never edit it.
-volumes = ["/Users/benjaminhess/Downloads/narrator:/workspace-narrator:ro",
-           "/Users/benjaminhess/Downloads/mathgraph:/workspace-mathgraph:ro"]
+volumes = ["../narrator:/workspace-narrator:ro",
+           "../mathgraph:/workspace-mathgraph:ro"]
 
 [tool.sandbox.forward-env]
 HF_TOKEN = "publishing built knowledge graphs to HuggingFace will fail"
