@@ -14,3 +14,10 @@ __pycache__/
 # belt-and-braces for the most likely accidental placement.
 teach/data/*.jsonl
 .partial.json
+
+# Gas City
+.beads/*
+!.beads/identity.toml
+.beads.gate.lock
+.claude/skills/core.*
+.claude/skills/.gc-skill-ownership.json
